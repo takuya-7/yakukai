@@ -1,0 +1,89 @@
+@media (max-width: 576px) {
+  .top-wrap{
+    padding-bottom: 1.5rem;
+  }
+  .header-left a{
+    font-size: 1.2rem;
+  }
+  .header-right a{
+    font-size: 0.8rem;
+    padding: 0 0.8rem;
+  }
+  .top-head{
+    margin-top: 1.5rem;
+    margin-left: 0.3rem;
+  }
+  .top-head h1{
+    font-size: 1.3rem;
+    letter-spacing: 0.1rem;
+  }
+  .top-search-box{
+    margin-top: 2rem;
+    margin-left: 0.3rem;
+    margin-bottom: 2rem;
+  }
+  .top-search-box form input{
+    height: 2.7rem;
+    font-size: 0.75rem;
+  }
+  .top-search-box form button{
+    height: 2.7rem;
+    font-size: 0.8rem;
+  }
+  .top-widget{
+    padding: 2rem 0.5rem;
+  }
+  .cp_ipselect{
+    height: 2.7rem;
+    line-height: 2.7rem;
+    font-size: 0.8rem;
+    width: 7rem;
+  }
+
+  .cp_ipselect select{
+    height: 2.7rem;
+    line-height: 1.7rem;
+  }
+  .select-box{
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+  }
+  .select-box-items{
+    height: 2.7rem;
+    width: 20rem;
+    display: flex;
+    justify-content: center;
+  }
+  .select-box-item{
+    margin: 0 0.5rem;
+    
+  }
+  .select-box-item-x{
+    line-height: 2.7rem;
+  }
+  .select-box button{
+    height: 2.7rem;
+    font-size: 0.8rem;
+    margin-right: 2rem;
+    margin-top: 1rem;
+    float: right;
+  }
+  
+
+  .form-container{
+    margin: 2rem auto;
+  }
+  .form{
+    padding: 1.1rem;
+  }
+  .form .title{
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px){
+  .menus-container{
+    width: 100rem;
+  }
+}
