@@ -20,7 +20,7 @@ debugLogStart();
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
 
 // 企業名
-$companyName = (!empty($_GET['c_name'])) ? $_GET['c_name'] : '';
+$companyName = (!empty($_GET['src_str'])) ? $_GET['src_str'] : '';
 
 // 都道府県
 $prefecture = (!empty($_GET['pref'])) ? $_GET['pref'] : '';
@@ -34,7 +34,7 @@ $sort = (!empty($_GET['sort'])) ? $_GET['sort'] : '';
 // パラメータに不正な値が入っているかチェック
 if(!is_int((int)$currentPageNum)){
   error_log('エラー発生:指定ページに不正な値が入りました');
-  header('Location:index.php');
+  header('Location:search.php');
   exit();
 }
 
@@ -46,6 +46,9 @@ $currentMinNum = ($currentPageNum - 1) * $listSpan;
 
 // DBから商品データ（total:商品総数、total_page:総ページ数、data:表示する商品データ）を取得
 $dbCompanyData = getCompanyList($companyName, $prefecture, $industry, $sort, $listSpan);
+
+// DBから都道府県データを取得
+$dbPrefectureData = getPrefecture();
 
 // DBから業種データを取得
 $dbIndustryData = getIndustry();
@@ -74,119 +77,95 @@ require('head.php');
 
     
   <main>
-    <div class="container">
-      <h1 class="page-title">気になる会社を検索</h1>
-
-      <div class="top-search-box">
-        <form method="get" action="">
-          <input class="" type="text" placeholder="企業名で検索" name="searchWords">
-          <button class="" type="submit">検索</button>
-
-          <div class="select-box-items">
-            <div class="select-box-item">
+    <div class="content-wrapper">
+      <div class="container">
+        <div class="page-heading">
+          <h1 class="page-title">気になる会社を検索</h1>
+          <div class="top-search-box">
+            <form method="get" action="">
+              <input class="" type="text" placeholder="企業名で検索" name="src_str">
+              <button class="" type="submit">検索</button>
+    
+              <div class="select-box-items">
+                <div class="select-box-item">
+                  <div class="cp_ipselect cp_sl01">
+                    <select name="pref">
+                      <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県</option>
+                      <?php
+                        foreach($dbPrefectureData as $key => $val){
+                      ?>
+                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
+                          <?php echo $val['name']; ?>
+                        </option>
+                      <?php
+                        }
+                      ?>
+                    </select>
+                  </div>
+                </div>
+    
+                <div class="select-box-item">
+                  <div class="cp_ipselect cp_sl01">
+                    <select name="i">
+                      <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
+    
+                      <?php
+                        foreach($dbIndustryData as $key => $val){
+                      ?>
+                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
+                          <?php echo $val['name']; ?>
+                        </option>
+                      <?php
+                        }
+                      ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
+    
               <div class="cp_ipselect cp_sl01">
-                <select name="pref_id">
-                  <option value="">都道府県</option>
-                  <option value="1">北海道</option>
-                  <option value="2">青森県</option>
-                  <option value="3">岩手県</option>
-                  <option value="4">宮城県</option>
-                  <option value="5">秋田県</option>
-                  <option value="6">山形県</option>
-                  <option value="7">福島県</option>
-                  <option value="8">茨城県</option>
-                  <option value="9">栃木県</option>
-                  <option value="10">群馬県</option>
-                  <option value="11">埼玉県</option>
-                  <option value="12">千葉県</option>
-                  <option value="13">東京都</option>
-                  <option value="14">神奈川県</option>
-                  <option value="15">新潟県</option>
-                  <option value="16">富山県</option>
-                  <option value="17">石川県</option>
-                  <option value="18">福井県</option>
-                  <option value="19">山梨県</option>
-                  <option value="20">長野県</option>
-                  <option value="21">岐阜県</option>
-                  <option value="22">静岡県</option>
-                  <option value="23">愛知県</option>
-                  <option value="24">三重県</option>
-                  <option value="25">滋賀県</option>
-                  <option value="26">京都府</option>
-                  <option value="27">大阪府</option>
-                  <option value="28">兵庫県</option>
-                  <option value="29">奈良県</option>
-                  <option value="30">和歌山県</option>
-                  <option value="31">鳥取県</option>
-                  <option value="32">島根県</option>
-                  <option value="33">岡山県</option>
-                  <option value="34">広島県</option>
-                  <option value="35">山口県</option>
-                  <option value="36">徳島県</option>
-                  <option value="37">香川県</option>
-                  <option value="38">愛媛県</option>
-                  <option value="39">高知県</option>
-                  <option value="40">福岡県</option>
-                  <option value="41">佐賀県</option>
-                  <option value="42">長崎県</option>
-                  <option value="43">熊本県</option>
-                  <option value="44">大分県</option>
-                  <option value="45">宮崎県</option>
-                  <option value="46">鹿児島県</option>
-                  <option value="47">沖縄県</option>
+                <select name="sort">
+                  <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
+                  <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                  <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>総合評価</option>
                 </select>
               </div>
+            </form>
+          </div>
+        </div>
+  
+        <div class="result-form">
+          <div class="result-heading">
+            <div class="result-num">
+              <p>
+                <span class="num"><?php echo sanitize($dbCompanyData['total']); ?></span>
+                 件中　
+                <span class="num"><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
+                〜
+                <span class="num"><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
+                件表示
+              </p>
             </div>
-
-            <div class="select-box-item">
-              <div class="cp_ipselect cp_sl01">
-                <select name="i_id">
-                  <option value="0" <?php if(getFormData('i_id', true) == 0) echo 'selected'; ?>>業種</option>
-
-                  <?php
-                    foreach($dbIndustryData as $key => $val){
-                  ?>
-                    <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i_id', true) == $val['id']) echo 'selected'; ?>>
-                      <?php echo $val['name']; ?>
-                    </option>
-                  <?php
-                    }
-                  ?>
-                </select>
+          </div>
+          <?php
+            foreach($dbCompanyData['data'] as $key => $val):
+          ?>
+            <div class="company-card">
+              <div class="company-header">
+                <h2>企業名<?php echo sanitize($val['name']); ?></h2>
+              </div>
+              <div class="item-content">
+                <div class="post-content">
+                  <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
+                </div>
+                <a href="company.php">口コミを見る</a>
               </div>
             </div>
-          </div>
-
-          <div class="cp_ipselect cp_sl01">
-            <select name="sort">
-              <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
-              <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
-              <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>総合評価</option>
-            </select>
-          </div>
-        </form>
+          <?php
+            endforeach;
+          ?>
+        </div>
       </div>
-
-      <div class="result-form">
-        <?php
-          foreach($dbCompanyData['data'] as $key => $val):
-        ?>
-
-          <div class="card">
-            <div class="company-header">
-              <h2>企業名<?php echo sanitize($val['name']); ?></h2>
-            </div>
-            <div class="item-content">
-
-              <a href="company.php">口コミを見る</a>
-            </div>
-          </div>
-          
-        <?php
-          endforeach;
-        ?>
-      </div>
-      
     </div>
   </main>
     
