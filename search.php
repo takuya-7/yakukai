@@ -45,7 +45,7 @@ $listSpan = 20;
 $currentMinNum = ($currentPageNum - 1) * $listSpan;
 
 // DBから商品データ（total:商品総数、total_page:総ページ数、data:表示する商品データ）を取得
-$dbCompanyData = getCompanyList($companyName, $prefecture, $industry, $sort, $listSpan);
+$dbCompanyData = getCompanyList($currentMinNum, $companyName, $prefecture, $industry, $sort, $listSpan);
 
 // DBから都道府県データを取得
 $dbPrefectureData = getPrefecture();
@@ -54,9 +54,8 @@ $dbPrefectureData = getPrefecture();
 $dbIndustryData = getIndustry();
 
 debug('現在のページ：' . $currentPageNum);
-
-//debug('フォーム用DBデータ：'.print_r($dbFormData,true));
-//debug('カテゴリデータ：'.print_r($dbCategoryData,true));
+debug('フォーム用DBデータ：'.print_r($dbFormData,true));
+debug('カテゴリデータ：'.print_r($dbIndustryData,true));
 
 ?>
 
@@ -81,55 +80,58 @@ require('head.php');
       <div class="container">
         <div class="page-heading">
           <h1 class="page-title">気になる会社を検索</h1>
-          <div class="top-search-box">
+          <div class="search-wrap">
             <form method="get" action="">
-              <input class="" type="text" placeholder="企業名で検索" name="src_str">
-              <button class="" type="submit">検索</button>
-    
-              <div class="select-box-items">
-                <div class="select-box-item">
-                  <div class="cp_ipselect cp_sl01">
-                    <select name="pref">
-                      <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県</option>
-                      <?php
-                        foreach($dbPrefectureData as $key => $val){
+              <div class="search-item">
+                <input class="" type="text" placeholder="企業名で検索" name="src_str">
+              </div>
+              
+              <div class="search-item">
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="pref">
+                    <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県</option>
+                    <?php
+                      foreach($dbPrefectureData as $key => $val){
+                        ?>
+                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
+                      <?php echo $val['name']; ?>
+                    </option>
+                    <?php
+                      }
                       ?>
-                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
-                          <?php echo $val['name']; ?>
-                        </option>
-                      <?php
-                        }
-                      ?>
-                    </select>
-                  </div>
-                </div>
-    
-                <div class="select-box-item">
-                  <div class="cp_ipselect cp_sl01">
-                    <select name="i">
-                      <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
-    
-                      <?php
-                        foreach($dbIndustryData as $key => $val){
-                      ?>
-                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
-                          <?php echo $val['name']; ?>
-                        </option>
-                      <?php
-                        }
-                      ?>
-                    </select>
-                  </div>
+                  </select>
                 </div>
               </div>
-    
-              <div class="cp_ipselect cp_sl01">
-                <select name="sort">
-                  <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
-                  <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
-                  <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>総合評価</option>
-                </select>
+              
+              <div class="search-item">
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="i">
+                    <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
+                    
+                    <?php
+                      foreach($dbIndustryData as $key => $val){
+                        ?>
+                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
+                      <?php echo $val['name']; ?>
+                    </option>
+                    <?php
+                      }
+                      ?>
+                  </select>
+                </div>
               </div>
+              
+              <div class="search-item">
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="sort">
+                    <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
+                    <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                    <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>総合評価</option>
+                  </select>
+                </div>
+              </div>
+
+              <button class="" type="submit">口コミを検索する</button>
             </form>
           </div>
         </div>
@@ -138,11 +140,11 @@ require('head.php');
           <div class="result-heading">
             <div class="result-num">
               <p>
-                <span class="num"><?php echo sanitize($dbCompanyData['total']); ?></span>
+                <span><?php echo sanitize($dbCompanyData['total']); ?></span>
                  件中　
-                <span class="num"><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
+                <span><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
                 〜
-                <span class="num"><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
+                <span><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
                 件表示
               </p>
             </div>
@@ -152,18 +154,31 @@ require('head.php');
           ?>
             <div class="company-card">
               <div class="company-header">
-                <h2>企業名<?php echo sanitize($val['name']); ?></h2>
+                <h2><?php echo sanitize($val['name']); ?></h2>
               </div>
               <div class="item-content">
                 <div class="post-content">
                   <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
                 </div>
-                <a href="company.php">口コミを見る</a>
+                <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>">口コミを見る</a>
               </div>
             </div>
           <?php
             endforeach;
           ?>
+
+          <div class="pagination-heading">
+            <p>
+              <span><?php echo sanitize($dbCompanyData['total']); ?></span>
+                件中　
+              <span><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
+              〜
+              <span><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
+              件表示
+            </p>
+          </div>
+          <?php pagination($currentPageNum, $dbCompanyData['total_page']); ?>
+
         </div>
       </div>
     </div>
