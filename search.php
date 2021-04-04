@@ -18,19 +18,14 @@ debugLogStart();
 //----------------------------
 // （現在のページ番号）カレントページのGETパラメータを取得。pの値がなければ1を入れる
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
-
 // 企業名
 $companyName = (!empty($_GET['src_str'])) ? $_GET['src_str'] : '';
-
 // 都道府県
 $prefecture = (!empty($_GET['pref'])) ? $_GET['pref'] : '';
-
 // 業種
 $industry = (!empty($_GET['i'])) ? $_GET['i'] : '';
-
 // ソート順
 $sort = (!empty($_GET['sort'])) ? $_GET['sort'] : '';
-
 // パラメータに不正な値が入っているかチェック
 if(!is_int((int)$currentPageNum)){
   error_log('エラー発生:指定ページに不正な値が入りました');
@@ -54,8 +49,8 @@ $dbPrefectureData = getPrefecture();
 $dbIndustryData = getIndustry();
 
 debug('現在のページ：' . $currentPageNum);
-debug('フォーム用DBデータ：'.print_r($dbFormData,true));
-debug('カテゴリデータ：'.print_r($dbIndustryData,true));
+// debug('フォーム用DBデータ：'.print_r($dbFormData,true));
+// debug('カテゴリデータ：'.print_r($dbIndustryData,true));
 
 ?>
 
@@ -83,13 +78,13 @@ require('head.php');
           <div class="search-wrap">
             <form method="get" action="">
               <div class="search-item">
-                <input class="" type="text" placeholder="企業名で検索" name="src_str">
+                <input class="" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
               </div>
               
               <div class="search-item">
                 <div class="cp_ipselect cp_sl01 w-100">
                   <select name="pref">
-                    <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県</option>
+                    <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
                     <?php
                       foreach($dbPrefectureData as $key => $val){
                         ?>
@@ -126,7 +121,7 @@ require('head.php');
                   <select name="sort">
                     <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
                     <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
-                    <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>総合評価</option>
+                    <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
                   </select>
                 </div>
               </div>
@@ -149,23 +144,31 @@ require('head.php');
               </p>
             </div>
           </div>
-          <?php
-            foreach($dbCompanyData['data'] as $key => $val):
-          ?>
-            <div class="company-card">
-              <div class="company-header">
-                <h2><?php echo sanitize($val['name']); ?></h2>
-              </div>
-              <div class="item-content">
-                <div class="post-content">
-                  <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
-                </div>
-                <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>">口コミを見る</a>
-              </div>
-            </div>
-          <?php
-            endforeach;
-          ?>
+
+          <ul>
+            <?php
+              foreach($dbCompanyData['data'] as $key => $val):
+            ?>
+              <li class="company-card">
+                <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>">
+                  <div class="company-header">
+                    <h2><?php echo sanitize($val['name']); ?></h2>
+                    <p>幸福度：<?php echo sanitize($val['rating']); ?></p>
+                    <p>クチコミ数：<?php echo sanitize($val['posts_count']); ?></p>
+                    <p>本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></p>
+                  </div>
+                  <div class="item-content">
+                    <div class="post-content">
+                      <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            <?php
+              endforeach;
+            ?>
+          </ul>
+
 
           <div class="pagination-heading">
             <p>
