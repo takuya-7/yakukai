@@ -149,11 +149,22 @@ require('head.php');
             
             <h2>Pick up クチコミ</h2>
             <section>
-              <div class="kutikomi-head">
-                <i class="gg-profile"></i>
-                <h3>仕事のやりがい・成長</h3>
+              <div class="kutikomi-header">
+                <div class="user-icon">
+                  <i class="gg-profile"></i>
+                </div>
+                <h3>
+                  <span><?php echo $dbCompanyData['name']; ?></span><br>
+                  仕事のやりがい・成長
+                </h3>
+                <div class="user-info">
+                  回答者：
+                  <a href="">男性、新卒入社、現職（回答時）、在籍2年</a>
+                </div>
                 <span class="heart5_rating" data-rate="<?php echo sanitize($dbCompanyData['rating']); ?>"></span>
-                <?php echo sanitize($dbCompanyData['rating']); ?>
+                <span class="fs-3 ms-1">
+                  <?php echo sanitize($dbCompanyData['rating']); ?>
+                </span>
                 <p></p>
               </div>
               <p>ここにクチコミが入ります。ここにクチコミが入ります。ここにクチコミが入ります。ここにクチコミが入ります。</p>
