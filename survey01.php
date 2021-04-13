@@ -86,14 +86,14 @@ require('head.php');
 
             <div class="mb-5">
               <label class="fw-bold mb-2">在籍状況<span class="fw-normal text-danger">（必須）</span></label>
-              <div class="radio-custom">
-                <div class="form-check custom-control-inline">
+              <div class="radio-custom d-flex justify-content-evenly">
+                <div class="custom-control-inline">
                   <input class="form-check-input " type="radio" name="registration" value="1" id="flexRadioDefault1" <?php if($_POST['registration']) echo 'checked'; ?>>
                   <label class="form-check-label" for="flexRadioDefault1">
                     現職
                   </label>
                 </div>
-                <div class="form-check custom-control-inline">
+                <div class="custom-control-inline">
                   <input class="form-check-input" type="radio" name="registration" value="0" id="flexRadioDefault2" <?php if(!$_POST['registration']) echo 'checked'; ?>>
                   <label class="form-check-label" for="flexRadioDefault2">
                     退職済み
@@ -104,14 +104,14 @@ require('head.php');
 
             <div class="mb-5">
               <label class="fw-bold mb-2">入社形態<span class="fw-normal text-danger">（必須）</span></label>
-              <div class="radio-custom">
-                <div class="form-check custom-control-inline">
+              <div class="radio-custom d-flex justify-content-evenly">
+                <div class="custom-control-inline">
                   <input class="form-check-input " type="radio" name="entry_type" value="1" id="flexRadioDefault1" <?php if($_POST['entry_type']) echo 'checked'; ?>>
                   <label class="form-check-label" for="flexRadioDefault1">
                     新卒入社
                   </label>
                 </div>
-                <div class="form-check custom-control-inline">
+                <div class="custom-control-inline">
                   <input class="form-check-input" type="radio" name="entry_type" value="0" id="flexRadioDefault2" <?php if(!$_POST['entry_type']) echo 'checked'; ?>>
                   <label class="form-check-label" for="flexRadioDefault2">
                     中途入社
@@ -123,7 +123,7 @@ require('head.php');
             <div class="mb-5">
               <label class="fw-bold mb-2">入社年月<span class="fw-normal text-danger">（必須）</span></label>
 
-              <div class="d-flex flex-row">
+              <div class="d-flex justify-content-evenly">
                 <div class="cp_ipselect cp_sl01">
                   <select name="user_enter_year">
                     <option value="" hidden>年</option>
@@ -134,7 +134,7 @@ require('head.php');
                   </select>
                 </div>
   
-                <div class="cp_ipselect cp_sl01 ml-3">
+                <div class="cp_ipselect cp_sl01">
                   <select name="user_enter_month">
                     <option value="" hidden>月</option>
                     <?php for($i=1; $i<=12; $i++){ ?>
