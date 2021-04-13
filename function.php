@@ -16,7 +16,7 @@ $debug_flg = true;
 function debug($str){
     global $debug_flg;
     if($debug_flg){
-        error_log('デバッグ：' . $str);
+      error_log('デバッグ：' . $str);
     }
 }
 
@@ -272,24 +272,27 @@ function queryPost($dbh, $sql, $data){
 
 function getUser($u_id){
   debug('ユーザー情報を取得します。');
-
   try{
     $dbh = dbConnect();
     $sql = 'SELECT * FROM users WHERE id = :u_id AND delete_flg = 0';
     $data = array(':u_id' => $u_id);
     $stmt = queryPost($dbh, $sql, $data);
-
-    // if($stmt){
-    //   debug('クエリ成功！');
-    // }else{
-    //   debug('クエリに失敗しました。');
-    // }
-
   } catch (Exeption $e){
     error_log('エラー発生：' . $e->getMessage());
   }
-
   return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+function getPost($u_id){
+  debug('ユーザーのクチコミ情報を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM posts WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array(':u_id' => $u_id);
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
 }
 
 // 商品情報を取得
@@ -507,15 +510,12 @@ function getCategory(){
     $dbh = dbConnect();
     $sql = 'SELECT * FROM category';
     $data = array();
-  
     $stmt = queryPost($dbh, $sql, $data);
-    
     if($stmt){
       return $stmt->fetchAll();
     }else{
       return false;
     }
-
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
@@ -800,10 +800,8 @@ function showImg($path){
 // （引数で受け取ったものを除外したものができる）
 // $arr_del_key：除外したいGETパラメーターの配列キー
 function appendGetParam($arr_del_key = array()){
-
   if(!empty($_GET)){
     $str = '?';
-  
     foreach($_GET as $key => $val){
       if(!in_array($key, $arr_del_key, true)){
         $str .= $key . '=' . $val . '&';
@@ -814,5 +812,172 @@ function appendGetParam($arr_del_key = array()){
     // 第３引数の$lengthに-1とすることで語尾の&は取得しない。（語尾-1まで取得？）
   
     return $str;
+  }
+}
+
+// 業種情報取得
+function getIndustry(){
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM industry';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+}
+
+// ======================
+// 企業情報
+// ======================
+
+// company_idから企業カラム取得
+function getCompanyOne($c_id){
+  debug('c_idに合致する企業情報（companyテーブルの情報、industryテーブルの業種名）を取得します。');
+  debug('取得する企業ID：'.$c_id);
+  try{
+    $dbh = dbConnect();
+    // companyテーブルをまず取得。そのindustry_idとindustryテーブルのidが同じになるようにindustryテーブルを外部結合。companyはc、industryはiとして、カラム名の前に「c.」とつけることでどのテーブルのカラム名なのか識別可能にする。キーを指定して中のデータを取り出す際、「name」はcompanyとindustryに両方あるため、industryの「name」は「industry」としておくことでキーを「industry」とすればカテゴリ名を取り出せる。結合してできたテーブルで、WHERE句の条件に合致するレコードを取り出す。
+    // カラム名を一つずつ指定することで、余計な情報や個人情報を取得しないようにする
+    $sql = 'SELECT c.id, c.sequence_number, c.corporate_number, c.process, c.name, c.prefecture_name, c.city_name, c.street_number,	c.prefecture_code, c.city_code, c.post_code, c.successor_corporate_number, c.furigana, c.hihyoji, c.summary, c.icon, c.rating, c.posts_count, c.create_date, c.update_date, i.name AS industry
+              FROM company AS c LEFT OUTER JOIN industry AS i ON c.industry_id = i.id WHERE c.id = :c_id AND c.delete_flg = 0 AND i.delete_flg = 0';
+    $data = array(':c_id' => $c_id);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetch(PDO::FETCH_ASSOC);
+    }else{
+      return false;
+    }
+  } catch (Exception $e) {
+    error_log('エラー発生：'.$e->getMessage());
+  }
+}
+function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry, $sort, $span = 20){
+  debug('getCompanyListを実行します。');
+
+  try{
+    // 検索・表示処理：法人番号が登録されている企業のうち、口コミ数の多い順に検索ワードに合致した企業を取得
+
+    debug('DBから法人番号が登録されている企業の総数を取得し、総ページ数を算出します。');
+    $dbh = dbConnect();
+
+    // companyテーブルから、corporate_numberを持つカラム数を算出
+    $sql = 'SELECT COUNT(corporate_number) AS num FROM company';
+
+    // 企業名・都道府県・業種で抽出する条件文処理
+    if(!empty($companyName)){
+      $sql .= ' WHERE name LIKE "%'.$companyName.'%"';
+      if(!empty($prefecture)){
+        $sql .= ' AND prefecture_code = '.$prefecture;   // 都道府県で抽出する条件文
+      }
+      if(!empty($industry)){
+        $sql .= ' AND industry_id = '.$industry;    // 業種で抽出する条件文
+      }
+    }else{
+      if(!empty($prefecture)){
+        $sql .= ' WHERE prefecture_code = '.$prefecture;
+        if(!empty($industry)){
+          $sql .= ' AND industry_id = '.$industry;
+        }
+      }else{
+        if(!empty($industry)){
+          $sql .= ' WHERE industry_id = '.$industry;
+        }
+      }
+    }
+
+    // // 表示順について指定されていて$sortが第４引数に渡されていたら、並び替えの条件を追加する
+    // if(!empty($sort)){
+    //   switch ($sort){
+    //     case 1:
+    //       $sql .= ' ORDER BY posts_count DESC';
+    //       break;
+    //     case 2:
+    //       $sql .= ' ORDER BY rating DESC';
+    //       break;
+    //   }
+    // }
+
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    $rst['total'] = $res['num'];
+    debug('法人番号をもつ企業総数：'.print_r($rst['total'],true));
+    $rst['total_page'] = ceil($rst['total']/$span); // 総ページ数を算出
+
+    if(!$stmt){
+      return false;
+    }
+
+    debug('法人番号が存在する、表示する企業データを取得します。');
+    $sql = 'SELECT * FROM company WHERE corporate_number IS NOT NULL';
+    // 企業名・都道府県・業種で抽出する条件文処理
+    if(!empty($companyName)){
+      $sql .= ' AND name LIKE "%'.$companyName.'%"';
+      if(!empty($prefecture)){
+        $sql .= ' AND prefecture_code = '.$prefecture;   // 都道府県で抽出する条件文
+      }
+      if(!empty($industry)){
+        $sql .= ' AND industry_id = '.$industry;    // 業種で抽出する条件文
+      }
+    }else{
+      if(!empty($prefecture)){
+        $sql .= ' AND prefecture_code = '.$prefecture;
+        if(!empty($industry)){
+          $sql .= ' AND industry_id = '.$industry;
+        }
+      }else{
+        if(!empty($industry)){
+          $sql .= ' AND industry_id = '.$industry;
+        }
+      }
+    }
+    // 検索条件（口コミ数の多い順・評価順）をSQL文に追加
+    if(!empty($sort)){
+      switch($sort){
+        case 1:
+          $sql .= ' ORDER BY posts_count DESC';
+        break;
+        case 2:
+          $sql .= ' ORDER BY rating DESC';
+        break;
+      }
+    }
+    $sql .= ' LIMIT '.$span.' OFFSET '.$currentMinNum;
+    $data = array();
+    debug('SQL：'.$sql);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $rst['data'] = $stmt->fetchAll();
+      debug('表示する商品データをDBから取得し、$rst[data]に格納しました。');
+      return $rst;
+    }else{
+      return false;
+    }
+  } catch (Exception $e) {
+    error_log('エラー発生：' . $e->getMessage());
+  }
+}
+
+
+function getPrefecture(){
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM prefectures';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
   }
 }
