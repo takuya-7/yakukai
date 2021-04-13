@@ -72,10 +72,26 @@ if(!empty($_POST)){
                 //$_SESSIONの中身をログに残す
                 debug('セッション変数の中身：' . print_r($_SESSION, true));
 
-                //マイページへ遷移
-                debug('マイページへ遷移します。');
-                header('Location:mypage.php');
-                exit();
+                // 画面遷移処理
+                $dbPostData = getPost($result['id']);
+                if(empty($dbPostData[0]['company_id'])){
+                  debug('会社登録がありません。クチコミ投稿ページへ遷移します。');
+                  header('Location:surveyInfo.php');
+                  exit();
+                }elseif(empty($dbPostData[0]['emp_type'])){
+                  header('Location:survey01.php');
+                  exit();
+                }elseif(empty($dbPostData[0]['q_001'])){
+                  header('Location:survey02.php');
+                  exit();
+                }elseif(empty($dbPostData[0]['c_001'])){
+                  header('Location:survey03.php');
+                  exit();
+                }else{
+                  debug('マイページへ遷移します。');
+                  header('Location:mypage.php');
+                  exit();
+                }
             }else{
                 //マッチしなかった場合
                 //debugでアンマッチだったことを残す
@@ -117,48 +133,56 @@ require('head.php');
 
     
     <main>
-      <div class="container">
-        <div class="form-container">
-          <form action="" method="post" class="form natural-shadow col col-sm-9 col-md-7 col-lg-6">
-            <h2 class="title">ログイン</h2>
-            
-            <div class="area-msg">
-              <?php 
-                if(!empty($err_msg['common'])) echo $err_msg['common'];
-              ?>
-            </div>
-
-            <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
-              メールアドレス
-              <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo $_POST['email']; ?>">
-            </label>
-            <div class="area-msg">
-              <?php 
-              if(!empty($err_msg['email'])) echo $err_msg['email'];
-              ?>
-            </div>
-
-            <label class="<?php if(!empty($err_msg['pass'])) echo 'err'; ?>">
-              パスワード
-              <input type="password" name="pass" value="<?php if(!empty($_POST['pass'])) echo $_POST['pass']; ?>">
-            </label>
-            <div class="area-msg">
-              <?php 
-              if(!empty($err_msg['pass'])) echo $err_msg['pass'];
-              ?>
-            </div>
-
-            <label>
-                <input type="checkbox" name="pass_save"> 次回ログインを省略する
-            </label>
-
-              <div class="btn-container">
-                <input type="submit" class="btn btn-mid" value="ログイン">
+      <div class="content-wrapper">
+        <div class="container">
+          <div class="form-container">
+            <form action="" method="post" class="form col col-sm-9 col-md-7 col-lg-6">
+              <h2 class="title">ログイン</h2>
+              
+              <div class="area-msg">
+                <?php 
+                  if(!empty($err_msg['common'])) echo $err_msg['common'];
+                ?>
               </div>
-              パスワードを忘れた方は<a href="passRemindSend.php">コチラ</a>
-          </form>
+  
+              <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
+                メールアドレス
+                <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo $_POST['email']; ?>">
+              </label>
+              <div class="area-msg">
+                <?php 
+                if(!empty($err_msg['email'])) echo $err_msg['email'];
+                ?>
+              </div>
+  
+              <label class="<?php if(!empty($err_msg['pass'])) echo 'err'; ?>">
+                パスワード
+                <input type="password" name="pass" value="<?php if(!empty($_POST['pass'])) echo $_POST['pass']; ?>">
+              </label>
+              <div class="area-msg">
+                <?php 
+                if(!empty($err_msg['pass'])) echo $err_msg['pass'];
+                ?>
+              </div>
+  
+              <label>
+                  <input type="checkbox" name="pass_save"> 次回ログインを省略する
+              </label>
+  
+              <div class="btn-container mb-3">
+                <button type="submit" class="btn-blue radius-shadow my-4">ログイン</button>
+              </div>
+  
+              <div class="mb-4">
+                パスワードをお忘れの方は<a href="passRemindSend.php">コチラ</a>
+              </div>
+  
+              <div class="mb-2">
+                会員登録がまだの方は<a href="signup.php">コチラ</a>からご登録ください。
+              </div>
+            </form>
+          </div>
         </div>
-
       </div>
     </main>
 
