@@ -16,6 +16,8 @@
     <!-- style読み込み -->
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="responsive.css">
+    <!-- Font Awsome読み込み -->
+    <!-- <script src="https://kit.fontawesome.com/7f36980d49.js" crossorigin="anonymous"></script> -->
 
     <!-- Bootstrap CSS -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"> -->
