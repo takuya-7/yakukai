@@ -16,21 +16,27 @@ require('auth.php');
 
 // 画面表示用データ取得
 //================================
+// ユーザーID取得
+$u_id = $_SESSION['user_id'];
+// ユーザーのクチコミレコード取得
+$dbPostData = getPost($u_id);
+// ユーザーのクチコミレコードから企業ID取得
+$c_id = $dbPostData[0]['company_id'];
+if(!empty($c_id)){
+  debug('クチコミレコードに企業IDが登録されていました。企業情報を取得します。');
+  $dbCompanyData = getCompanyOne($c_id);
+}else{
+  debug('クチコミレコードに企業IDの登録がありません。surveyInfo.phpに遷移します。');
+  header('Location:surveyInfo.php');
+  exit();
+}
+// 企業の評価項目を取得
+$dbRatingItemsAndQuestions = getRatingItemsAndQuestions();
+
 // POSTパラメータを取得
 //----------------------------
 if(!empty($_POST)){
   
-  // 企業情報取得
-  $dbCompanyData = getCompanyOne($c_id);
-  // パラメータに不正な値が入っているかチェック
-  if(!is_int((int)$c_id)){
-    error_log('エラー発生:指定ページに不正な値が入りました');
-    header('Location:surveyInfo.php');
-    exit();
-  }
-}else{
-  header('Location:surveyInfo.php');
-  exit();
 }
 
 ?>
@@ -58,17 +64,62 @@ require('head.php');
             <?php echo $dbCompanyData['name']; ?>について教えてください。（2/3）
           </h1>
 
-          <form action="survey03.php" method="post" class="mx-4">
-            <div class="mb-5">
-              <label class="fw-bold mb-2">雇用形態<span class="fw-normal text-danger">（必須）</span></label>
-            </div>
+          <form action="" method="post" class="mx-4">
+            <?php foreach($dbRatingItemsAndQuestions as $key => $val){ ?>
+
+              <div class="mb-2 fw-bold">
+                <?php echo $val['name']; ?><span class="fw-normal text-red">（必須）</span>
+              </div>
+
+              <div class="mb-3">
+                <?php echo $val['question']; ?>
+              </div>
+
+              <div class="survey-list mb-5">
+                <ul class="">
+                  <li>
+                    <label>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5">
+                      <span>そう思う</span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4">
+                      <span>まあそう思う</span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3">
+                      <span>どちらとも言えない</span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2">
+                      <span>あまりそう思わない</span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1">
+                      <span>そう思わない</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
 
 
-            <button class="btn btn-blue">次へ</button>
+            <?php } ?>
+
+            <button type="submit" class="btn btn-blue">次へ</button>
           </form>
-          
         </div>
-        
       </div>
     </div>
   </main>
