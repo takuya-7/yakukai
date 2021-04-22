@@ -32,25 +32,75 @@ if(!empty($c_id)){
 }
 // 企業の評価項目を取得
 $dbRatingItemsAndQuestions = getRatingItemsAndQuestions();
-
+// 評価項目のIDを取得
+$rating_item_id
 // POSTパラメータを取得
 //----------------------------
 if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：' . print_r($_POST, true));
 
-  $total_well_being_rating = $_POST['total_well_being_rating'];
-  $company_grouth_potential_rating = $_POST['company_grouth_potential_rating'];
-  $unique_selling_point_rating = $_POST['unique_selling_point_rating'];
-  $result_oriented_rating = $_POST['result_oriented_rating'];
-  $u30_growth_potential_rating = $_POST['u30_growth_potential_rating'];
-  $inovation_effort_rating = $_POST['inovation_effort_rating'];
-  $leadership_evaluation_rating = $_POST['leadership_evaluation_rating'];
-  $human_relationship_rating = $_POST['human_relationship_rating'];
-  $working_hour_satisfaction_rating = $_POST['working_hour_satisfaction_rating'];
-  $holiday_obtaining_satisfaction_rating = $_POST['holiday_obtaining_satisfaction_rating'];
-  $salary_satisfaction_rating = $_POST['salary_satisfaction_rating'];
-  $good_for_career_rating = $_POST['good_for_career_rating'];
+  // インデックスがあれば変数に値を格納。なければ''を格納。
+  if(isset($_POST['total_well_being_rating'])){
+    $total_well_being_rating = $_POST['total_well_being_rating'];
+  }else{
+    $total_well_being_rating = '';
+  }
+  if(isset($_POST['company_grouth_potential_rating'])){
+    $company_grouth_potential_rating = $_POST['company_grouth_potential_rating'];
+  }else{
+    $company_grouth_potential_rating = '';
+  }
+  if(isset($_POST['unique_selling_point_rating'])){
+    $unique_selling_point_rating = $_POST['unique_selling_point_rating'];
+  }else{
+    $unique_selling_point_rating = '';
+  }
+  if(isset($_POST['result_oriented_rating'])){
+    $result_oriented_rating = $_POST['result_oriented_rating'];
+  }else{
+    $result_oriented_rating = '';
+  }
+  if(isset($_POST['u30_growth_potential_rating'])){
+    $u30_growth_potential_rating = $_POST['u30_growth_potential_rating'];
+  }else{
+    $u30_growth_potential_rating = '';
+  }
+  if(isset($_POST['inovation_effort_rating'])){
+    $inovation_effort_rating = $_POST['inovation_effort_rating'];
+  }else{
+    $inovation_effort_rating = '';
+  }
+  if(isset($_POST['leadership_evaluation_rating'])){
+    $leadership_evaluation_rating = $_POST['leadership_evaluation_rating'];
+  }else{
+    $leadership_evaluation_rating = '';
+  }
+  if(isset($_POST['human_relationship_rating'])){
+    $human_relationship_rating = $_POST['human_relationship_rating'];
+  }else{
+    $human_relationship_rating = '';
+  }
+  if(isset($_POST['working_hour_satisfaction_rating'])){
+    $working_hour_satisfaction_rating = $_POST['working_hour_satisfaction_rating'];
+  }else{
+    $working_hour_satisfaction_rating = '';
+  }
+  if(isset($_POST['holiday_obtaining_satisfaction_rating'])){
+    $holiday_obtaining_satisfaction_rating = $_POST['holiday_obtaining_satisfaction_rating'];
+  }else{
+    $holiday_obtaining_satisfaction_rating = '';
+  }
+  if(isset($_POST['salary_satisfaction_rating'])){
+    $salary_satisfaction_rating = $_POST['salary_satisfaction_rating'];
+  }else{
+    $salary_satisfaction_rating = '';
+  }
+  if(isset($_POST['good_for_career_rating'])){
+    $good_for_career_rating = $_POST['good_for_career_rating'];
+  }else{
+    $good_for_career_rating = '';
+  }
   $anual_total_salary = $_POST['anual_total_salary'];
   $monthly_total_salary = $_POST['monthly_total_salary'];
   $monthly_overtime_salary = $_POST['monthly_overtime_salary'];
@@ -71,8 +121,68 @@ if(!empty($_POST)){
   validRequired($salary_satisfaction_rating, 'salary_satisfaction_rating');
   validRequired($good_for_career_rating, 'good_for_career_rating');
   validRequired($anual_total_salary, 'anual_total_salary');
-  validRequired($monthly_total_salary, 'monthly_total_salary');
   
+  // 半角数字チェック
+  if(!empty($anual_total_salary)){
+    validNumber($anual_total_salary, 'anual_total_salary');
+  }
+  if(!empty($monthly_total_salary)){
+    validNumber($monthly_total_salary, 'monthly_total_salary');
+  }
+  if(!empty($monthly_overtime_salary)){
+    validNumber($monthly_overtime_salary, 'monthly_overtime_salary');
+  }
+  if(!empty($monthly_allowance)){
+    validNumber($monthly_allowance, 'monthly_allowance');
+  }
+  if(!empty($anual_bonus_salary)){
+    validNumber($anual_bonus_salary, 'anual_bonus_salary');
+  }
+
+  if(empty($err_msg)){
+    try{
+      $dbh = dbConnect();
+
+      // 評価値をDB、ratingsテーブルに登録
+      $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
+      $date = array(
+        ':rating_item_id' => $rating_item_id,
+        ':rating' => $rating,
+        ':post_id' => $post_id,
+        ':user_id' => $user_id,
+        ':company_id' => $company_id,
+        ':create_date' => date('Y-m-d H:i:s'),
+      );
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('評価値をデータベースに登録しました！');
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+
+    try{
+      // 年収・給与情報をDB、postsテーブルに登録
+      $sql = 'UPDATE posts SET anual_total_salary = :anual_total_salary, monthly_total_salary = :monthly_total_salary, monthly_overtime_salary = :monthly_overtime_salary, monthly_allowance = :monthly_allowance, anual_bonus_salary = :anual_bonus_salary WHERE user_id = :user_id AND company_id = :company_id AND delete_flg = 0';
+      $data = array(
+        ':anual_total_salary' => $anual_total_salary,
+        ':monthly_total_salary' => $monthly_total_salary,
+        ':monthly_overtime_salary' => $monthly_overtime_salary,
+        ':monthly_allowance' => $monthly_allowance,
+        ':anual_bonus_salary' => $anual_bonus_salary,
+        ':user_id' => $u_id,
+        ':company_id' => $c_id,
+      );
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('年収・給与情報をデータベースに登録しました！次のページへ遷移します！');
+        header('Location:survey03.php');
+        exit();
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+  }
 }
 
 ?>
@@ -105,9 +215,10 @@ require('head.php');
 
               <div class="mb-2 fw-bold">
                 <?php echo $val['name']; ?><span class="fw-normal text-red">（必須）</span>
-                <div class="d-inline-block">
+                <div class="d-block">
                   <span class="text-red">
                     <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
+                    
                   </span>
                 </div>
               </div>
@@ -119,36 +230,36 @@ require('head.php');
               <div class="survey-list mb-5">
                 <ul class="">
                   <li>
-                    <label>
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5">
+                    <label class="<?php if($_POST[$val['english_name']] == 5) echo 'checked'; ?>">
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"<?php if($_POST[$val['english_name']] == 5) echo ' checked'; ?>>
                       <span>そう思う</span>
                     </label>
                   </li>
 
                   <li>
-                    <label>
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4">
+                    <label class="<?php if($_POST[$val['english_name']] == 4) echo 'checked'; ?>">
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"<?php if($_POST[$val['english_name']] == 4) echo ' checked'; ?>>
                       <span>まあそう思う</span>
                     </label>
                   </li>
 
                   <li>
-                    <label>
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3">
+                    <label class="<?php if($_POST[$val['english_name']] == 3) echo 'checked'; ?>">
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"<?php if($_POST[$val['english_name']] == 3) echo ' checked'; ?>>
                       <span>どちらとも言えない</span>
                     </label>
                   </li>
 
                   <li>
-                    <label>
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2">
+                    <label class="<?php if($_POST[$val['english_name']] == 2) echo 'checked'; ?>">
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"<?php if($_POST[$val['english_name']] == 2) echo ' checked'; ?>>
                       <span>あまりそう思わない</span>
                     </label>
                   </li>
 
                   <li>
-                    <label>
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1">
+                    <label class="<?php if($_POST[$val['english_name']] == 1) echo 'checked'; ?>">
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"<?php if($_POST[$val['english_name']] == 1) echo ' checked'; ?>>
                       <span>そう思わない</span>
                     </label>
                   </li>
@@ -167,19 +278,29 @@ require('head.php');
             <div class="mb-2 row">
               <div class="col-5 pe-0">
                 <span class="fw-bold lh-2-5">年収</span><span class="fw-normal text-red">（必須）</span>
+                <div class="d-block">
+                  <span class="text-red fw-bold">
+                    <?php if(!empty($err_msg['anual_total_salary'])) echo $err_msg['anual_total_salary']; ?>
+                  </span>
+                </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="anual_total_salary" placeholder="例：400" class="w-75 d-inline h-2-5">
+                <input type="text" name="anual_total_salary" placeholder="例：400" value="<?php echo getFormData('anual_total_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_total_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
 
             <div class="mb-2 row">
               <div class="col-5 pe-0">
-                <span class="lh-2-5">月給（月額）</span>
+                <span class="lh-2-5">月給（総額）</span>
+                <div class="d-block">
+                  <span class="text-red fw-bold">
+                    <?php if(!empty($err_msg['monthly_total_salary'])) echo $err_msg['monthly_total_salary']; ?>
+                  </span>
+                </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_total_salary" class="w-75 d-inline h-2-5">
+                <input type="text" name="monthly_total_salary" value="<?php echo getFormData('monthly_total_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_total_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -187,9 +308,14 @@ require('head.php');
             <div class="mb-2 row">
               <div class="col-5 pe-0">
                 <span class="lh-2-5"> - 残業代（月額）</span>
+                <div class="d-block">
+                  <span class="text-red fw-bold">
+                    <?php if(!empty($err_msg['monthly_overtime_salary'])) echo $err_msg['monthly_overtime_salary']; ?>
+                  </span>
+                </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_overtime_salary" class="w-75 d-inline h-2-5">
+                <input type="text" name="monthly_overtime_salary" value="<?php echo getFormData('monthly_overtime_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_overtime_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -197,9 +323,14 @@ require('head.php');
             <div class="mb-2 row">
               <div class="col-5 pe-0">
                 <span class="lh-2-5"> - 手当て（月額）</span>
+                <div class="d-block">
+                  <span class="text-red fw-bold">
+                    <?php if(!empty($err_msg['monthly_allowance'])) echo $err_msg['monthly_allowance']; ?>
+                  </span>
+                </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_allowance" class="w-75 d-inline h-2-5">
+                <input type="text" name="monthly_allowance" value="<?php echo getFormData('monthly_allowance', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_allowance'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -207,9 +338,14 @@ require('head.php');
             <div class="mb-2 row">
               <div class="col-5 pe-0">
                 <span class="lh-2-5">賞与（年額）</span>
+                <div class="d-block">
+                  <span class="text-red fw-bold">
+                    <?php if(!empty($err_msg['anual_bonus_salary'])) echo $err_msg['anual_bonus_salary']; ?>
+                  </span>
+                </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="anual_bonus_salary" class="w-75 d-inline h-2-5">
+                <input type="text" name="anual_bonus_salary" value="<?php echo getFormData('anual_bonus_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_bonus_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
