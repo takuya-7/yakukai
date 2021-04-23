@@ -74,17 +74,22 @@ if(!empty($_POST)){
 
                 // 画面遷移処理
                 $dbPostData = getPost($result['id']);
+                $dbRatingData = getRating($result['id']);
+                $dbAnswerData = getAnswer($result['id']);
                 if(empty($dbPostData[0]['company_id'])){
                   debug('会社登録がありません。クチコミ投稿ページへ遷移します。');
                   header('Location:surveyInfo.php');
                   exit();
-                }elseif(empty($dbPostData[0]['emp_type'])){
+                }elseif(empty($dbPostData[0]['employment_type'])){
+                  debug('クチコミ登録がありません。クチコミ投稿ページ（1/3）へ遷移します。');
                   header('Location:survey01.php');
                   exit();
-                }elseif(empty($dbPostData[0]['q_001'])){
+                }elseif(empty($dbRatingData[0]['rating'])){
+                  debug('評価値が投稿されていません。クチコミ投稿ページ（2/3）へ遷移します。');
                   header('Location:survey02.php');
                   exit();
-                }elseif(empty($dbPostData[0]['c_001'])){
+                }elseif(empty($dbAnswerData[0]['answer'])){
+                  debug('フリー回答がありません。クチコミ投稿ページ（3/3）へ遷移します。');
                   header('Location:survey03.php');
                   exit();
                 }else{
