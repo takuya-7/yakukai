@@ -17,14 +17,14 @@ require('auth.php');
 // 画面表示用データ取得
 //================================
 // ユーザーID取得
-$u_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 // ユーザーのクチコミレコード取得
-$dbPostData = getPost($u_id);
+$dbPostData = getPost($user_id);
 // ユーザーのクチコミレコードから企業ID取得
-$c_id = $dbPostData[0]['company_id'];
-if(!empty($c_id)){
+$company_id = $dbPostData[0]['company_id'];
+if(!empty($company_id)){
   debug('クチコミレコードに企業IDが登録されていました。企業情報を取得します。');
-  $dbCompanyData = getCompanyOne($c_id);
+  $dbCompanyData = getCompanyOne($company_id);
 }else{
   debug('クチコミレコードに企業IDの登録がありません。surveyInfo.phpに遷移します。');
   header('Location:surveyInfo.php');
@@ -33,7 +33,10 @@ if(!empty($c_id)){
 // 企業の評価項目を取得
 $dbRatingItemsAndQuestions = getRatingItemsAndQuestions();
 // 評価項目のIDを取得
-$rating_item_id
+$rating_item_ids = array();
+foreach($dbRatingItemsAndQuestions as $key => $val){
+  $rating_item_ids[] = $val['id'];
+}
 // POSTパラメータを取得
 //----------------------------
 if(!empty($_POST)){
@@ -139,22 +142,41 @@ if(!empty($_POST)){
     validNumber($anual_bonus_salary, 'anual_bonus_salary');
   }
 
+  
   if(empty($err_msg)){
+    debug('バリデーションOKです！');
+    // 評価値を配列に格納
+    $postRatings = array(
+      array('rating_item_id' => $rating_item_ids[0], 'rating' => $total_well_being_rating),
+      array('rating_item_id' => $rating_item_ids[1], 'rating' => $company_grouth_potential_rating),
+      array('rating_item_id' => $rating_item_ids[2], 'rating' => $unique_selling_point_rating),
+      array('rating_item_id' => $rating_item_ids[3], 'rating' => $result_oriented_rating),
+      array('rating_item_id' => $rating_item_ids[4], 'rating' => $u30_growth_potential_rating),
+      array('rating_item_id' => $rating_item_ids[5], 'rating' => $inovation_effort_rating),
+      array('rating_item_id' => $rating_item_ids[6], 'rating' => $leadership_evaluation_rating),
+      array('rating_item_id' => $rating_item_ids[7], 'rating' => $human_relationship_rating),
+      array('rating_item_id' => $rating_item_ids[8], 'rating' => $working_hour_satisfaction_rating),
+      array('rating_item_id' => $rating_item_ids[9], 'rating' => $holiday_obtaining_satisfaction_rating),
+      array('rating_item_id' => $rating_item_ids[10], 'rating' => $salary_satisfaction_rating),
+      array('rating_item_id' => $rating_item_ids[11], 'rating' => $good_for_career_rating),
+    );
     try{
       $dbh = dbConnect();
 
       // 評価値をDB、ratingsテーブルに登録
-      $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
-      $date = array(
-        ':rating_item_id' => $rating_item_id,
-        ':rating' => $rating,
-        ':post_id' => $post_id,
-        ':user_id' => $user_id,
-        ':company_id' => $company_id,
-        ':create_date' => date('Y-m-d H:i:s'),
-      );
-      $stmt = queryPost($dbh, $sql, $data);
-      if($stmt){
+      foreach($postRatings as $key => $val){
+        $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
+        $date = array(
+          ':rating_item_id' => $val['rating_item_id'],
+          ':rating' => $val['rating'],
+          ':post_id' => $dbPostData[0]['id'],
+          ':user_id' => $user_id,
+          ':company_id' => $company_id,
+          ':create_date' => date('Y-m-d H:i:s'),
+        );
+        $stmtRatings = queryPost($dbh, $sql, $data);
+      }
+      if($stmtRatings){
         debug('評価値をデータベースに登録しました！');
       }
     } catch (Exeption $e) {
@@ -170,12 +192,12 @@ if(!empty($_POST)){
         ':monthly_overtime_salary' => $monthly_overtime_salary,
         ':monthly_allowance' => $monthly_allowance,
         ':anual_bonus_salary' => $anual_bonus_salary,
-        ':user_id' => $u_id,
-        ':company_id' => $c_id,
+        ':user_id' => $user_id,
+        ':company_id' => $company_id,
       );
-      $stmt = queryPost($dbh, $sql, $data);
-      if($stmt){
-        debug('年収・給与情報をデータベースに登録しました！次のページへ遷移します！');
+      $stmtPosts = queryPost($dbh, $sql, $data);
+      if($stmtRatings && $stmtPosts){
+        debug('年収・給与情報をデータベースに登録しました！評価値、給与情報、両方登録できているため次のページへ遷移します！');
         header('Location:survey03.php');
         exit();
       }
@@ -231,35 +253,60 @@ require('head.php');
                 <ul class="">
                   <li>
                     <label class="<?php if($_POST[$val['english_name']] == 5) echo 'checked'; ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"<?php if($_POST[$val['english_name']] == 5) echo ' checked'; ?>>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"
+                      <?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 5) echo ' checked';
+                        }
+                      ?>>
                       <span>そう思う</span>
                     </label>
                   </li>
 
                   <li>
                     <label class="<?php if($_POST[$val['english_name']] == 4) echo 'checked'; ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"<?php if($_POST[$val['english_name']] == 4) echo ' checked'; ?>>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"
+                      <?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 4) echo ' checked'; 
+                        }
+                      ?>>
                       <span>まあそう思う</span>
                     </label>
                   </li>
 
                   <li>
                     <label class="<?php if($_POST[$val['english_name']] == 3) echo 'checked'; ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"<?php if($_POST[$val['english_name']] == 3) echo ' checked'; ?>>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"
+                      <?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 3) echo ' checked';
+                        }
+                      ?>>
                       <span>どちらとも言えない</span>
                     </label>
                   </li>
 
                   <li>
                     <label class="<?php if($_POST[$val['english_name']] == 2) echo 'checked'; ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"<?php if($_POST[$val['english_name']] == 2) echo ' checked'; ?>>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"
+                      <?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 2) echo ' checked';
+                        }
+                      ?>>
                       <span>あまりそう思わない</span>
                     </label>
                   </li>
 
                   <li>
                     <label class="<?php if($_POST[$val['english_name']] == 1) echo 'checked'; ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"<?php if($_POST[$val['english_name']] == 1) echo ' checked'; ?>>
+                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"
+                      <?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 1) echo ' checked';
+                        }
+                      ?>>
                       <span>そう思わない</span>
                     </label>
                   </li>
