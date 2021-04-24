@@ -104,11 +104,29 @@ if(!empty($_POST)){
   }else{
     $good_for_career_rating = '';
   }
+
   $anual_total_salary = $_POST['anual_total_salary'];
-  $monthly_total_salary = $_POST['monthly_total_salary'];
-  $monthly_overtime_salary = $_POST['monthly_overtime_salary'];
-  $monthly_allowance = $_POST['monthly_allowance'];
-  $anual_bonus_salary = $_POST['anual_bonus_salary'];
+
+  if(!empty($_POST['monthly_total_salary'])){
+    $monthly_total_salary = $_POST['monthly_total_salary'];
+  }else{
+    $monthly_total_salary = NULL;
+  }
+  if(!empty($_POST['monthly_overtime_salary'])){
+    $monthly_overtime_salary = $_POST['monthly_overtime_salary'];
+  }else{
+    $monthly_overtime_salary = NULL;
+  }
+  if(!empty($_POST['monthly_allowance'])){
+    $monthly_allowance = $_POST['monthly_allowance'];
+  }else{
+    $monthly_allowance = NULL;
+  }
+  if(!empty($_POST['anual_bonus_salary'])){
+    $anual_bonus_salary = $_POST['anual_bonus_salary'];
+  }else{
+    $anual_bonus_salary = NULL;
+  }
 
   //未入力チェック
   validRequired($total_well_being_rating, 'total_well_being_rating');
@@ -166,7 +184,8 @@ if(!empty($_POST)){
       // 評価値をDB、ratingsテーブルに登録
       foreach($postRatings as $key => $val){
         $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
-        $date = array(
+        $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date) ON DUPLICATE KEY UPDATE rating_item_id = :rating_item_id user_id = :user_id AND company_id = :company_id';
+        $data = array(
           ':rating_item_id' => $val['rating_item_id'],
           ':rating' => $val['rating'],
           ':post_id' => $dbPostData[0]['id'],
@@ -174,6 +193,7 @@ if(!empty($_POST)){
           ':company_id' => $company_id,
           ':create_date' => date('Y-m-d H:i:s'),
         );
+        debug('postRatingsのdata：'.print_r($data, true));
         $stmtRatings = queryPost($dbh, $sql, $data);
       }
       if($stmtRatings){
@@ -197,7 +217,9 @@ if(!empty($_POST)){
       );
       $stmtPosts = queryPost($dbh, $sql, $data);
       if($stmtRatings && $stmtPosts){
+        debug('===================================================');
         debug('年収・給与情報をデータベースに登録しました！評価値、給与情報、両方登録できているため次のページへ遷移します！');
+        debug('===================================================');
         header('Location:survey03.php');
         exit();
       }
@@ -232,6 +254,14 @@ require('head.php');
             <?php echo $dbCompanyData['name']; ?>について教えてください。（2/3）
           </h1>
 
+          <?php if(!empty($err_msg)){ ?>
+            <div class="mb-4 text-center">
+              <span class="fw-bold text-red">
+                入力不備がございます。
+              </span>
+            </div>
+          <?php } ?>
+
           <form action="" method="post" class="mx-3">
             <?php foreach($dbRatingItemsAndQuestions as $key => $val){ ?>
 
@@ -252,7 +282,7 @@ require('head.php');
               <div class="survey-list mb-5">
                 <ul class="">
                   <li>
-                    <label class="<?php if($_POST[$val['english_name']] == 5) echo 'checked'; ?>">
+                    <label class="<?php if(getFormData($val['english_name'], false) == 5) echo 'checked'; ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
@@ -264,7 +294,7 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if($_POST[$val['english_name']] == 4) echo 'checked'; ?>">
+                    <label class="<?php if(getFormData($val['english_name'], false) == 4) echo 'checked'; ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
@@ -276,7 +306,7 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if($_POST[$val['english_name']] == 3) echo 'checked'; ?>">
+                    <label class="<?php if(getFormData($val['english_name'], false) == 3) echo 'checked'; ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
@@ -288,7 +318,7 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if($_POST[$val['english_name']] == 2) echo 'checked'; ?>">
+                    <label class="<?php if(getFormData($val['english_name'], false) == 2) echo 'checked'; ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
@@ -300,7 +330,7 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if($_POST[$val['english_name']] == 1) echo 'checked'; ?>">
+                    <label class="<?php if(getFormData($val['english_name'], false) == 1) echo 'checked'; ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
