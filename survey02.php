@@ -22,6 +22,7 @@ $user_id = $_SESSION['user_id'];
 $dbPostData = getPost($user_id);
 // ユーザーのクチコミレコードから企業ID取得
 $company_id = $dbPostData[0]['company_id'];
+
 if(!empty($company_id)){
   debug('クチコミレコードに企業IDが登録されていました。企業情報を取得します。');
   $dbCompanyData = getCompanyOne($company_id);
@@ -163,6 +164,7 @@ if(!empty($_POST)){
   
   if(empty($err_msg)){
     debug('バリデーションOKです！');
+
     // 評価値を配列に格納
     $postRatings = array(
       array('rating_item_id' => $rating_item_ids[0], 'rating' => $total_well_being_rating),
@@ -178,29 +180,55 @@ if(!empty($_POST)){
       array('rating_item_id' => $rating_item_ids[10], 'rating' => $salary_satisfaction_rating),
       array('rating_item_id' => $rating_item_ids[11], 'rating' => $good_for_career_rating),
     );
-    try{
-      $dbh = dbConnect();
-
-      // 評価値をDB、ratingsテーブルに登録
-      foreach($postRatings as $key => $val){
-        $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
-        $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date) ON DUPLICATE KEY UPDATE rating_item_id = :rating_item_id user_id = :user_id AND company_id = :company_id';
-        $data = array(
-          ':rating_item_id' => $val['rating_item_id'],
-          ':rating' => $val['rating'],
-          ':post_id' => $dbPostData[0]['id'],
-          ':user_id' => $user_id,
-          ':company_id' => $company_id,
-          ':create_date' => date('Y-m-d H:i:s'),
-        );
-        debug('postRatingsのdata：'.print_r($data, true));
-        $stmtRatings = queryPost($dbh, $sql, $data);
+    
+    // まだ評価値が投稿されていなければ、INSERTを行う
+    if(empty(getRatings($dbPostData[0]['id'], $user_id, $company_id,))){
+      debug('評価値がまだ登録されていません。評価値の挿入を行います！');
+      try{
+        $dbh = dbConnect();
+        // 評価値をDB、ratingsテーブルに登録
+        foreach($postRatings as $key => $val){
+          $sql = 'INSERT INTO ratings (rating_item_id, rating, post_id, user_id, company_id, create_date) VALUES (:rating_item_id, :rating, :post_id, :user_id, :company_id, :create_date)';
+          $data = array(
+            ':rating_item_id' => $val['rating_item_id'],
+            ':rating' => $val['rating'],
+            ':post_id' => $dbPostData[0]['id'],
+            ':user_id' => $user_id,
+            ':company_id' => $company_id,
+            ':create_date' => date('Y-m-d H:i:s'),
+          );
+          debug('postRatingsのdata：'.print_r($data, true));
+          $stmtRatings = queryPost($dbh, $sql, $data);
+        }
+        if($stmtRatings){
+          debug('評価値をデータベースに新規登録しました！');
+        }
+      } catch (Exeption $e) {
+        error_log('エラー発生：' . $e->getMessage());
       }
-      if($stmtRatings){
-        debug('評価値をデータベースに登録しました！');
+    }else{    // 既にratingsテーブルに、ユーザーの投稿があった場合、UPDATE
+      debug('評価値が既に登録されています。評価値の更新を行います！');
+      try{
+        $dbh = dbConnect();
+        // 評価値をDB、ratingsテーブルで更新
+        foreach($postRatings as $key => $val){
+          $sql = 'UPDATE ratings SET rating = :rating WHERE rating_item_id = :rating_item_id AND post_id = :post_id AND user_id = :user_id AND company_id = :company_id AND delete_flg = 0';
+          $data = array(
+            ':rating' => $val['rating'],
+            ':rating_item_id' => $val['rating_item_id'],
+            ':post_id' => $dbPostData[0]['id'],
+            ':user_id' => $user_id,
+            ':company_id' => $company_id,
+          );
+          debug('postRatingsのdata：'.print_r($data, true));
+          $stmtRatings = queryPost($dbh, $sql, $data);
+        }
+        if($stmtRatings){
+          debug('評価値の更新が完了しました！');
+        }
+      } catch (Exeption $e) {
+        error_log('エラー発生：' . $e->getMessage());
       }
-    } catch (Exeption $e) {
-      error_log('エラー発生：' . $e->getMessage());
     }
 
     try{
