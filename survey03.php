@@ -39,29 +39,38 @@ if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：' . print_r($_POST, true));
 
+  $postAnswers = array();
+
   // 回答ごとに、インデックスがあれば２次元配列にカテゴリID、質問項目のID、送信された回答を格納。なければ回答部分にNULLを格納。
   foreach($dbAnswerItemsAndQuestions as $key => $val){
     if(isset($_POST[$val['english_name']])){
-      $postAnswers = array(
-        array(
-          'category_id' => $val['category_id'],
-          'answer_item_id' => $val['answer_item_id'],
-          'answer' => $_POST[$val['english_name']],
-        ),
+      $postAnswers[$key] = array(
+        'category_id' => $val['category_id'],
+        'answer_item_id' => $val['answer_item_id'],
+        'english_name' => $val['english_name'],
+        'answer' => $_POST[$val['english_name']],
       );
     }else{
-        $postAnswers = array(
-          array(
-            'category_id' => $val['category_id'],
-            'answer_item_id' => $val['answer_item_id'],
-            'english_name' => $val['english_name'],
-            'answer' => NULL,
-          ),
-        );
+      $postAnswers[$key] = array(
+        'category_id' => $val['category_id'],
+        'answer_item_id' => $val['answer_item_id'],
+        'english_name' => $val['english_name'],
+        'answer' => NULL,
+      );
     }
   }
+  debug('$postAnswers：'.print_r($postAnswers, true));
 
-  // 文字数チェック
+  // 合計500文字以上かチェック
+  $totalCount = 0;
+  foreach($postAnswers as $key => $val){
+    $totalCount += mb_strlen($val['answer']);
+  }
+  if($totalCount < 500){
+    $err_msg['total_count'] = '合計500文字以上になるように入力してください。';
+  }
+
+  // 最大800文字数チェック
   foreach($postAnswers as $key => $val){
     validMaxLen($val['answer'], $val['english_name'], 800);
   }
@@ -74,13 +83,14 @@ if(!empty($_POST)){
       try{
         $dbh = dbConnect();
         foreach($postAnswers as $key => $val){
-          $sql = 'INSERT INTO answers (answer_item_id, answer, post_id, user_id, company_id, create_date) VALUES (:answer_item_id, :answer, :post_id, :user_id, :company_id, :create_date)';
-          $date = array(
+          $sql = 'INSERT INTO answers (answer_item_id, answer, post_id, user_id, company_id, category_id, create_date) VALUES (:answer_item_id, :answer, :post_id, :user_id, :company_id, :category_id, :create_date)';
+          $data = array(
             ':answer_item_id' => $val['answer_item_id'],
             ':answer' => $val['answer'],
-            ':post_id' => $dbPostData['id'],
+            ':post_id' => $dbPostData[0]['id'],
             ':user_id' => $user_id,
             ':company_id' => $company_id,
+            ':category_id' => $val['category_id'],
             ':create_date' => date('Y-m-d H:i:s'),
           );
           debug('DBに新規登録するpostAnswersのdata：'.print_r($data, true));
@@ -101,13 +111,14 @@ if(!empty($_POST)){
         $dbh = dbConnect();
         // 評価値をDB、answersテーブルで更新
         foreach($postAnswers as $key => $val){
-          $sql = 'UPDATE answers SET answer = :answer WHERE answer_item_id = :answer_item_id AND post_id = :post_id AND user_id = :user_id AND company_id = :company_id AND delete_flg = 0';
-          $date = array(
+          $sql = 'UPDATE answers SET answer = :answer WHERE answer_item_id = :answer_item_id AND post_id = :post_id AND user_id = :user_id AND company_id = :company_id AND category_id = :category_id AND delete_flg = 0';
+          $data = array(
             ':answer' => $val['answer'],
             ':answer_item_id' => $val['answer_item_id'],
-            ':post_id' => $dbPostData['id'],
+            ':post_id' => $dbPostData[0]['id'],
             ':user_id' => $user_id,
             ':company_id' => $company_id,
+            ':category_id' => $val['category_id'],
           );
           debug('DBで更新するpostAnswersのdata：'.print_r($data, true));
           $stmt = queryPost($dbh, $sql, $data);
@@ -154,25 +165,33 @@ require('head.php');
             <p>合計500文字以上になるようにご回答下さい。</p>
           </div>
 
+          <?php if(!empty($err_msg['total_count'])){ ?>
+            <div class="mb-4 text-center">
+              <span class="fw-bold text-red">
+                <?php echo $err_msg['total_count']; ?>
+              </span>
+            </div>
+          <?php } ?>
+
           <form action="" method="post" class="mx-3">
             <?php foreach($dbAnswerItemsAndQuestions as $key => $val){ ?>
 
               <div class="mb-5">
                 <div class="mb-2 fw-bold">
                   <?php echo $val['name']; ?>
-                  <div class="d-block">
-                    <span class="text-red">
-                      <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
-                      
-                    </span>
-                  </div>
                 </div>
   
                 <div class="mb-3">
                   <?php echo $val['question']; ?>
                 </div>
 
-                <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $val['id']; ?>" class="js-character-count" style="min-height: 8rem;"></textarea>
+                <div class="d-block">
+                  <span class="text-red">
+                    <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
+                  </span>
+                </div>
+
+                <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $val['id']; ?>" class="js-character-count" style="min-height: 8rem;"><?php echo getFormData($val['english_name'], false); ?></textarea>
 
                 <div class="fs-08 float-end">
                   <span class="text-gray">
