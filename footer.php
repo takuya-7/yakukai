@@ -87,19 +87,35 @@
         });
 
         // ----------------------------------------------------------
-        // テキストエリアカウント
-        var $countUp = $('#js-count'),
-            $countView = $('#js-count-view');
+        // クチコミ投稿、テキストエリアカウント
+        var totalCount = 0;
+        var $countUp = $('.js-character-count');
+        var $countView = $('.js-count-view');
 
         $countUp.on('keyup', function(e){
-          $countView.html($(this).val().length);
+
+          for(let i = 13; i < 29; i++){
+            $count = $('#js-count'+i);
+            
+            totalCount += $count.val().length;
+            console.log('合計文字数：'+totalCount);
+          }
+
+          if(totalCount >= 500){
+            $countView.addClass('text-green');
+          }else{
+            $countView.removeClass('text-green');
+          }
+
+          $countView.html(totalCount);
+          totalCount = 0;
         });
 
         // ------------------------------------------------------
         // 画像切り替え
         var $switchImgSubs = $('.js-switch-img-sub'),
             $switchImgMain = $('#js-switch-img-main');
-        
+
         $switchImgSubs.on('click', function(e){
           $switchImgMain.attr('src', $(this).attr('src'));
         });
