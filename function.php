@@ -71,6 +71,7 @@ define('MSG15', '現在のパスワードと同じです');
 define('MSG16', '文字で入力してください');
 define('MSG17', '正しくありません');
 define('MSG18', '有効期限が切れています');
+define('MSG19', '800文字以内で入力してください');
 
 define('SUC01', 'パスワードの変更が完了しました');
 define('SUC02', 'プロフィールを変更しました');
@@ -141,7 +142,11 @@ function validMinLen($str, $key, $min = 6){
 function validMaxLen($str, $key, $max = 255){
   if(mb_strlen($str) > $max){
     global $err_msg;
-    $err_msg[$key] = MSG06;
+    if($max == 255){
+      $err_msg[$key] = MSG06;
+    }elseif($max == 800){
+      $err_msg[$key] = MSG19;
+    }
   }
 }
 
@@ -294,7 +299,100 @@ function getPost($u_id){
   }
   return $stmt->fetchAll();
 }
-
+function getRatingByUserId($u_id){
+  debug('ユーザーの評価値を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM ratings WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array(
+      ':u_id' => $u_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getRatings($p_id, $u_id, $c_id){
+  debug('ユーザーの評価値を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM ratings WHERE post_id = :p_id AND user_id = :u_id AND company_id = :c_id AND delete_flg = 0';
+    $data = array(
+      ':p_id' => $p_id,
+      ':u_id' => $u_id,
+      ':c_id' => $c_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getAnswer($u_id){
+  debug('ユーザーのフリー回答を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM answers WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array(':u_id' => $u_id);
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getAnswers($p_id, $u_id, $c_id){
+  debug('ユーザーのフリー投稿を全て取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM answers WHERE post_id = :p_id AND user_id = :u_id AND company_id = :c_id AND delete_flg = 0';
+    $data = array(
+      ':p_id' => $p_id,
+      ':u_id' => $u_id,
+      ':c_id' => $c_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getEmploymentType(){
+  debug('雇用形態テーブルの情報を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM employment_type WHERE delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getRatingItemsAndQuestions(){
+  debug('評価項目と質問を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM rating_items LEFT JOIN questions ON rating_items.id = questions.rating_item_id WHERE rating_items.delete_flg = 0 OR questions.delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getAnswerItemsAndQuestions(){
+  debug('クチコミの質問項目と質問を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM answer_items LEFT JOIN questions ON answer_items.id = questions.answer_item_id WHERE answer_items.delete_flg = 0 OR questions.delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
 // 商品情報を取得
 function getProduct($u_id, $p_id){
   debug('商品情報を取得します');
