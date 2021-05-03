@@ -369,6 +369,18 @@ function getEmploymentType(){
   }
   return $stmt->fetchAll();
 }
+function getRatingItemsAndQuestions(){
+  debug('評価に関する項目、質問を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM rating_items LEFT JOIN questions ON rating_items.id = questions.rating_item_id WHERE rating_items.delete_flg = 0 AND questions.delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
 function getQuestionsAndRatings($post_id, $user_id, $company_id){
   debug('評価に関する項目、質問、評価値を取得します。');
   try{
@@ -381,6 +393,18 @@ function getQuestionsAndRatings($post_id, $user_id, $company_id){
     );
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $stmt->fetchAll();
+}
+function getAnswerItemsAndQuestions(){
+  debug('項目と質問を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM answer_items LEFT JOIN questions ON answer_items.id = questions.answer_item_id WHERE answer_items.delete_flg = 0 AND questions.delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+  }catch(Exeption $e){
     error_log('エラー発生：' . $e->getMessage());
   }
   return $stmt->fetchAll();
