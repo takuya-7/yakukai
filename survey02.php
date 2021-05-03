@@ -22,7 +22,7 @@ $user_id = $_SESSION['user_id'];
 $dbPostData = getPost($user_id);
 // ユーザーのクチコミレコードから企業ID取得
 $company_id = $dbPostData[0]['company_id'];
-
+// 企業IDから企業情報を取得
 if(!empty($company_id)){
   debug('クチコミレコードに企業IDが登録されていました。企業情報を取得します。');
   $dbCompanyData = getCompanyOne($company_id);
@@ -31,80 +31,34 @@ if(!empty($company_id)){
   header('Location:surveyInfo.php');
   exit();
 }
-// 企業の評価項目を取得
-$dbRatingItemsAndQuestions = getRatingItemsAndQuestions();
-// 評価項目のIDを取得
-$rating_item_ids = array();
-foreach($dbRatingItemsAndQuestions as $key => $val){
-  $rating_item_ids[] = $val['id'];
-}
+// 項目・質問文・評価値を取得
+$dbQuestionsAndRatings = getQuestionsAndRatings($dbPostData[0]['id'], $user_id, $company_id);
+
 // POSTパラメータを取得
 //----------------------------
 if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：' . print_r($_POST, true));
 
-  // インデックスがあれば変数に値を格納。なければ''を格納。
-  if(isset($_POST['total_well_being_rating'])){
-    $total_well_being_rating = $_POST['total_well_being_rating'];
-  }else{
-    $total_well_being_rating = '';
+  $postRatings = array();
+
+  // 回答ごとに、インデックスがあれば２次元配列にカテゴリID、質問項目のID、送信された回答を格納。なければ回答部分にNULLを格納。
+  foreach($dbQuestionsAndRatings as $key => $val){
+    if(!empty($_POST[$val['english_name']])){
+      $postRatings[$key] = array(
+        'rating_item_id' => $val['rating_item_id'],
+        'english_name' => $val['english_name'],
+        'rating' => $_POST[$val['english_name']],
+      );
+    }else{
+      $postRatings[$key] = array(
+        'rating_item_id' => $val['rating_item_id'],
+        'english_name' => $val['english_name'],
+        'rating' => NULL,
+      );
+    }
   }
-  if(isset($_POST['company_grouth_potential_rating'])){
-    $company_grouth_potential_rating = $_POST['company_grouth_potential_rating'];
-  }else{
-    $company_grouth_potential_rating = '';
-  }
-  if(isset($_POST['unique_selling_point_rating'])){
-    $unique_selling_point_rating = $_POST['unique_selling_point_rating'];
-  }else{
-    $unique_selling_point_rating = '';
-  }
-  if(isset($_POST['result_oriented_rating'])){
-    $result_oriented_rating = $_POST['result_oriented_rating'];
-  }else{
-    $result_oriented_rating = '';
-  }
-  if(isset($_POST['u30_growth_potential_rating'])){
-    $u30_growth_potential_rating = $_POST['u30_growth_potential_rating'];
-  }else{
-    $u30_growth_potential_rating = '';
-  }
-  if(isset($_POST['inovation_effort_rating'])){
-    $inovation_effort_rating = $_POST['inovation_effort_rating'];
-  }else{
-    $inovation_effort_rating = '';
-  }
-  if(isset($_POST['leadership_evaluation_rating'])){
-    $leadership_evaluation_rating = $_POST['leadership_evaluation_rating'];
-  }else{
-    $leadership_evaluation_rating = '';
-  }
-  if(isset($_POST['human_relationship_rating'])){
-    $human_relationship_rating = $_POST['human_relationship_rating'];
-  }else{
-    $human_relationship_rating = '';
-  }
-  if(isset($_POST['working_hour_satisfaction_rating'])){
-    $working_hour_satisfaction_rating = $_POST['working_hour_satisfaction_rating'];
-  }else{
-    $working_hour_satisfaction_rating = '';
-  }
-  if(isset($_POST['holiday_obtaining_satisfaction_rating'])){
-    $holiday_obtaining_satisfaction_rating = $_POST['holiday_obtaining_satisfaction_rating'];
-  }else{
-    $holiday_obtaining_satisfaction_rating = '';
-  }
-  if(isset($_POST['salary_satisfaction_rating'])){
-    $salary_satisfaction_rating = $_POST['salary_satisfaction_rating'];
-  }else{
-    $salary_satisfaction_rating = '';
-  }
-  if(isset($_POST['good_for_career_rating'])){
-    $good_for_career_rating = $_POST['good_for_career_rating'];
-  }else{
-    $good_for_career_rating = '';
-  }
+  debug('$postAnswers：'.print_r($postRatings, true));
 
   $anual_total_salary = $_POST['anual_total_salary'];
 
@@ -130,18 +84,9 @@ if(!empty($_POST)){
   }
 
   //未入力チェック
-  validRequired($total_well_being_rating, 'total_well_being_rating');
-  validRequired($company_grouth_potential_rating, 'company_grouth_potential_rating');
-  validRequired($unique_selling_point_rating, 'unique_selling_point_rating');
-  validRequired($result_oriented_rating, 'result_oriented_rating');
-  validRequired($u30_growth_potential_rating, 'u30_growth_potential_rating');
-  validRequired($inovation_effort_rating, 'inovation_effort_rating');
-  validRequired($leadership_evaluation_rating, 'leadership_evaluation_rating');
-  validRequired($human_relationship_rating, 'human_relationship_rating');
-  validRequired($working_hour_satisfaction_rating, 'working_hour_satisfaction_rating');
-  validRequired($holiday_obtaining_satisfaction_rating, 'holiday_obtaining_satisfaction_rating');
-  validRequired($salary_satisfaction_rating, 'salary_satisfaction_rating');
-  validRequired($good_for_career_rating, 'good_for_career_rating');
+  foreach($postRatings as $key => $val){
+    validRequired($_POST[$val['english_name']], $val['english_name']);
+  }
   validRequired($anual_total_salary, 'anual_total_salary');
   
   // 半角数字チェック
@@ -161,25 +106,8 @@ if(!empty($_POST)){
     validNumber($anual_bonus_salary, 'anual_bonus_salary');
   }
 
-  
   if(empty($err_msg)){
     debug('バリデーションOKです！');
-
-    // 評価値を配列に格納
-    $postRatings = array(
-      array('rating_item_id' => $rating_item_ids[0], 'rating' => $total_well_being_rating),
-      array('rating_item_id' => $rating_item_ids[1], 'rating' => $company_grouth_potential_rating),
-      array('rating_item_id' => $rating_item_ids[2], 'rating' => $unique_selling_point_rating),
-      array('rating_item_id' => $rating_item_ids[3], 'rating' => $result_oriented_rating),
-      array('rating_item_id' => $rating_item_ids[4], 'rating' => $u30_growth_potential_rating),
-      array('rating_item_id' => $rating_item_ids[5], 'rating' => $inovation_effort_rating),
-      array('rating_item_id' => $rating_item_ids[6], 'rating' => $leadership_evaluation_rating),
-      array('rating_item_id' => $rating_item_ids[7], 'rating' => $human_relationship_rating),
-      array('rating_item_id' => $rating_item_ids[8], 'rating' => $working_hour_satisfaction_rating),
-      array('rating_item_id' => $rating_item_ids[9], 'rating' => $holiday_obtaining_satisfaction_rating),
-      array('rating_item_id' => $rating_item_ids[10], 'rating' => $salary_satisfaction_rating),
-      array('rating_item_id' => $rating_item_ids[11], 'rating' => $good_for_career_rating),
-    );
     
     // まだ評価値が投稿されていなければ、INSERTを行う
     if(empty(getRatings($dbPostData[0]['id'], $user_id, $company_id,))){
@@ -291,14 +219,13 @@ require('head.php');
           <?php } ?>
 
           <form action="" method="post" class="mx-3">
-            <?php foreach($dbRatingItemsAndQuestions as $key => $val){ ?>
+            <?php foreach($dbQuestionsAndRatings as $key => $val){ ?>
 
               <div class="mb-2 fw-bold">
                 <?php echo $val['name']; ?><span class="fw-normal text-red">（必須）</span>
                 <div class="d-block">
                   <span class="text-red">
                     <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
-                    
                   </span>
                 </div>
               </div>
@@ -310,11 +237,19 @@ require('head.php');
               <div class="survey-list mb-5">
                 <ul class="">
                   <li>
-                    <label class="<?php if(getFormData($val['english_name'], false) == 5) echo 'checked'; ?>">
+                    <label class="<?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 5) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 5) echo ' checked';
+                        }
+                      ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
                           if($_POST[$val['english_name']] == 5) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 5) echo ' checked';
                         }
                       ?>>
                       <span>そう思う</span>
@@ -322,11 +257,19 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if(getFormData($val['english_name'], false) == 4) echo 'checked'; ?>">
+                    <label class="<?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 4) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 4) echo ' checked';
+                        }
+                      ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 4) echo ' checked'; 
+                          if($_POST[$val['english_name']] == 4) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 4) echo ' checked';
                         }
                       ?>>
                       <span>まあそう思う</span>
@@ -334,11 +277,19 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if(getFormData($val['english_name'], false) == 3) echo 'checked'; ?>">
+                    <label class="<?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 3) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 3) echo ' checked';
+                        }
+                      ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
                           if($_POST[$val['english_name']] == 3) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 3) echo ' checked';
                         }
                       ?>>
                       <span>どちらとも言えない</span>
@@ -346,11 +297,19 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if(getFormData($val['english_name'], false) == 2) echo 'checked'; ?>">
+                    <label class="<?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 2) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 2) echo ' checked';
+                        }
+                      ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
                           if($_POST[$val['english_name']] == 2) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 2) echo ' checked';
                         }
                       ?>>
                       <span>あまりそう思わない</span>
@@ -358,11 +317,19 @@ require('head.php');
                   </li>
 
                   <li>
-                    <label class="<?php if(getFormData($val['english_name'], false) == 1) echo 'checked'; ?>">
+                    <label class="<?php
+                        if(!empty($_POST[$val['english_name']])){
+                          if($_POST[$val['english_name']] == 1) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 1) echo ' checked';
+                        }
+                      ?>">
                       <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"
                       <?php
                         if(!empty($_POST[$val['english_name']])){
                           if($_POST[$val['english_name']] == 1) echo ' checked';
+                        }elseif(!empty($val['rating'])){
+                          if($val['rating'] == 1) echo ' checked';
                         }
                       ?>>
                       <span>そう思わない</span>
@@ -390,7 +357,13 @@ require('head.php');
                 </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="anual_total_salary" placeholder="例：400" value="<?php echo getFormData('anual_total_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_total_salary'])) echo ' bg-red'; ?>">
+                <input type="text" name="anual_total_salary" placeholder="例：400" value="<?php
+                  if(!empty($_POST['anual_total_salary'])){
+                    echo $_POST['anual_total_salary'];
+                  }elseif(!empty($dbPostData[0]['anual_total_salary'])){
+                    echo $dbPostData[0]['anual_total_salary'];
+                  }
+                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_total_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -405,7 +378,13 @@ require('head.php');
                 </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_total_salary" value="<?php echo getFormData('monthly_total_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_total_salary'])) echo ' bg-red'; ?>">
+                <input type="text" name="monthly_total_salary" value="<?php
+                  if(!empty($_POST['monthly_total_salary'])){
+                    echo $_POST['monthly_total_salary'];
+                  }elseif(!empty($dbPostData[0]['monthly_total_salary'])){
+                    echo $dbPostData[0]['monthly_total_salary'];
+                  }
+                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_total_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -420,7 +399,13 @@ require('head.php');
                 </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_overtime_salary" value="<?php echo getFormData('monthly_overtime_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_overtime_salary'])) echo ' bg-red'; ?>">
+                <input type="text" name="monthly_overtime_salary" value="<?php
+                  if(!empty($_POST['monthly_overtime_salary'])){
+                    echo $_POST['monthly_overtime_salary'];
+                  }elseif(!empty($dbPostData[0]['monthly_overtime_salary'])){
+                    echo $dbPostData[0]['monthly_overtime_salary'];
+                  }
+                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_overtime_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -435,7 +420,13 @@ require('head.php');
                 </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="monthly_allowance" value="<?php echo getFormData('monthly_allowance', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_allowance'])) echo ' bg-red'; ?>">
+                <input type="text" name="monthly_allowance" value="<?php
+                  if(!empty($_POST['monthly_allowance'])){
+                    echo $_POST['monthly_allowance'];
+                  }elseif(!empty($dbPostData[0]['monthly_allowance'])){
+                    echo $dbPostData[0]['monthly_allowance'];
+                  }
+                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_allowance'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
@@ -450,7 +441,13 @@ require('head.php');
                 </div>
               </div>
               <div class="col-7 d-inline">
-                <input type="text" name="anual_bonus_salary" value="<?php echo getFormData('anual_bonus_salary', false); ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_bonus_salary'])) echo ' bg-red'; ?>">
+                <input type="text" name="anual_bonus_salary" value="<?php
+                  if(!empty($_POST['anual_bonus_salary'])){
+                    echo $_POST['anual_bonus_salary'];
+                  }elseif(!empty($dbPostData[0]['anual_bonus_salary'])){
+                    echo $dbPostData[0]['anual_bonus_salary'];
+                  }
+                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_bonus_salary'])) echo ' bg-red'; ?>">
                 <span class="fs-08">万円</span>
               </div>
             </div>
