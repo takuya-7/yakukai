@@ -88,7 +88,7 @@ $err_msg = array();
 
 //バリデーション関数（未入力チェック）
 function validRequired($str, $key){
-  if($str === ''){                  // 数値の0も入力OKにするためにemptyは使わない
+  if($str === '' || $str === NULL){                  // 数値の0も入力OKにするためにemptyは使わない
     global $err_msg;
     $err_msg[$key] = MSG01;
   }
@@ -330,7 +330,7 @@ function getRatings($p_id, $u_id, $c_id){
   return $stmt->fetchAll();
 }
 function getAnswer($u_id){
-  debug('ユーザーのフリー回答を取得します。');
+  debug('ユーザーの回答を取得します。');
   try{
     $dbh = dbConnect();
     $sql = 'SELECT * FROM answers WHERE user_id = :u_id AND delete_flg = 0';
@@ -342,7 +342,7 @@ function getAnswer($u_id){
   return $stmt->fetchAll();
 }
 function getAnswers($p_id, $u_id, $c_id){
-  debug('ユーザーのフリー投稿を全て取得します。');
+  debug('ユーザーの投稿を全て取得します。');
   try{
     $dbh = dbConnect();
     $sql = 'SELECT * FROM answers WHERE post_id = :p_id AND user_id = :u_id AND company_id = :c_id AND delete_flg = 0';
@@ -369,24 +369,35 @@ function getEmploymentType(){
   }
   return $stmt->fetchAll();
 }
-function getRatingItemsAndQuestions(){
-  debug('評価項目と質問を取得します。');
+function getQuestionsAndRatings($post_id, $user_id, $company_id){
+  debug('評価に関する項目、質問、評価値を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM rating_items LEFT JOIN questions ON rating_items.id = questions.rating_item_id WHERE rating_items.delete_flg = 0 OR questions.delete_flg = 0';
-    $data = array();
+    $sql = 'SELECT * FROM rating_items LEFT JOIN questions ON rating_items.id = questions.rating_item_id LEFT JOIN ratings ON questions.rating_item_id = ratings.rating_item_id WHERE ratings.post_id = :post_id AND ratings.user_id = :user_id AND ratings.company_id = :company_id AND rating_items.delete_flg = 0 AND questions.delete_flg = 0 AND ratings.delete_flg = 0';
+    $data = array(
+      ':post_id' => $post_id,
+      ':user_id' => $user_id,
+      ':company_id' => $company_id,
+    );
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
     error_log('エラー発生：' . $e->getMessage());
   }
   return $stmt->fetchAll();
 }
-function getAnswerItemsAndQuestions(){
-  debug('クチコミの質問項目と質問を取得します。');
+function getQuestionsAndAnswers($post_id, $user_id, $company_id, $exist_flg = false){
+  debug('質問と回答を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM answer_items LEFT JOIN questions ON answer_items.id = questions.answer_item_id WHERE answer_items.delete_flg = 0 OR questions.delete_flg = 0';
-    $data = array();
+    $sql = 'SELECT * FROM answer_items LEFT JOIN questions ON answer_items.id = questions.answer_item_id LEFT JOIN answers ON questions.answer_item_id = answers.answer_item_id WHERE answers.post_id = :post_id AND answers.user_id = :user_id AND answers.company_id = :company_id AND questions.delete_flg = 0 AND answers.delete_flg = 0';
+    if($exist_flg){
+      $sql .= ' AND answers.answer IS NOT NULL';
+    }
+    $data = array(
+      ':post_id' => $post_id,
+      ':user_id' => $user_id,
+      ':company_id' => $company_id,
+    );
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
     error_log('エラー発生：' . $e->getMessage());
