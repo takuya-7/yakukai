@@ -10,26 +10,34 @@ debugLogStart();
 //ログイン認証
 require('auth.php');
 
-// 画面遷移処理!!!!!!!!未実装!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // $dbPostData = getPost($result['id']);
-  // if(empty($dbPostData[0]['emp_type'])){
-  //   header('Location:survey01.php');
-  //   exit();
-  // }elseif(empty($dbPostData[0]['q_001'])){
-  //   header('Location:survey02.php');
-  //   exit();
-  // }elseif(empty($dbPostData[0]['c_001'])){
-  //   header('Location:survey03.php');
-  //   exit();
-  // }else{
-  //   debug('マイページへ遷移します。');
-  //   header('Location:mypage.php');
-  //   exit();
-  // }
-
 //================================
 // 画面処理
 //================================
+$u_id = $_SESSION['user_id'];
+$dbPostData = getPost($u_id);
+$dbRatingData = getRatingByUserId($_SESSION['user_id']);
+$dbAnswerData = getAnswer($_SESSION['user_id']);
+
+// 画面遷移処理
+if(empty($dbPostData[0]['company_id'])){
+  debug('会社登録がありません。画面遷移を行いません。');
+}elseif(empty($dbPostData[0]['employment_type'])){
+  debug('クチコミ登録がありません。クチコミ投稿ページ（1/3）へ遷移します。');
+  header('Location:survey01.php');
+  exit();
+}elseif(empty($dbRatingData[0]['rating'])){
+  debug('評価値が投稿されていません。クチコミ投稿ページ（2/3）へ遷移します。');
+  header('Location:survey02.php');
+  exit();
+}elseif(empty($dbAnswerData[0]['answer'])){
+  debug('フリー回答がありません。クチコミ投稿ページ（3/3）へ遷移します。');
+  header('Location:survey03.php');
+  exit();
+}else{
+  debug('クチコミ情報が全て登録されているためマイページへ遷移します。');
+  header('Location:mypage.php');
+  exit();
+}
 
 // 画面表示用データ取得
 //================================
@@ -46,11 +54,24 @@ if(!empty($_GET)){
 if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：' . print_r($_POST, true));
+  // ユーザーがクチコミレコード作成しており、company_idにデータがなければレコードを削除
+  if(empty($dbPostData[0]['company_id'])){
+    debug('クチコミが完成していないレコードを削除します。');
+    try{
+      $dbh = dbConnect();
+      $sql = 'DELETE FROM posts WHERE user_id = :user_id AND company_id IS NULL LIMIT 1';
+      $data = array(':user_id' => $u_id);
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('不要のクチコミレコードが１件削除されました。');
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+  }
 
+  // 新たにINSERT
   $c_id = $_POST['c_id'];
-  $u_id = $_SESSION['user_id'];
-
-  // クチコミレコード新規作成
   try{
     $dbh = dbConnect();
     $sql = 'INSERT INTO posts (company_id, user_id, create_date) VALUES (:company_id, :user_id, :create_date)';
@@ -69,7 +90,6 @@ if(!empty($_POST)){
   } catch (Exeption $e) {
     error_log('エラー発生：' . $e->getMessage());
   }
-
 }
 
 ?>
@@ -92,7 +112,7 @@ require('head.php');
   <main>
     <div class="content-wrapper">
       <div class="container">
-        <div class="bg-white">
+        <div class="bg-white pt-3">
           <h1 class="page-title mb-4">クチコミ投稿について</h1>
     
           <p class="mb-4">クチコミを投稿していただくと、半年間クチコミを読み放題になります。</p>
@@ -122,18 +142,18 @@ require('head.php');
                   <h3>検索結果</h3>
                   <p>該当の会社を選択してください</p>
                   <ul>
-                    <form action="" method="post">
-                      <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
-                        <li>
+                    <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
+                      <li>
+                        <form action="" method="post">
                           <input type="hidden" name="c_id" value="<?php echo $val['id']; ?>">
                           <button type="submit">
                             <?php echo sanitize($val['name']); ?>
                             <br>
                             <span>本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
                           </button>
-                        </li>
-                      <?php } ?>
-                    </form>
+                        </form>
+                      </li>
+                    <?php } ?>
                   </ul>
                 </div>
               <?php } ?>
