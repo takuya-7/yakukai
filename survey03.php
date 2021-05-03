@@ -30,8 +30,15 @@ if(!empty($company_id)){
   header('Location:surveyInfo.php');
   exit();
 }
-// クチコミの質問項目・質問文を取得
-$dbAnswerItemsAndQuestions = getAnswerItemsAndQuestions();
+// クチコミの質問項目・質問文・回答内容を取得
+$dbQuestionsAndAnswers = getQuestionsAndAnswers($dbPostData[0]['id'], $user_id, $company_id);
+// 既に回答がDBに登録されている場合、入力合計文字数を算出
+if(!empty(getAnswers($dbPostData[0]['id'], $user_id, $company_id,))){
+  $totalCount = 0;
+  foreach($dbQuestionsAndAnswers as $key => $val){
+    $totalCount += mb_strlen($val['answer']);
+  }
+}
 
 // POSTパラメータを取得
 //----------------------------
@@ -42,8 +49,8 @@ if(!empty($_POST)){
   $postAnswers = array();
 
   // 回答ごとに、インデックスがあれば２次元配列にカテゴリID、質問項目のID、送信された回答を格納。なければ回答部分にNULLを格納。
-  foreach($dbAnswerItemsAndQuestions as $key => $val){
-    if(isset($_POST[$val['english_name']])){
+  foreach($dbQuestionsAndAnswers as $key => $val){
+    if(!empty($_POST[$val['english_name']])){
       $postAnswers[$key] = array(
         'category_id' => $val['category_id'],
         'answer_item_id' => $val['answer_item_id'],
@@ -67,13 +74,15 @@ if(!empty($_POST)){
     $totalCount += mb_strlen($val['answer']);
   }
   if($totalCount < 500){
-    $err_msg['total_count'] = '合計500文字以上になるように入力してください。';
+    $err_msg['total_count'] = '入力が合計500文字以上できていません。';
   }
 
   // 最大800文字数チェック
   foreach($postAnswers as $key => $val){
     validMaxLen($val['answer'], $val['english_name'], 800);
   }
+
+  // バリデーション追加：空白削除trim()、html等無効化。sanitize。htmlspecialchars
   
   if(empty($err_msg)){
     debug('バリデーションOKです！');
@@ -126,7 +135,7 @@ if(!empty($_POST)){
         if($stmt){
           debug('回答の更新が完了しました！');
           debug('次のページへ遷移します。');
-          header('Location:survey04.php');
+          header('Location:surveyConfirm.php');
           exit();
         }
       } catch (Exeption $e) {
@@ -174,13 +183,13 @@ require('head.php');
           <?php } ?>
 
           <form action="" method="post" class="mx-3">
-            <?php foreach($dbAnswerItemsAndQuestions as $key => $val){ ?>
+            <?php foreach($dbQuestionsAndAnswers as $key => $val){ ?>
 
               <div class="mb-5">
                 <div class="mb-2 fw-bold">
                   <?php echo $val['name']; ?>
                 </div>
-  
+
                 <div class="mb-3">
                   <?php echo $val['question']; ?>
                 </div>
@@ -191,11 +200,17 @@ require('head.php');
                   </span>
                 </div>
 
-                <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $val['id']; ?>" class="js-character-count" style="min-height: 8rem;"><?php echo getFormData($val['english_name'], false); ?></textarea>
+                <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $key; ?>" class="js-character-count" style="min-height: 8rem;"><?php
+                  if(!empty($_POST[$val['english_name']])){
+                    echo $_POST[$val['english_name']];
+                  }elseif(!empty($val['answer'])){
+                    echo $val['answer'];
+                  }
+                ?></textarea>
 
                 <div class="fs-08 float-end">
                   <span class="text-gray">
-                    合計文字数：<span class="js-count-view fw-bold text-black">0</span> / 500字
+                    合計文字数：<span class="js-count-view fw-bold text-black"><?php echo (!empty($totalCount)) ? $totalCount : 0;  ?></span> / 500字
                   </span>
                 </div>
               </div>
