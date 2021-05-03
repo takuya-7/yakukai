@@ -30,12 +30,18 @@ if(!empty($company_id)){
   header('Location:surveyInfo.php');
   exit();
 }
-// クチコミの質問項目・質問文・回答内容を取得
-$dbQuestionsAndAnswers = getQuestionsAndAnswers($dbPostData[0]['id'], $user_id, $company_id);
+// 項目・質問文・回答内容を取得
+// DBに既に回答があれば回答もまとめて取得
+if(!empty(getQuestionsAndAnswers($dbPostData[0]['id'], $user_id, $company_id))){
+  $dbAnswerItems = getQuestionsAndAnswers($dbPostData[0]['id'], $user_id, $company_id);
+}else{    // まだDBに登録していなければ項目・質問文を取得
+  $dbAnswerItems = getAnswerItemsAndQuestions();
+}
+
 // 既に回答がDBに登録されている場合、入力合計文字数を算出
 if(!empty(getAnswers($dbPostData[0]['id'], $user_id, $company_id,))){
   $totalCount = 0;
-  foreach($dbQuestionsAndAnswers as $key => $val){
+  foreach($dbAnswerItems as $key => $val){
     $totalCount += mb_strlen($val['answer']);
   }
 }
@@ -49,7 +55,7 @@ if(!empty($_POST)){
   $postAnswers = array();
 
   // 回答ごとに、インデックスがあれば２次元配列にカテゴリID、質問項目のID、送信された回答を格納。なければ回答部分にNULLを格納。
-  foreach($dbQuestionsAndAnswers as $key => $val){
+  foreach($dbAnswerItems as $key => $val){
     if(!empty($_POST[$val['english_name']])){
       $postAnswers[$key] = array(
         'category_id' => $val['category_id'],
@@ -108,7 +114,7 @@ if(!empty($_POST)){
         if($stmt){
           debug('回答をデータベースに新規登録しました！');
           debug('次のページへ遷移します。');
-          header('Location:survey04.php');
+          header('Location:surveyConfirm.php');
           exit();
         }
       } catch (Exeption $e) {
@@ -183,7 +189,7 @@ require('head.php');
           <?php } ?>
 
           <form action="" method="post" class="mx-3">
-            <?php foreach($dbQuestionsAndAnswers as $key => $val){ ?>
+            <?php foreach($dbAnswerItems as $key => $val){ ?>
 
               <div class="mb-5">
                 <div class="mb-2 fw-bold">
@@ -210,7 +216,7 @@ require('head.php');
 
                 <div class="fs-08 float-end">
                   <span class="text-gray">
-                    合計文字数：<span class="js-count-view fw-bold text-black"><?php echo (!empty($totalCount)) ? $totalCount : 0;  ?></span> / 500字
+                    合計文字数：<span class="js-count-view fw-bold text-black<?php if($totalCount >= 500) echo ' text-green'; ?>"><?php echo (!empty($totalCount)) ? $totalCount : 0;  ?></span> / 500字
                   </span>
                 </div>
               </div>
