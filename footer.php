@@ -19,9 +19,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.0/chart.min.js" integrity="sha512-RGbSeD/jDcZBWNsI1VCvdjcDULuSfWTtIva2ek5FtteXeSjLfXac4kqkDRHVGf1TwsXCAqPTF7/EYITD0/CTqw==" crossorigin="anonymous"></script>
     <!-- 自作のmain.jsを読み込み -->
     <script src="js/main.js"></script>
+
     <script>
       $(function(){
-
         // フッターを最下部に固定
         var $ftr = $('#footer');
         if( window.innerHeight > $ftr.offset().top + $ftr.outerHeight() ){
@@ -50,7 +50,6 @@
 
         // ---------------------------------------------------------
         // 画像ライブビュー
-
         var $dropArea = $('.area-drop');
         var $fileInput = $('.input-file');
 
@@ -83,7 +82,6 @@
 
           // dataURLとして読み込み
           fileReader.readAsDataURL(file);
-
         });
 
         // ----------------------------------------------------------
@@ -91,24 +89,18 @@
         var totalCount = 0;
         var $countUp = $('.js-character-count');
         var $countView = $('.js-count-view');
-
         $countUp.on('keyup', function(e){
-
-          for(let i = 13; i < 29; i++){
+          totalCount = 0;
+          for(let i = 0; i < <?php echo (!empty($dbAnswerItems)) ? count($dbAnswerItems) : 1; ?>; i++){
             $count = $('#js-count'+i);
-            
             totalCount += $count.val().length;
-            console.log('合計文字数：'+totalCount);
           }
-
           if(totalCount >= 500){
             $countView.addClass('text-green');
           }else{
             $countView.removeClass('text-green');
           }
-
           $countView.html(totalCount);
-          totalCount = 0;
         });
 
         // ------------------------------------------------------
