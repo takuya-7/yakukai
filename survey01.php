@@ -19,7 +19,7 @@ require('auth.php');
 // ユーザーID取得
 $u_id = $_SESSION['user_id'];
 // 雇用形態取得
-$dbEmploymentTyoe = getEmploymentType();
+$dbEmploymentType = getEmploymentType();
 // ユーザーのクチコミレコード取得
 $dbPostData = getPost($u_id);
 // ユーザーのクチコミレコードから企業ID取得
@@ -82,13 +82,7 @@ if(!empty($_POST)){
     } catch (Exeption $e) {
       error_log('エラー発生：' . $e->getMessage());
     }
-    
-    // DB登録
-    header('Location:survey02.php');
   }
-  
-  
-  
 }
 
 ?>
@@ -129,12 +123,14 @@ require('head.php');
               <div class="ms-3">
                 <div class="cp_ipselect cp_sl01">
                   <select name="user_employment_type" class="<?php if(!empty($err_msg['user_employment_type'])) echo 'bg-red'; ?>">
-                    <option value="" hidden>雇用形態</option>
-                    <?php foreach($dbEmploymentTyoe as $key => $val){ ?>
-                      <option value="<?php echo $val['id']; ?>" 
+                    <option value="">雇用形態</option>
+                    <?php foreach($dbEmploymentType as $key => $val){ ?>
+                      <option value="<?php echo $val['id']; ?>"
                         <?php
                           if(!empty($_POST['user_employment_type'])){
-                            if($_POST['user_employment_type'] == $val['id']) echo 'selected'; 
+                            if($_POST['user_employment_type'] == $val['id']) echo ' selected';
+                          }elseif(!empty($dbPostData[0]['employment_type'])){
+                            if($dbPostData[0]['employment_type'] == $val['id']) echo ' selected';
                           }
                         ?>><?php echo $val['name']; ?></option>
                     <?php } ?>
@@ -154,13 +150,25 @@ require('head.php');
                 <input type="hidden" name="user_registration" value="">
                 <div class="custom-control-inline mr-4">
                   <label class="form-check-label">
-                    <input class="form-check-input " type="radio" name="user_registration" value="1"<?php ?>>
+                    <input class="form-check-input " type="radio" name="user_registration" value="1"<?php
+                      if(isset($_POST['user_registration'])){
+                        if($_POST['user_registration'] == 1) echo ' checked';
+                      }elseif(isset($dbPostData[0]['registration'])){
+                        if($dbPostData[0]['registration'] == 1) echo ' checked';
+                      }
+                    ?>>
                     <span class="ms-2">現職</span>
                   </label>
                 </div>
                 <div class="custom-control-inline">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="user_registration" value="0"<?php ?>>
+                    <input class="form-check-input" type="radio" name="user_registration" value="0"<?php
+                      if(isset($_POST['user_registration'])){
+                        if($_POST['user_registration'] == 0) echo ' checked';
+                      }elseif(isset($dbPostData[0]['registration'])){
+                        if($dbPostData[0]['registration'] == 0) echo ' checked';
+                      }
+                    ?>>
                     <span class="ms-2">退職済み</span>
                   </label>
                 </div>
@@ -178,13 +186,25 @@ require('head.php');
                 <input type="hidden" name="user_entry_type" value="">
                 <div class="custom-control-inline mr-2">
                   <label class="form-check-label">
-                    <input class="form-check-input " type="radio" name="user_entry_type" value="0"<?php ?>>
+                    <input class="form-check-input " type="radio" name="user_entry_type" value="0"<?php
+                      if(isset($_POST['user_entry_type'])){
+                        if($_POST['user_entry_type'] == 0) echo ' checked';
+                      }elseif(isset($dbPostData[0]['entry_type'])){
+                        if($dbPostData[0]['entry_type'] == 0) echo ' checked';
+                      }
+                    ?>>
                     <span class="ms-2">新卒入社</span>
                   </label>
                 </div>
                 <div class="custom-control-inline">
                   <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="user_entry_type" value="1"<?php ?>>
+                    <input class="form-check-input" type="radio" name="user_entry_type" value="1"<?php
+                      if(isset($_POST['user_entry_type'])){
+                        if($_POST['user_entry_type'] == 1) echo ' checked';
+                      }elseif(isset($dbPostData[0]['entry_type'])){
+                        if($dbPostData[0]['entry_type'] == 1) echo ' checked';
+                      }
+                    ?>>
                     <span class="ms-2">中途入社</span>
                   </label>
                 </div>
@@ -214,8 +234,10 @@ require('head.php');
                     <?php for($i=1991; $i<=date('Y'); $i++){ ?>
                       <option value="<?php echo $i; ?>" 
                         <?php
-                          if(!empty($_POST['user_entry_year'])){
-                            if($_POST['user_entry_year'] == $i) echo 'selected';
+                          if(isset($_POST['user_entry_year'])){
+                            if($_POST['user_entry_year'] == $i) echo ' selected';
+                          }elseif(isset($dbPostData[0]['entry_date'])){
+                            if(date('Y', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
                           }
                         ?>><?php echo $i; ?>年</option>
                     <?php } ?>
@@ -228,8 +250,10 @@ require('head.php');
                     <?php for($i=1; $i<=12; $i++){ ?>
                       <option value="<?php echo $i; ?>" 
                         <?php
-                          if(!empty($_POST['user_entry_month'])){
-                            if($_POST['user_entry_month'] == $i) echo 'selected';
+                          if(isset($_POST['user_entry_month'])){
+                            if($_POST['user_entry_month'] == $i) echo ' selected';
+                          }elseif(isset($dbPostData[0]['entry_date'])){
+                            if(date('m', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
                           }
                         ?>><?php echo $i; ?>月</option>
                     <?php } ?>
@@ -240,7 +264,13 @@ require('head.php');
 
             <div class="mb-5">
               <label class="fw-bold mb-2">事業部・部署<span class="fw-normal text-green">（任意）</span></label>
-              <input type="text" name="user_department" placeholder="例：薬局運営、人事" value="<?php if(!empty($_POST['user_department'])) echo $_POST['user_department']; ?>">
+              <input type="text" name="user_department" placeholder="例：薬局運営、人事" value="<?php
+                if(isset($_POST['user_department'])){
+                  echo $_POST['user_department'];
+                }elseif(isset($dbPostData[0]['department'])){
+                  echo $dbPostData[0]['department'];
+                }
+              ?>">
               <div class="area-msg text-red">
                 <?php if(!empty($err_msg['user_department'])) echo $err_msg['user_department']; ?>
               </div>
@@ -248,13 +278,19 @@ require('head.php');
 
             <div class="mb-5">
               <label class="fw-bold mb-2">役職<span class="fw-normal text-green">（任意）</span></label>
-              <input type="text" name="user_position" placeholder="例：薬局長、管理薬剤師、一般薬剤師" value="<?php if(!empty($_POST['user_position'])) echo $_POST['user_position']; ?>">
+              <input type="text" name="user_position" placeholder="例：薬局長、管理薬剤師、一般薬剤師" value="<?php
+                if(isset($_POST['user_position'])){
+                  echo $_POST['user_position'];
+                }elseif(isset($dbPostData[0]['position'])){
+                  echo $dbPostData[0]['position'];
+                }
+              ?>">
               <div class="area-msg text-red">
                 <?php if(!empty($err_msg['user_position'])) echo $err_msg['user_position']; ?>
               </div>
             </div>
 
-            <button class="btn btn-blue">次へ</button>
+            <button type="submit" class="btn btn-blue">次へ</button>
           </form>
           
         </div>
