@@ -32,7 +32,12 @@ if(!empty($company_id)){
   exit();
 }
 // 項目・質問文・評価値を取得
-$dbQuestionsAndRatings = getQuestionsAndRatings($dbPostData[0]['id'], $user_id, $company_id);
+// DBに既に評価値があれば評価値もまとめて取得
+if(!empty(getQuestionsAndRatings($dbPostData[0]['id'], $user_id, $company_id))){
+  $dbRatingItems = getQuestionsAndRatings($dbPostData[0]['id'], $user_id, $company_id);
+}else{    // まだDBに登録していなければ項目・質問文を取得
+  $dbRatingItems = getRatingItemsAndQuestions();
+}
 
 // POSTパラメータを取得
 //----------------------------
@@ -43,7 +48,7 @@ if(!empty($_POST)){
   $postRatings = array();
 
   // 回答ごとに、インデックスがあれば２次元配列にカテゴリID、質問項目のID、送信された回答を格納。なければ回答部分にNULLを格納。
-  foreach($dbQuestionsAndRatings as $key => $val){
+  foreach($dbRatingItems as $key => $val){
     if(!empty($_POST[$val['english_name']])){
       $postRatings[$key] = array(
         'rating_item_id' => $val['rating_item_id'],
@@ -85,7 +90,7 @@ if(!empty($_POST)){
 
   //未入力チェック
   foreach($postRatings as $key => $val){
-    validRequired($_POST[$val['english_name']], $val['english_name']);
+    validRequired($val['rating'], $val['english_name']);
   }
   validRequired($anual_total_salary, 'anual_total_salary');
   
@@ -219,7 +224,7 @@ require('head.php');
           <?php } ?>
 
           <form action="" method="post" class="mx-3">
-            <?php foreach($dbQuestionsAndRatings as $key => $val){ ?>
+            <?php foreach($dbRatingItems as $key => $val){ ?>
 
               <div class="mb-2 fw-bold">
                 <?php echo $val['name']; ?><span class="fw-normal text-red">（必須）</span>
