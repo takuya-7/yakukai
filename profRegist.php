@@ -3,7 +3,7 @@ require('config.php');
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「 プロフィール入力');
+debug('「 プロフィール入力・編集');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -13,8 +13,14 @@ require('auth.php');
 //================================
 // 画面処理
 //================================
-
+// ユーザー情報取得
 $dbFormData = getUser($_SESSION['user_id']);
+// DBから都道府県データを取得
+$dbPrefectureData = getPrefecture();
+// DBから業種データを取得
+$dbIndustryData = getIndustry();
+// DBから雇用形態取得
+$dbEmploymentType = getEmploymentType();
 
 debug('取得したユーザー情報：' . print_r($dbFormData, true));
 
@@ -27,11 +33,22 @@ if(!empty($_POST)){
   $addr = $_POST['user_pref'];
   $phLicense = $_POST['user_phlicense'];
   $carrierType = $_POST['user_carrier_type'];
-  $exPhType = (!empty($_POST['user_experience_phtype'])) ? $_POST['user_experience_phtype'] : 0;
-  $exYear = (!empty($_POST['user_experience_years'])) ? $_POST['user_experience_years'] : 0;
-  $empType = (!empty($_POST['user_employment_type'])) ? $_POST['user_employment_type'] : 0;
+  $exPhType = $_POST['user_experience_phtype'];
+  $exYear = $_POST['user_experience_years'];
+  $empType = $_POST['user_employment_type'];
 
   // バリデーションの必要性？？
+  validRequired($sex, 'user_sex');
+  validRequired($birthYear, 'user_birth_year');
+  validRequired($addr, 'user_pref');
+  validRequired($phLicense, 'user_phlicense');
+  validRequired($carrierType, 'user_carrier_type');
+  if($carrierType == 1){
+    validRequired($exPhType, 'user_experience_phtype');
+    validRequired($exYear, 'user_experience_years');
+    validRequired($empType, 'user_employment_type');
+  }
+
 
   if(empty($err_msg)){
     try{
@@ -46,10 +63,9 @@ if(!empty($_POST)){
 
       if($stmt){
         // debug('クエリ成功！');
-        $_SESSION['msg_success'] = SUC02;
-        debug('マイページに遷移します。');
-
-        header('Location:mypage.php');
+        // $_SESSION['msg_success'] = SUC02;
+        debug('クチコミ投稿ページに遷移します。');
+        header('Location:surveyInfo.php');
         exit();
       // }else{
       //     debug('クエリに失敗しました。');
@@ -80,275 +96,288 @@ require('head.php');
     </p>
 
     <main>
-      <div class="container">
-        <div class="form-container natural-shadow  col col-sm-9 col-md-7 col-lg-6">
-          <form method="post" action="" class="px-4">
-            <h2 class="page-title">プロフィール入力</h2>
-            
-            <div class="form-item mb-5">
-              <label class="fw-bold mb-2">性別</label>
-              <div class="radio-custom">
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input " type="radio" name="user_sex" value="1" id="flexRadioDefault1">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    男性
-                  </label>
-                </div>
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="radio" name="user_sex" value="2" id="flexRadioDefault2">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    女性
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-item mb-5">
-              <label class="fw-bold mb-2">生まれ年</label>
-              <div class="cp_ipselect cp_sl01">
-                <select name="user_birth_year">
-                  <option value="">生まれ年</option>
-                  <option value="1946">1946年以前</option>
-                  <option value="1947">1947年</option>
-                  <option value="1948">1948年</option>
-                  <option value="1949">1949年</option>
-                  <option value="1950">1950年</option>
-                  <option value="1951">1951年</option>
-                  <option value="1952">1952年</option>
-                  <option value="1953">1953年</option>
-                  <option value="1954">1954年</option>
-                  <option value="1955">1955年</option>
-                  <option value="1956">1956年</option>
-                  <option value="1957">1957年</option>
-                  <option value="1958">1958年</option>
-                  <option value="1959">1959年</option>
-                  <option value="1960">1960年</option>
-                  <option value="1961">1961年</option>
-                  <option value="1962">1962年</option>
-                  <option value="1963">1963年</option>
-                  <option value="1964">1964年</option>
-                  <option value="1965">1965年</option>
-                  <option value="1966">1966年</option>
-                  <option value="1967">1967年</option>
-                  <option value="1968">1968年</option>
-                  <option value="1969">1969年</option>
-                  <option value="1970">1970年</option>
-                  <option value="1971">1971年</option>
-                  <option value="1972">1972年</option>
-                  <option value="1973">1973年</option>
-                  <option value="1974">1974年</option>
-                  <option value="1975">1975年</option>
-                  <option value="1976">1976年</option>
-                  <option value="1977">1977年</option>
-                  <option value="1978">1978年</option>
-                  <option value="1979">1979年</option>
-                  <option value="1980">1980年</option>
-                  <option value="1981">1981年</option>
-                  <option value="1982">1982年</option>
-                  <option value="1983">1983年</option>
-                  <option value="1984">1984年</option>
-                  <option value="1985">1985年</option>
-                  <option value="1986">1986年</option>
-                  <option value="1987">1987年</option>
-                  <option value="1988">1988年</option>
-                  <option value="1989">1989年</option>
-                  <option value="1990">1990年</option>
-                  <option value="1991">1991年</option>
-                  <option value="1992">1992年</option>
-                  <option value="1993">1993年</option>
-                  <option value="1994">1994年</option>
-                  <option value="1995">1995年</option>
-                  <option value="1996">1996年</option>
-                  <option value="1997">1997年</option>
-                  <option value="1998">1998年</option>
-                  <option value="1999">1999年</option>
-                  <option value="2000">2000年</option>
-                  <option value="2001">2001年</option>
-                  <option value="2002">2002年</option>
-                  <option value="2003">2003年</option>
-                  <option value="2004">2004年</option>
-                  <option value="2005">2005年以降</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-item mb-5">
-              <label class="fw-bold mb-2">現住所</label>
-              <div class="cp_ipselect cp_sl01">
-                <select name="user_pref">
-                  <option value="" hidden>都道府県</option>
-                  <option value="1">北海道</option>
-                  <option value="2">青森県</option>
-                  <option value="3">岩手県</option>
-                  <option value="4">宮城県</option>
-                  <option value="5">秋田県</option>
-                  <option value="6">山形県</option>
-                  <option value="7">福島県</option>
-                  <option value="8">茨城県</option>
-                  <option value="9">栃木県</option>
-                  <option value="10">群馬県</option>
-                  <option value="11">埼玉県</option>
-                  <option value="12">千葉県</option>
-                  <option value="13">東京都</option>
-                  <option value="14">神奈川県</option>
-                  <option value="15">新潟県</option>
-                  <option value="16">富山県</option>
-                  <option value="17">石川県</option>
-                  <option value="18">福井県</option>
-                  <option value="19">山梨県</option>
-                  <option value="20">長野県</option>
-                  <option value="21">岐阜県</option>
-                  <option value="22">静岡県</option>
-                  <option value="23">愛知県</option>
-                  <option value="24">三重県</option>
-                  <option value="25">滋賀県</option>
-                  <option value="26">京都府</option>
-                  <option value="27">大阪府</option>
-                  <option value="28">兵庫県</option>
-                  <option value="29">奈良県</option>
-                  <option value="30">和歌山県</option>
-                  <option value="31">鳥取県</option>
-                  <option value="32">島根県</option>
-                  <option value="33">岡山県</option>
-                  <option value="34">広島県</option>
-                  <option value="35">山口県</option>
-                  <option value="36">徳島県</option>
-                  <option value="37">香川県</option>
-                  <option value="38">愛媛県</option>
-                  <option value="39">高知県</option>
-                  <option value="40">福岡県</option>
-                  <option value="41">佐賀県</option>
-                  <option value="42">長崎県</option>
-                  <option value="43">熊本県</option>
-                  <option value="44">大分県</option>
-                  <option value="45">宮崎県</option>
-                  <option value="46">鹿児島県</option>
-                  <option value="47">沖縄県</option>
-                </select>
-              </div>
-
-            </div>
-            <div class="form-item mb-5">
-              <label class="fw-bold mb-2">薬剤師免許</label>
-              <div class="radio-custom">
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input " type="radio" name="user_phlicense" value="1" id="flexRadioDefault1">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    保有
-                  </label>
-                </div>
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="radio" name="user_phlicense" value="0" id="flexRadioDefault2">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    無し
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="form-item mb-5">
-              <label class="fw-bold mb-2">キャリア状況</label>
-              <div class="radio-custom">
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input " type="radio" name="user_carrier_type" value="1" id="1">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    社会人
-                  </label>
-                </div>
-                <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="radio" name="user_carrier_type" value="0" id="0">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    学生
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="worker-form <?php if($edit_flg && $dbFormData['carrier_type']) echo 'form-show' ?>">
+      <div class="content-wrapper">
+        <div class="container">
+          <div class="form-container py-3 col col-sm-9 col-md-7 col-lg-6">
+            <form method="post" action="" class="px-4">
+              <h2 class="">プロフィール入力</h2>
+              
               <div class="form-item mb-5">
-                <label class="fw-bold mb-2">経歴</label>
-                <div class="select-box-item">
-                  <div class="cp_ipselect cp_sl01">
-                    <select name="user_experience_phtype">
-                      <option value="" hidden>業種</option>
-                      <option value="10">調剤薬局</option>
-                      <option value="20">ドラッグストア</option>
-                      <option value="30">病院</option>
-                      <option value="40">製薬企業</option>
-                      <option value="50">行政</option>
-                      <option value="60">その他</option>
-                    </select>
+                <label class="fw-bold mb-2">性別<span class="fw-normal text-red">（必須）</span></label>
+                <?php if(!empty($err_msg['user_sex'])){ ?>
+                  <div class="mb-2">
+                    <span class="text-red ms-3 fw-bold">
+                      <?php echo $err_msg['user_sex']; ?>
+                    </span>
                   </div>
-                </div>
-                <div class="select-box-item">
-                  <div class="cp_ipselect cp_sl01">
-                    <select name="user_experience_years">
-                      <option value="" hidden>経験年数</option>
-                      <option value="1">1年</option>
-                      <option value="2">2年</option>
-                      <option value="3">3年</option>
-                      <option value="4">4年</option>
-                      <option value="5">5年</option>
-                      <option value="6">6年</option>
-                      <option value="7">7年</option>
-                      <option value="8">8年</option>
-                      <option value="9">9年</option>
-                      <option value="10">10年</option>
-                      <option value="11">11年</option>
-                      <option value="12">12年</option>
-                      <option value="13">13年</option>
-                      <option value="14">14年</option>
-                      <option value="15">15年</option>
-                      <option value="16">16年</option>
-                      <option value="17">17年</option>
-                      <option value="18">18年</option>
-                      <option value="19">19年</option>
-                      <option value="20">20年</option>
-                      <option value="21">21年</option>
-                      <option value="22">22年</option>
-                      <option value="23">23年</option>
-                      <option value="24">24年</option>
-                      <option value="25">25年</option>
-                      <option value="26">26年</option>
-                      <option value="27">27年</option>
-                      <option value="28">28年</option>
-                      <option value="29">29年</option>
-                      <option value="30">30年</option>
-                      <option value="31">31年</option>
-                      <option value="32">32年</option>
-                      <option value="33">33年</option>
-                      <option value="34">34年</option>
-                      <option value="35">35年</option>
-                      <option value="36">36年</option>
-                      <option value="37">37年</option>
-                      <option value="38">38年</option>
-                      <option value="39">39年</option>
-                      <option value="40">40年以上</option>
-                    </select>
+                <?php } ?>
+                <div class="radio-custom">
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input " type="radio" name="user_sex" value="1" id="user_sex_1"<?php
+                      if(isset($_POST['user_sex'])){
+                        if($_POST['user_sex'] == 1) echo ' checked';
+                      }elseif($dbFormData['sex'] == 1){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_sex_1">
+                      男性
+                    </label>
+                  </div>
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input" type="radio" name="user_sex" value="2" id="user_sex_2"<?php
+                      if(isset($_POST['user_sex'])){
+                        if($_POST['user_sex'] == 2) echo ' checked';
+                      }elseif($dbFormData['sex'] == 2){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_sex_2">
+                      女性
+                    </label>
                   </div>
                 </div>
               </div>
-
+  
               <div class="form-item mb-5">
-                <label class="fw-bold mb-2">現在の状況</label>
-                <div class="select-box-item">
-                  <div class="cp_ipselect cp_sl01">
-                    <select name="user_employment_type">
-                      <option value="" hidden>現在の状況</option>
-                      <option value="10">正社員</option>
-                      <option value="20">パート</option>
-                      <option value="30">派遣</option>
-                      <option value="40">離職中</option>
-                      <option value="50">その他</option>
-                    </select>
+                <label class="fw-bold mb-2">生まれ年<span class="fw-normal text-red">（必須）</span></label>
+                <?php if(!empty($err_msg['user_birth_year'])){ ?>
+                  <div class="mb-2">
+                    <span class="text-red ms-3 fw-bold">
+                      <?php echo $err_msg['user_birth_year']; ?>
+                    </span>
+                  </div>
+                <?php } ?>
+                <div class="cp_ipselect cp_sl01">
+                  <select name="user_birth_year">
+                    <option value="" hidden>生まれ年</option>
+                    <option value="1946" <?php
+                        if(isset($_POST['user_birth_year'])){
+                          if($_POST['user_birth_year'] == 1946) echo ' selected';
+                        }elseif($dbFormData['birth_year'] == 1946){
+                          echo ' selected';
+                        }
+                      ?>>1946年以前</option>
+                    <?php for($i=1947; $i<date('Y')-18; $i++){ ?>
+                      <option value="<?php echo $i; ?>" 
+                        <?php
+                          if(isset($_POST['user_birth_year'])){
+                            if($_POST['user_birth_year'] == $i) echo ' selected';
+                          }elseif($dbFormData['birth_year'] == $i){
+                            echo ' selected';
+                          }
+                        ?>><?php echo $i; ?>年</option>
+                    <?php } ?>
+                    <option value="<?php echo date('Y')-18; ?>" <?php
+                        if(isset($_POST['user_birth_year'])){
+                          if($_POST['user_birth_year'] == date('Y')-18) echo ' selected';
+                        }elseif($dbFormData['birth_year'] >=  date('Y')-18){
+                          echo ' selected';
+                        }
+                      ?>><?php echo date('Y')-18; ?>年以降</option>
+                  </select>
+                </div>
+              </div>
+  
+              <div class="form-item mb-5">
+                <label class="fw-bold mb-2">現住所<span class="fw-normal text-red">（必須）</span></label>
+                <?php if(!empty($err_msg['user_pref'])){ ?>
+                  <div class="mb-2">
+                    <span class="text-red ms-3 fw-bold">
+                      <?php echo $err_msg['user_pref']; ?>
+                    </span>
+                  </div>
+                <?php } ?>
+                <div class="cp_ipselect cp_sl01">
+                  <select name="user_pref">
+                    <option value="">都道府県</option>
+                    <?php foreach($dbPrefectureData as $key => $val){ ?>
+                      <option value="<?php echo $val['id']; ?>"<?php
+                        if(isset($_POST['user_pref'])){
+                          if($_POST['user_pref'] == $val['id']) echo ' selected';
+                        }elseif($dbFormData['addr'] == $val['id']){
+                          echo ' selected';
+                        }
+                      ?>>
+                      <?php echo $val['name']; ?>
+                      </option>
+                    <?php } ?>
+
+                  </select>
+                </div>
+  
+              </div>
+              <div class="form-item mb-5">
+                <label class="fw-bold mb-2">薬剤師免許<span class="fw-normal text-red">（必須）</span></label>
+                <?php if(!empty($err_msg['user_phlicense'])){ ?>
+                  <div class="mb-2">
+                    <span class="text-red ms-3 fw-bold">
+                      <?php echo $err_msg['user_phlicense']; ?>
+                    </span>
+                  </div>
+                <?php } ?>
+                <div class="radio-custom">
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input " type="radio" name="user_phlicense" value="1" id="user_phlicense_1"<?php
+                      if(isset($_POST['user_phlicense'])){
+                        if($_POST['user_phlicense'] == 1) echo ' checked';
+                      }elseif($dbFormData['ph_license'] == 1){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_phlicense_1">
+                      保有
+                    </label>
+                  </div>
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input" type="radio" name="user_phlicense" value="0" id="user_phlicense_0"<?php
+                      if(isset($_POST['user_phlicense'])){
+                        if($_POST['user_phlicense'] == 0) echo ' checked';
+                      }elseif($dbFormData['ph_license'] == 0){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_phlicense_0">
+                      無し
+                    </label>
                   </div>
                 </div>
               </div>
-            </div>
+              <div class="form-item mb-5">
+                <label class="fw-bold mb-2">キャリア状況<span class="fw-normal text-red">（必須）</span></label>
+                <?php if(!empty($err_msg['user_carrier_type'])){ ?>
+                  <div class="mb-2">
+                    <span class="text-red ms-3 fw-bold">
+                      <?php echo $err_msg['user_carrier_type']; ?>
+                    </span>
+                  </div>
+                <?php } ?>
+                <div class="radio-custom">
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input " type="radio" name="user_carrier_type" value="1" id="user_carrier_type_1"<?php
+                      if(isset($_POST['user_carrier_type'])){
+                        if($_POST['user_carrier_type'] == 1) echo ' checked';
+                      }elseif($dbFormData['carrier_type'] == 1){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_carrier_type_1">
+                      社会人
+                    </label>
+                  </div>
+                  <div class="form-check custom-control-inline">
+                    <input class="form-check-input" type="radio" name="user_carrier_type" value="0" id="user_carrier_type_0"<?php
+                      if(isset($_POST['user_carrier_type'])){
+                        if($_POST['user_carrier_type'] == 0) echo ' checked';
+                      }elseif($dbFormData['carrier_type'] == 0){
+                        echo ' checked';
+                      }
+                    ?>>
+                    <label class="form-check-label" for="user_carrier_type_0">
+                      学生
+                    </label>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="worker-form<?php
+                  if(isset($_POST['user_carrier_type'])){
+                    if($_POST['user_carrier_type'] == 1){
+                      echo ' form-show'; 
+                    }
+                  }elseif($dbFormData['carrier_type'] == 1){
+                    echo ' form-show'; 
+                  }
+                ?>">
+                <div class="form-item mb-5">
+                  <label class="fw-bold mb-2">経歴<span class="fw-normal text-red">（必須）</span></label>
+                  <?php if(!empty($err_msg['user_experience_phtype'])){ ?>
+                    <div class="mb-2">
+                      <span class="text-red ms-3 fw-bold">
+                        <?php echo $err_msg['user_experience_phtype']; ?>
+                      </span>
+                    </div>
+                  <?php }elseif(!empty($err_msg['user_experience_years'])){ ?>
+                    <div class="mb-2">
+                      <span class="text-red ms-3 fw-bold">
+                        <?php echo $err_msg['user_experience_years']; ?>
+                      </span>
+                    </div>
+                  <?php } ?>
+                  <div class="select-box-item">
+                    <div class="cp_ipselect cp_sl01">
+                      <select name="user_experience_phtype">
+                        <option value="">業種</option>
+                        <?php foreach($dbIndustryData as $key => $val){ ?>
+                          <option value="<?php echo $val['id']; ?>" <?php
+                            if(!empty($_POST['user_experience_phtype'])){
+                              if($_POST['user_experience_phtype'] == $val['id']) echo ' selected';
+                            }elseif($dbFormData['ex_phtype'] == $val['id']){
+                              echo ' selected'; 
+                            }
+                            ?>><?php echo $val['name']; ?>
+                          </option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="select-box-item">
+                    <div class="cp_ipselect cp_sl01">
+                      <select name="user_experience_years">
+                        <option value="" hidden>経験年数</option>
+                        <?php for($i = 1; $i<40; $i++){ ?>
+                          <option value="<?php echo $i; ?>"<?php
+                              if(!empty($_POST['user_experience_years'])){
+                                if($_POST['user_experience_years'] == $i) echo ' selected';
+                              }elseif($dbFormData['ex_year'] == $i){
+                                echo ' selected'; 
+                              }
+                            ?>><?php echo $i; ?>年</option>
+                        <?php } ?>
+                        <option value="40"<?php
+                          if(!empty($_POST['user_experience_years'])){
+                            if($_POST['user_experience_years'] == 40) echo ' selected';
+                          }elseif($dbFormData['ex_year'] == 40){
+                            echo ' selected'; 
+                          }
+                        ?>>40年以上</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="form-item mb-5">
+                  <label class="fw-bold mb-2">現在の状況<span class="fw-normal text-red">（必須）</span></label>
+                  <?php if(!empty($err_msg['user_employment_type'])){ ?>
+                    <div class="mb-2">
+                      <span class="text-red ms-3 fw-bold">
+                        <?php echo $err_msg['user_employment_type']; ?>
+                      </span>
+                    </div>
+                  <?php } ?>
+                  <div class="select-box-item">
+                    <div class="cp_ipselect cp_sl01">
+                      <select name="user_employment_type">
+                        <option value="">現在の状況</option>
+                        <?php foreach($dbEmploymentType as $key => $val){ ?>
+                          <option value="<?php echo $val['id']; ?>"
+                            <?php
+                              if(!empty($_POST['user_employment_type'])){
+                                if($_POST['user_employment_type'] == $val['id']) echo ' selected';
+                              }elseif($dbFormData['emp_type'] == $val['id']){
+                                echo ' selected'; 
+                              }
+                            ?>><?php echo $val['name']; ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            <div class="btn-container">
-              <input type="submit" class="btn" value="登録する">
-            </div>
-          </form>
+              <button type="submit" class="btn btn-blue">登録する</button>
+            </form>
+          </div>
         </div>
       </div>
     </main>
