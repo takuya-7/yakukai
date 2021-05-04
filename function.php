@@ -279,7 +279,7 @@ function getUser($u_id){
   debug('ユーザー情報を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM users WHERE id = :u_id AND delete_flg = 0';
+    $sql = 'SELECT *, industry.name AS i_name, employment_type.name AS e_name FROM users LEFT JOIN industry ON users.ex_phtype = industry.id LEFT JOIN employment_type ON users.emp_type = employment_type.id WHERE users.id = :u_id AND users.delete_flg = 0 AND industry.delete_flg = 0 AND employment_type.delete_flg = 0';
     $data = array(':u_id' => $u_id);
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
@@ -979,6 +979,7 @@ function getCompanyOne($c_id){
     // カラム名を一つずつ指定することで、余計な情報や個人情報を取得しないようにする
     $sql = 'SELECT c.id, c.sequence_number, c.corporate_number, c.process, c.name, c.prefecture_name, c.city_name, c.street_number,	c.prefecture_code, c.city_code, c.post_code, c.successor_corporate_number, c.furigana, c.hihyoji, c.summary, c.icon, c.rating, c.posts_count, c.create_date, c.update_date, i.name AS industry
               FROM company AS c LEFT OUTER JOIN industry AS i ON c.industry_id = i.id WHERE c.id = :c_id AND c.delete_flg = 0 AND i.delete_flg = 0';
+    // $sql = 'SELECT * FROM company LEFT OUTER JOIN industry ON company.industry_id = industry.id WHERE company.id = :c_id AND company.delete_flg = 0 AND industry.delete_flg = 0';
     $data = array(':c_id' => $c_id);
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
@@ -1096,6 +1097,45 @@ function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry
   } catch (Exception $e) {
     error_log('エラー発生：' . $e->getMessage());
   }
+}
+function getCompanyRatings($company_id){
+  debug('企業の平均評価値を取得します。');
+
+  debug('評価項目を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM rating_items WHERE delete_flg = 0';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $rating_items = $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+
+  debug('評価項目ごとに平均値を取得します。');
+  try{
+    $dbh = dbConnect();
+    foreach($rating_items as $key => $val){
+      $sql = 'SELECT AVG(rating) FROM ratings WHERE company_id = :company_id AND rating_item_id = :rating_item_id AND post_flg = 1 AND delete_flg = 0';
+      $data = array(
+        ':company_id' => $company_id,
+        ':rating_item_id' => $val['id']
+      );
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        $result[$key] = $stmt->fetch(PDO::FETCH_ASSOC);
+      }else{
+        return false;
+      }
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $result;
 }
 
 
