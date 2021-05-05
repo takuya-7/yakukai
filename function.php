@@ -638,20 +638,49 @@ function getMyMsgsAndBoard($u_id){
 }
 
 // カテゴリ情報取得
-function getCategory(){
+function getCategory($company_id = NULL){
+  debug('カテゴリ情報を取得します。');
+  $result = array();
   try{
     $dbh = dbConnect();
     $sql = 'SELECT id, name FROM category';
     $data = array();
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
-      return $stmt->fetchAll();
+      $result = $stmt->fetchAll();
     }else{
       return false;
     }
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
+
+  // $company_idを指定していた場合、カテゴリごとの投稿件数を取得
+  if($company_id){
+    debug('$company_idが指定されているためカテゴリごとの投稿件数を取得します。');
+
+    foreach($result as $key => $val){
+      try{
+        $dbh = dbConnect();
+        $sql = 'SELECT COUNT(answers.id) FROM category LEFT JOIN answers ON category.id = answers.category_id WHERE answers.company_id = :company_id AND answers.category_id = :category_id AND answers.post_flg = 1 AND answers.delete_flg = 0';
+        $data = array(
+          ':company_id' => $company_id,
+          ':category_id' => $val['id'],
+        );
+        $stmt = queryPost($dbh, $sql, $data);
+        if($stmt){
+          $result[$key]['count'] = $stmt->fetch(PDO::FETCH_ASSOC);
+        }else{
+          return false;
+        }
+      } catch (Exception $e){
+        error_log('エラー発生：' . $e->getMessage());
+      }
+    }
+
+  }
+
+  return $result;
 }
 
 // お気に入りかどうかを返す関数
@@ -973,6 +1002,7 @@ function getIndustry(){
 function getCompanyOne($c_id){
   debug('c_idに合致する企業情報（companyテーブルの情報、industryテーブルの業種名）を取得します。');
   debug('取得する企業ID：'.$c_id);
+  $result = array();
   try{
     $dbh = dbConnect();
     // companyテーブルをまず取得。そのindustry_idとindustryテーブルのidが同じになるようにindustryテーブルを外部結合。companyはc、industryはiとして、カラム名の前に「c.」とつけることでどのテーブルのカラム名なのか識別可能にする。キーを指定して中のデータを取り出す際、「name」はcompanyとindustryに両方あるため、industryの「name」は「industry」としておくことでキーを「industry」とすればカテゴリ名を取り出せる。結合してできたテーブルで、WHERE句の条件に合致するレコードを取り出す。
@@ -983,13 +1013,30 @@ function getCompanyOne($c_id){
     $data = array(':c_id' => $c_id);
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
-      return $stmt->fetch(PDO::FETCH_ASSOC);
+      $result['info'] =  $stmt->fetch(PDO::FETCH_ASSOC);
     }else{
       return false;
     }
   } catch (Exception $e) {
     error_log('エラー発生：'.$e->getMessage());
   }
+
+  debug('ユーザーによるデータ（平均年収等）を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT COUNT(over_time), AVG(over_time), COUNT(anual_total_salary), AVG(anual_total_salary), MAX(anual_total_salary), MIN(anual_total_salary) FROM posts WHERE company_id = :c_id AND post_flg = 1 AND delete_flg = 0';
+    $data = array(':c_id' => $c_id);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['user_data'] = $stmt->fetch(PDO::FETCH_ASSOC);
+    }else{
+      return false;
+    }
+  } catch (Exception $e) {
+    error_log('エラー発生：'.$e->getMessage());
+  }
+
+  return $result;
 }
 function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry, $sort, $span = 20){
   debug('getCompanyListを実行します。');
@@ -1135,26 +1182,26 @@ function getCompanyRatings($company_id){
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
-  return $result;
-}
-function getPostList($company_id){
-  debug('各企業ページで表示するクチコミ（post, answer）を取得します。');
+
+  debug('評価件数を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM posts LEFT JOIN answers ON posts.id = answers.post_id WHERE posts.company_id = :company_id AND answers.company_id = :company_id AND posts.delete_flg = 0 AND answers.delete_flg = 0 AND posts.post_flg = 1 AND answers.post_flg = 1';
+    $sql = 'SELECT COUNT(rating) FROM ratings WHERE company_id = :company_id AND rating_item_id = 1 AND post_flg = 1 AND delete_flg = 0';
     $data = array(
       ':company_id' => $company_id,
     );
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
-      return $stmt->fetchAll();
+      $result['rating_count'] = $stmt->fetch(PDO::FETCH_ASSOC);
     }else{
       return false;
     }
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
+  return $result;
 }
+
 function getPickUpPosts($company_id, $category_id){
   debug('各企業ページで表示するPick Upクチコミ（post, answer）を取得します。');
   $result = array();
