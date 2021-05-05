@@ -25,11 +25,7 @@ $dbCompanyData = getCompanyOne($c_id);
 // DBから企業の平均評価値を取得
 $dbCompanyRatings = getCompanyRatings($c_id);
 // DBからクチコミのカテゴリ情報を取得
-$dbCategoryData = getCategory();
-// 企業IDからDBクチコミ情報を取得
-$dbPostData = getPostList($c_id);
-// 企業IDからピックアップクチコミを取得
-// $dbPickUpPosts = getPickUpPosts($c_id);
+$dbCategoryData = getCategory($c_id);
 
 // $viewDataが空かどうか（空ならユーザーが不正なGETパラメータを入れて商品データを取得できていない状態）をチェック
 if(empty($dbCompanyData)){
@@ -66,15 +62,18 @@ require('head.php');
 
         <?php
 
+          var_dump($dbCategoryData);
+          echo '<br><br><br>';
+
           foreach($dbCategoryData as $key => $val){
-            echo $val['name'];
+            echo $val['count']['COUNT(answers.id)'];
             echo '<br>';
           }
-
+          
+          echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0);
           echo '<br><br>';
-          
-
-          
+          echo $dbCompanyData['user_data']['COUNT(anual_total_salary)'];
+        
 
           // foreach($dbCompanyRatings as $key => $val){
           //   echo $key.'=>'.$val['AVG(rating)'];
@@ -85,13 +84,13 @@ require('head.php');
         <div class="company-wrapper">
           <div class="company-heading">
             <section>
-              <h1 class="page-title"><?php echo $dbCompanyData['name']; ?><span class="company-title-append">のクチコミ・評判・年収</span></h1>
+              <h1 class="page-title"><?php echo $dbCompanyData['info']['name']; ?><span class="company-title-append">のクチコミ・評判・年収</span></h1>
               <div class="head-rating mb-4">
                 <span class="level-of-well-being">幸福度</span>
                 <br>
                 <span class="heart5_rating" data-rate="<?php echo round($dbCompanyRatings[0]['AVG(rating)'], 1); ?>"></span>
                 <span class="rating-val"><?php echo round($dbCompanyRatings[0]['AVG(rating)'], 1); ?></span>
-                <span class="answer-count">（回答：0人）</span>
+                <span class="answer-count">（回答：<?php echo $dbCompanyRatings['rating_count']['COUNT(rating)']; ?>件）</span>
               </div>
 
               <canvas id="header-chart"></canvas>
@@ -102,23 +101,23 @@ require('head.php');
                     平均年収<br>（正社員薬剤師）
                   </div>
                   <div class="mb-2">
-                    <span class="param">600</span>
+                    <span class="param"><?php echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0); ?></span>
                     <span> 万円</span>
                   </div>
                   <div>
-                    <span>（回答：0件）</span>
+                    <span>（回答：<?php echo $dbCompanyData['user_data']['COUNT(anual_total_salary)']; ?>件）</span>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="title">
-                    残業時間<br>（月間）
+                    平均残業時間<br>（月間）
                   </div>
                   <div class="mb-2">
-                    <span class="param">15</span>
+                    <span class="param"><?php echo round($dbCompanyData['user_data']['AVG(over_time)'], 0); ?></span>
                     <span> 時間</span>
                   </div>
                   <div>
-                    <span>（回答：0件）</span>
+                    <span>（回答：<?php echo $dbCompanyData['user_data']['COUNT(over_time)']; ?>件）</span>
                   </div>
                 </div>
               </div>
@@ -167,9 +166,9 @@ require('head.php');
           <div class="page-content">
             <section>
               <h2>年収データ</h2>
-              <p>回答者の平均年収：〜万円</p>
-              <p>回答者の年収範囲：〜万円</p>
-              <p>回答者数：人</p>
+              <p>回答者の平均年収：<?php echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0); ?>万円</p>
+              <p>回答者の年収範囲：<?php echo round($dbCompanyData['user_data']['MIN(anual_total_salary)'], 0); ?>〜<?php echo round($dbCompanyData['user_data']['MAX(anual_total_salary)'], 0); ?>万円</p>
+              <p>回答者数：<?php echo $dbCompanyData['user_data']['COUNT(anual_total_salary)']; ?>人</p>
               <p>回答者の平均年齢：人</p>
             </section>
 
@@ -182,52 +181,53 @@ require('head.php');
             <h2>Pick up クチコミ</h2>
             
             <?php foreach($dbCategoryData as $key => $category){ ?>
-              <section>
+              <?php $dbPickUpPosts = getPickUpPosts($c_id, $category['id']); ?>
+              <?php if(!empty($dbPickUpPosts)){ ?>
+                <section>
 
-                <?php $dbPickUpPosts = getPickUpPosts($c_id, $category['id']); ?>
+                  <?php foreach($dbPickUpPosts as $key => $val){ ?>
+                    <div class="kutikomi-header">
+                      <div class="user-icon">
+                        <i class="gg-profile"></i>
+                      </div>
+    
+                      <h3>
+                        <span><?php echo $dbCompanyData['info']['name']; ?></span><br>
+                        <?php echo $val['category']; ?>
+                      </h3>
+    
+                      <div class="user-info">
+                        回答者：
+                        <a href="">
+                          <?php echo SEX[$val['sex']]; ?>
+                          <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
+                          <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
+                          <?php echo '、在籍'.($val['a_update_date']-$val['entry_date']).'年'; ?>
+                        </a>
+                      </div>
+    
+                      <span class="heart5_rating" data-rate="<?php echo round($val['rating'], 1); ?>"></span>
+                      <span class="fs-3 ms-1">
+                        <?php echo round($val['rating'], 1); ?>
+                      </span>
+                      <p></p>
+                    </div>
+    
+                    <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
+                    <p><?php echo $val['answer']; ?></p>
+    
+                    <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
+    
+                    <div class="border-bottom mb-3"></div>
+    
+                  <?php } ?>
 
-                <?php foreach($dbPickUpPosts as $key => $val){ ?>
-                  <div class="kutikomi-header">
-                    <div class="user-icon">
-                      <i class="gg-profile"></i>
+                    <div class="category-btn">
+                      <a href=""><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
                     </div>
-  
-                    <h3>
-                      <span><?php echo $dbCompanyData['name']; ?></span><br>
-                      <?php echo $val['category']; ?>
-                    </h3>
-  
-                    <div class="user-info">
-                      回答者：
-                      <a href="">
-                        <?php echo SEX[$val['sex']]; ?>
-                        <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
-                        <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
-                        <?php echo '、在籍'.($val['a_update_date']-$val['entry_date']).'年'; ?>
-                      </a>
-                    </div>
-  
-                    <span class="heart5_rating" data-rate="<?php echo round($val['rating'], 1); ?>"></span>
-                    <span class="fs-3 ms-1">
-                      <?php echo round($val['rating'], 1); ?>
-                    </span>
-                    <p></p>
-                  </div>
-  
-                  <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
-                  <p><?php echo $val['answer']; ?></p>
-  
-                  <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
-  
-                  <div class="border-bottom mb-3"></div>
-  
+                    
+                  </section>
                 <?php } ?>
-                  
-                  <div class="category-btn">
-                    <a href=""><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="fs-08 category-append">のクチコミをもっと見る（件）</span></a>
-                  </div>
-                
-              </section>
             <?php } ?>
             
 
@@ -240,7 +240,7 @@ require('head.php');
               <div class="kutikomi-category-list">
                 <ul>
                   <?php foreach($dbCategoryData as $key => $val){ ?>
-                    <li><a href=""><?php echo $val['name']; ?>（件）</a></li>
+                    <li><a href=""><?php echo $val['name']; ?>（<?php echo $val['count']['COUNT(answers.id)']; ?>件）</a></li>
                   <?php } ?>
                 </ul>
               </div>
@@ -254,11 +254,11 @@ require('head.php');
               <div class="company-info">
                 <dl>
                   <dt>企業名</dt>
-                  <dd><?php echo $dbCompanyData['name']; ?></dd>
+                  <dd><?php echo $dbCompanyData['info']['name']; ?></dd>
                   <dt>フリガナ</dt>
-                  <dd><?php echo $dbCompanyData['furigana']; ?></dd>
+                  <dd><?php echo $dbCompanyData['info']['furigana']; ?></dd>
                   <dt>本社所在地</dt>
-                  <dd><?php echo $dbCompanyData['prefecture_name'].$dbCompanyData['city_name'].$dbCompanyData['street_number']; ?></dd>
+                  <dd><?php echo $dbCompanyData['info']['prefecture_name'].$dbCompanyData['city_name'].$dbCompanyData['info']['street_number']; ?></dd>
                 </dl>
               </div>
             </section>
@@ -318,7 +318,7 @@ require('head.php');
               ],
 
               datasets: [{
-                label: '<?php echo $dbCompanyData['name']; ?>の評価値',
+                label: '<?php echo $dbCompanyData['info']['name']; ?>の評価値',
                 data: [
                   <?php echo round($dbCompanyRatings[1]['AVG(rating)'], 1); ?>,
                   <?php echo round($dbCompanyRatings[2]['AVG(rating)'], 1); ?>,
