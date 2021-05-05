@@ -39,6 +39,9 @@ if(!empty(getQuestionsAndRatings($dbPostData[0]['id'], $user_id, $company_id))){
   $dbRatingItems = getRatingItemsAndQuestions();
 }
 
+// 残業時間格納
+$form_over_time = array(0, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200);
+
 // POSTパラメータを取得
 //----------------------------
 if(!empty($_POST)){
@@ -65,6 +68,7 @@ if(!empty($_POST)){
   }
   debug('$postAnswers：'.print_r($postRatings, true));
 
+  $over_time = $_POST['over_time'];
   $anual_total_salary = $_POST['anual_total_salary'];
 
   if(!empty($_POST['monthly_total_salary'])){
@@ -92,6 +96,7 @@ if(!empty($_POST)){
   foreach($postRatings as $key => $val){
     validRequired($val['rating'], $val['english_name']);
   }
+  validRequired($over_time, 'over_time');
   validRequired($anual_total_salary, 'anual_total_salary');
   
   // 半角数字チェック
@@ -212,7 +217,7 @@ require('head.php');
       <div class="container">
         <div class="bg-white py-4">
           <h1 class="page-title mb-4">
-            <?php echo $dbCompanyData['name']; ?>について教えてください。（2/3）
+            <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（2/3）
           </h1>
 
           <?php if(!empty($err_msg)){ ?>
@@ -343,6 +348,41 @@ require('head.php');
                 </ul>
               </div>
             <?php } ?>
+
+            <div class="mb-2 fw-bold">
+              残業時間<span class="fw-normal text-red">（必須）</span>
+            </div>
+
+            <div class="mb-3">
+              あなたのこの会社での残業時間（月間）はどの程度か教えてください。
+            </div>
+
+            <div class="d-block mb-2">
+              <span class="text-red fw-bold">
+                <?php if(!empty($err_msg['over_time'])) echo $err_msg['over_time']; ?>
+              </span>
+            </div>
+
+            <div class="ms-3 mb-5">
+              <div class="cp_ipselect cp_sl01">
+                <select name="over_time" class="<?php if(!empty($err_msg['over_time'])) echo 'bg-red'; ?>">
+                  <option value="">残業時間</option>
+                  <?php foreach($form_over_time as $val){ ?>
+                    <option value="<?php echo $val; ?>"
+                      <?php
+                        if(!empty($_POST['over_time'])){
+                          if($_POST['over_time'] == $val) echo ' selected';
+                        }elseif(!empty($dbPostData[0]['over_time'])){
+                          if($dbPostData[0]['over_time'] == $val) echo ' selected';
+                        }
+                      ?>><?php echo $val; ?>時間</option>
+                  <?php } ?>
+
+                </select>
+              </div>
+            </div>
+
+
 
             <div class="mb-2 fw-bold">
               給与・年収<span class="fw-normal text-red">（必須）</span>
