@@ -94,3 +94,8 @@ define('REGISTRATION', array(
   0 => '退職済み',
   1 => '現職',
 ));
+
+define('ENTRY_TYPE', array(
+  0 => '新卒入社',
+  1 => '中途入社',
+));
