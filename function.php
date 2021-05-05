@@ -641,7 +641,7 @@ function getMyMsgsAndBoard($u_id){
 function getCategory(){
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM category';
+    $sql = 'SELECT id, name FROM category';
     $data = array();
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
@@ -1120,7 +1120,7 @@ function getCompanyRatings($company_id){
   try{
     $dbh = dbConnect();
     foreach($rating_items as $key => $val){
-      $sql = 'SELECT AVG(rating) FROM ratings WHERE company_id = :company_id AND rating_item_id = :rating_item_id AND post_flg = 1 AND delete_flg = 0';
+      $sql = 'SELECT ratings.rating_item_id, AVG(rating), rating_items.name FROM ratings LEFT JOIN rating_items ON ratings.rating_item_id = rating_items.id WHERE ratings.company_id = :company_id AND ratings.rating_item_id = :rating_item_id AND ratings.post_flg = 1 AND ratings.delete_flg = 0';
       $data = array(
         ':company_id' => $company_id,
         ':rating_item_id' => $val['id']
@@ -1137,8 +1137,85 @@ function getCompanyRatings($company_id){
   }
   return $result;
 }
+function getPostList($company_id){
+  debug('各企業ページで表示するクチコミ（post, answer）を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM posts LEFT JOIN answers ON posts.id = answers.post_id WHERE posts.company_id = :company_id AND answers.company_id = :company_id AND posts.delete_flg = 0 AND answers.delete_flg = 0 AND posts.post_flg = 1 AND answers.post_flg = 1';
+    $data = array(
+      ':company_id' => $company_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+}
+function getPickUpPosts($company_id, $category_id){
+  debug('各企業ページで表示するPick Upクチコミ（post, answer）を取得します。');
+  $result = array();
+
+  debug('投稿を2件取得する');
+  // 必要なデータ：category.name, users.sex, posts.employment_type, employment_type.name, posts.resistration, posts.entry_type, posts.department, posts.position, answer_items.name, answers.answer, ratings.ragting(rating_item_id = 1)
+  // 対象テーブル：posts, category, employment_type, users, answer_items, answers, ratings
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
+      FROM posts
+      LEFT JOIN users ON posts.user_id = users.id
+      LEFT JOIN employment_type ON posts.employment_type = employment_type.id
+      LEFT JOIN answers ON posts.id = answers.post_id
+      LEFT JOIN category ON answers.category_id = category.id
+      LEFT JOIN answer_items ON answers.answer_item_id = answer_items.id
+      LEFT JOIN ratings ON posts.id = ratings.post_id
+      WHERE
+        posts.company_id = :company_id AND
+        answers.company_id = :company_id AND
+        answers.category_id = :category_id AND
+        ratings.rating_item_id = 1 AND
+        posts.post_flg = 1 AND
+        answers.post_flg = 1 AND
+        posts.delete_flg = 0 AND
+        answers.delete_flg = 0 AND
+        category.delete_flg = 0
+      LIMIT 2';
+    $data = array(
+      ':company_id' => $company_id,
+      ':category_id' => $category_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result = $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
 
 
+  // try{
+  //   $dbh = dbConnect();
+  //   $sql = 'SELECT *, answers.update_date AS a_update_date FROM posts LEFT JOIN answers ON posts.id = answers.post_id LEFT JOIN category ON answers.category_id = category.id WHERE posts.company_id = :company_id AND answers.company_id = :company_id AND posts.delete_flg = 0 AND answers.delete_flg = 0 AND posts.post_flg = 1 AND answers.post_flg = 1 AND category.delete_flg = 0 LIMIT 20';
+  //   $data = array(
+  //     ':company_id' => $company_id,
+  //   );
+  //   $stmt = queryPost($dbh, $sql, $data);
+  //   if($stmt){
+  //     $result = $stmt->fetchAll();
+  //   }else{
+  //     return false;
+  //   }
+  // } catch (Exception $e){
+  //   error_log('エラー発生：' . $e->getMessage());
+  // }
+
+  return $result;
+}
 function getPrefecture(){
   try{
     $dbh = dbConnect();
