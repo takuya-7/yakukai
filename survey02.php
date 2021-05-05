@@ -170,9 +170,10 @@ if(!empty($_POST)){
     }
 
     try{
-      // 年収・給与情報をDB、postsテーブルに登録
-      $sql = 'UPDATE posts SET anual_total_salary = :anual_total_salary, monthly_total_salary = :monthly_total_salary, monthly_overtime_salary = :monthly_overtime_salary, monthly_allowance = :monthly_allowance, anual_bonus_salary = :anual_bonus_salary WHERE user_id = :user_id AND company_id = :company_id AND delete_flg = 0';
+      // 残業時間、年収・給与情報をDB、postsテーブルに登録
+      $sql = 'UPDATE posts SET over_time = :over_time, anual_total_salary = :anual_total_salary, monthly_total_salary = :monthly_total_salary, monthly_overtime_salary = :monthly_overtime_salary, monthly_allowance = :monthly_allowance, anual_bonus_salary = :anual_bonus_salary WHERE user_id = :user_id AND company_id = :company_id AND delete_flg = 0';
       $data = array(
+        ':over_time' => $over_time,
         ':anual_total_salary' => $anual_total_salary,
         ':monthly_total_salary' => $monthly_total_salary,
         ':monthly_overtime_salary' => $monthly_overtime_salary,
