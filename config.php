@@ -84,3 +84,13 @@ define('RATING_ANSWER', array(
   '2.0' => 'あまりそう思わない',
   '1.0' => 'そう思わない',
 ));
+
+define('SEX', array(
+  1 => '男性',
+  2 => '女性',
+));
+
+define('REGISTRATION', array(
+  0 => '退職済み',
+  1 => '現職',
+));
