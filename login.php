@@ -74,7 +74,7 @@ if(!empty($_POST)){
 
                 // 画面遷移処理
                 $dbPostData = getPost($result['id']);
-                $dbRatingData = getRating($result['id']);
+                $dbRatingData = getRatingByUserId($result['id']);
                 $dbAnswerData = getAnswer($result['id']);
                 if(empty($dbPostData[0]['company_id'])){
                   debug('会社登録がありません。クチコミ投稿ページへ遷移します。');
