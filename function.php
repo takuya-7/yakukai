@@ -1024,7 +1024,7 @@ function getCompanyOne($c_id){
   debug('ユーザーによるデータ（平均年収等）を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT COUNT(over_time), AVG(over_time), COUNT(anual_total_salary), AVG(anual_total_salary), MAX(anual_total_salary), MIN(anual_total_salary) FROM posts WHERE company_id = :c_id AND post_flg = 1 AND delete_flg = 0';
+    $sql = 'SELECT AVG(users.birth_year), COUNT(over_time), AVG(over_time), COUNT(anual_total_salary), AVG(anual_total_salary), MAX(anual_total_salary), MIN(anual_total_salary) FROM posts LEFT JOIN users ON posts.user_id = users.id WHERE posts.company_id = :c_id AND posts. post_flg = 1 AND users.delete_flg = 0 AND posts.delete_flg = 0';
     $data = array(':c_id' => $c_id);
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
@@ -1263,6 +1263,47 @@ function getPickUpPosts($company_id, $category_id){
 
   return $result;
 }
+function getPostByCategory($company_id, $category_id){
+  debug('各企業における、カテゴリ内の投稿（post, answer）を取得します。');
+  $result = array();
+
+  // 必要なデータ：category.name, users.sex, posts.employment_type, employment_type.name, posts.resistration, posts.entry_type, posts.department, posts.position, answer_items.name, answers.answer, ratings.ragting(rating_item_id = 1)
+  // 対象テーブル：posts, category, employment_type, users, answer_items, answers, ratings
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
+      FROM posts
+      LEFT JOIN users ON posts.user_id = users.id
+      LEFT JOIN employment_type ON posts.employment_type = employment_type.id
+      LEFT JOIN answers ON posts.id = answers.post_id
+      LEFT JOIN category ON answers.category_id = category.id
+      LEFT JOIN answer_items ON answers.answer_item_id = answer_items.id
+      LEFT JOIN ratings ON posts.id = ratings.post_id
+      WHERE
+        posts.company_id = :company_id AND
+        answers.company_id = :company_id AND
+        answers.category_id = :category_id AND
+        ratings.rating_item_id = 1 AND
+        posts.post_flg = 1 AND
+        answers.post_flg = 1 AND
+        posts.delete_flg = 0 AND
+        answers.delete_flg = 0 AND
+        category.delete_flg = 0
+      ';
+    $data = array(
+      ':company_id' => $company_id,
+      ':category_id' => $category_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+}
 function getPrefecture(){
   try{
     $dbh = dbConnect();
@@ -1277,4 +1318,14 @@ function getPrefecture(){
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
+}
+
+// ===============================================
+// 時間・日付処理
+// ===============================================
+function getYearDiff($date1, $date2){
+  $o_date1 = new DateTime($date1);
+  $o_date2 = new DateTime($date2);
+  $diff = date_diff($o_date1, $o_date2);
+  return $diff->y;
 }
