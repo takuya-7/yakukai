@@ -18,14 +18,14 @@ debugLogStart();
 // GETパラメータを取得
 //----------------------------
 // 企業IDのGETパラメータを取得
-$c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+$company_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
 
 // DBから企業データを取得
-$dbCompanyData = getCompanyOne($c_id);
+$dbCompanyData = getCompanyOne($company_id);
 // DBから企業の平均評価値を取得
-$dbCompanyRatings = getCompanyRatings($c_id);
+$dbCompanyRatings = getCompanyRatings($company_id);
 // DBからクチコミのカテゴリ情報を取得
-$dbCategoryData = getCategory($c_id);
+$dbCategoryData = getCategory($company_id);
 
 // $viewDataが空かどうか（空ならユーザーが不正なGETパラメータを入れて商品データを取得できていない状態）をチェック
 if(empty($dbCompanyData)){
@@ -38,7 +38,7 @@ debug('企業データ：'.print_r($dbCompanyData,true));
 ?>
 
 <?php
-$siteTitle = $dbCompanyData['name'];
+$siteTitle = $dbCompanyData['info']['name'];
 require('head.php'); 
 ?>
 
@@ -59,27 +59,6 @@ require('head.php');
         <button class="btn-blue mb-3">
           <a href="surveyInfo.php">クチコミを投稿する</a>
         </button>
-
-        <?php
-
-          var_dump($dbCategoryData);
-          echo '<br><br><br>';
-
-          foreach($dbCategoryData as $key => $val){
-            echo $val['count']['COUNT(answers.id)'];
-            echo '<br>';
-          }
-          
-          echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0);
-          echo '<br><br>';
-          echo $dbCompanyData['user_data']['COUNT(anual_total_salary)'];
-        
-
-          // foreach($dbCompanyRatings as $key => $val){
-          //   echo $key.'=>'.$val['AVG(rating)'];
-          //   echo '<br>';
-          // }
-        ?>
 
         <div class="company-wrapper">
           <div class="company-heading">
@@ -169,19 +148,19 @@ require('head.php');
               <p>回答者の平均年収：<?php echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0); ?>万円</p>
               <p>回答者の年収範囲：<?php echo round($dbCompanyData['user_data']['MIN(anual_total_salary)'], 0); ?>〜<?php echo round($dbCompanyData['user_data']['MAX(anual_total_salary)'], 0); ?>万円</p>
               <p>回答者数：<?php echo $dbCompanyData['user_data']['COUNT(anual_total_salary)']; ?>人</p>
-              <p>回答者の平均年齢：人</p>
+              <p>回答者の平均年齢：<?php echo date('Y')-round($dbCompanyData['user_data']['AVG(users.birth_year)']); ?>歳</p>
             </section>
 
-            <section>
+            <!-- <section>
               <h2>処方せん処理枚数</h2>
               <p>回答者の平均枚数（1日8時間あたり）：枚</p>
               <p>回答者の枚数範囲：〜枚</p>
-            </section>
+            </section> -->
             
             <h2>Pick up クチコミ</h2>
             
             <?php foreach($dbCategoryData as $key => $category){ ?>
-              <?php $dbPickUpPosts = getPickUpPosts($c_id, $category['id']); ?>
+              <?php $dbPickUpPosts = getPickUpPosts($company_id, $category['id']); ?>
               <?php if(!empty($dbPickUpPosts)){ ?>
                 <section>
 
@@ -202,17 +181,17 @@ require('head.php');
                           <?php echo SEX[$val['sex']]; ?>
                           <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
                           <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
-                          <?php echo '、在籍'.($val['a_update_date']-$val['entry_date']).'年'; ?>
+                          <?php echo '、在籍'.getYearDiff($val['a_update_date'], $val['entry_date']).'年'; ?>
                         </a>
                       </div>
     
-                      <span class="heart5_rating" data-rate="<?php echo round($val['rating'], 1); ?>"></span>
+                      <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
                       <span class="fs-3 ms-1">
                         <?php echo round($val['rating'], 1); ?>
                       </span>
                       <p></p>
                     </div>
-    
+
                     <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
                     <p><?php echo $val['answer']; ?></p>
     
@@ -228,19 +207,14 @@ require('head.php');
                     
                   </section>
                 <?php } ?>
-            <?php } ?>
-            
-
-            
-
-            
+            <?php } ?>            
 
             <section>
               <h2>カテゴリからクチコミを探す</h2>
               <div class="kutikomi-category-list">
                 <ul>
                   <?php foreach($dbCategoryData as $key => $val){ ?>
-                    <li><a href=""><?php echo $val['name']; ?>（<?php echo $val['count']['COUNT(answers.id)']; ?>件）</a></li>
+                    <li><a href="category.php?co=<?php echo $company_id.'&ca='.$val['id']; ?>"><?php echo $val['name']; ?>（<?php echo $val['count']['COUNT(answers.id)']; ?>件）</a></li>
                   <?php } ?>
                 </ul>
               </div>
@@ -258,7 +232,7 @@ require('head.php');
                   <dt>フリガナ</dt>
                   <dd><?php echo $dbCompanyData['info']['furigana']; ?></dd>
                   <dt>本社所在地</dt>
-                  <dd><?php echo $dbCompanyData['info']['prefecture_name'].$dbCompanyData['city_name'].$dbCompanyData['info']['street_number']; ?></dd>
+                  <dd><?php echo $dbCompanyData['info']['prefecture_name'].$dbCompanyData['info']['city_name'].$dbCompanyData['info']['street_number']; ?></dd>
                 </dl>
               </div>
             </section>
@@ -335,20 +309,12 @@ require('head.php');
                 // borderCapStyle: 'round',
                 pointRadius: 0,
               }, 
-              // {
-              //   label: 'Bさん',
-              //   data: [4, 3, 4, 2, 3],
-              //   backgroundColor: 'RGBA(115,255,25, 0.5)',
-              //   borderColor: 'RGBA(115,255,25, 1)',
-              //   borderWidth: 1,
-              //   pointBackgroundColor: 'RGB(46,106,177)'
-              // }
               ]
             },
             options: {
               title: {
                 display: true,
-                text: '試験成績'
+                text: ''
               },
               scale:{
                 min: 0,
@@ -359,7 +325,7 @@ require('head.php');
                   // suggestedMax: 5,
                   stepSize: 1,
                   callback: function(value, index, values){
-                    return  value +  '点'
+                    return  value +  ''
                   }
                 }
               }
