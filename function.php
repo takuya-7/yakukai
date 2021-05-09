@@ -279,7 +279,7 @@ function getUser($u_id){
   debug('ユーザー情報を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT *, industry.name AS i_name, employment_type.name AS e_name FROM users LEFT JOIN industry ON users.ex_phtype = industry.id LEFT JOIN employment_type ON users.emp_type = employment_type.id WHERE users.id = :u_id AND users.delete_flg = 0 AND industry.delete_flg = 0 AND employment_type.delete_flg = 0';
+    $sql = 'SELECT email, sex, birth_year, addr, ph_license, carrier_type, ex_phtype, ex_year, industry.name AS i_name, employment_type.name AS e_name FROM users LEFT JOIN industry ON users.ex_phtype = industry.id LEFT JOIN employment_type ON users.emp_type = employment_type.id WHERE users.id = :u_id AND users.delete_flg = 0';
     $data = array(':u_id' => $u_id);
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
@@ -298,6 +298,52 @@ function getPost($u_id){
     error_log('エラー発生：' . $e->getMessage());
   }
   return $stmt->fetchAll();
+}
+function getPostAll($post_id){
+  debug('ユーザーのクチコミ情報（post, rating, answer）を取得します。');
+  debug('ユーザーのクチコミ情報（post）を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM posts WHERE id = :post_id AND post_flg = 1 AND delete_flg = 0';
+    $data = array(':post_id' => $post_id);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['post'] = $stmt->fetch(PDO::FETCH_ASSOC);
+    }else{
+      return false;
+    }
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  debug('ユーザーのクチコミ情報（rating）を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT rating_item_id, rating FROM ratings WHERE post_id = :post_id AND post_flg = 1 AND delete_flg = 0';
+    $data = array(':post_id' => $post_id);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['rating'] = $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  debug('ユーザーのクチコミ情報（answer）を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT answer_item_id, answer, category_id FROM answers WHERE post_id = :post_id AND post_flg = 1 AND delete_flg = 0';
+    $data = array(':post_id' => $post_id);
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['answer'] = $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exeption $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
+  return $result;
 }
 function getRatingByUserId($u_id){
   debug('ユーザーの評価値を取得します。');
@@ -1211,7 +1257,7 @@ function getPickUpPosts($company_id, $category_id){
   // 対象テーブル：posts, category, employment_type, users, answer_items, answers, ratings
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
+    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.id, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
       FROM posts
       LEFT JOIN users ON posts.user_id = users.id
       LEFT JOIN employment_type ON posts.employment_type = employment_type.id
