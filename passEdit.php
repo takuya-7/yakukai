@@ -109,65 +109,58 @@ $siteTitle = 'パスワード変更';
 require('head.php');
 ?>
 
-<body class="page-mypage page-2colum page-logined">
-    <style>
-        .form{
-            margin-top: 50px;
-        }
-    </style>
+<body>
 
     <?php
       require('header.php');
     ?>
 
-    <div id="contents" class="site-width">
+    <main>
+        <div class="content-wrapper py-5">
+            <div class="container">
+            
+                <div class="bg-white py-3">
+                    <h1 class="">パスワード変更</h1>
+                    
+                    <form action="" method="post" class="form py-0">
 
-        <h1 class="page-title">パスワード変更</h1>
+                        <?php if(getErrMsg('common')){ ?>
+                            <div class="area-msg">
+                                <?php echo getErrMsg('common'); ?>
+                            </div>
+                        <?php } ?>
         
-        <section id="main">
-            <div class="form-container-">
-                <form action="" method="post" class="form">
-                    <div class="area-msg">
-                        <?php echo getErrMsg('common'); ?>
-                    </div>
-
-                    <label class="<?php if(!empty($err_msg['pass_old'])) echo'err'; ?>">
-                        現在のパスワード
-                        <input type="password" name="pass_old" value="<?php echo getFormData('pass_old'); ?>">
-                    </label>
-                    <div class="area-msg">
-                        <?php echo getErrMsg('pass_old'); ?>
-                    </div>
-
-                    <label class="<?php if(!empty($err_msg['pass_new'])) echo'err'; ?>">
-                        新しいパスワード
-                        <input type="password" name="pass_new" value="<?php echo getFormData('pass_new'); ?>">
-                    </label>
-                    <div class="area-msg">
-                        <?php echo getErrMsg('pass_new'); ?>
-                    </div>
-
-                    <label class="<?php if(!empty($err_msg['pass_new_re'])) echo'err'; ?>">
-                        新しいパスワード（再入力）
-                        <input type="password" name="pass_new_re" value="<?php echo getFormData('pass_new_re'); ?>">
-                    </label>
-                    <div class="area-msg">
-                        <?php echo getErrMsg('pass_new_re'); ?>
-                    </div>
-
-                    <div class="btn-container">
-                        <input type="submit" class="btn btn-mid" value="変更する">
-                    </div>
-
-                </form>
+                        <label class="<?php if(!empty($err_msg['pass_old'])) echo'err'; ?>">
+                            現在のパスワード
+                            <input type="password" name="pass_old" value="<?php echo getFormData('pass_old'); ?>">
+                        </label>
+                        <div class="area-msg">
+                            <?php echo getErrMsg('pass_old'); ?>
+                        </div>
+        
+                        <label class="<?php if(!empty($err_msg['pass_new'])) echo'err'; ?>">
+                            新しいパスワード
+                            <input type="password" name="pass_new" value="<?php echo getFormData('pass_new'); ?>">
+                        </label>
+                        <div class="area-msg">
+                            <?php echo getErrMsg('pass_new'); ?>
+                        </div>
+        
+                        <label class="<?php if(!empty($err_msg['pass_new_re'])) echo'err'; ?>">
+                            新しいパスワード（再入力）
+                            <input type="password" name="pass_new_re" value="<?php echo getFormData('pass_new_re'); ?>">
+                        </label>
+                        <div class="area-msg">
+                            <?php echo getErrMsg('pass_new_re'); ?>
+                        </div>
+        
+                        <button type="submit" class="btn btn-blue">変更する</button>
+        
+                    </form>
+                </div>
             </div>
-
-        </section>
-        
-        <?php
-            require('sidebar_mypage.php');
-        ?>
-    </div>
+        </div>
+    </main>
 
     <?php
       require('footer.php');
