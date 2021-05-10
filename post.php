@@ -32,6 +32,8 @@ $dbCategoryData = getCategory($company_id);
 $dbPostData = getPostAll($post_id);
 // DBから投稿者の情報取得
 $dbUserData = getUser($dbPostData['post']['user_id']);
+// DBからクチコミリスト取得
+$dbPostList = getPostList($company_id);
 
 // $viewDataが空かどうか（空ならユーザーが不正なGETパラメータを入れて商品データを取得できていない状態）をチェック
 if(empty($dbCompanyData) || empty($dbPostData)){
@@ -67,9 +69,9 @@ require('head.php');
         </button>
 
         <?php
-          echo $dbPostData['post']['user_id'];
+          var_dump($dbPostList);
           echo '<br><br>';
-          var_dump($dbUserData);
+          var_dump($dbPostData);
         ?>
 
         <div class="company-wrapper">
@@ -78,6 +80,7 @@ require('head.php');
               <h1 class="page-title"><?php echo $dbCompanyData['info']['name']; ?><span class="company-title-append">の回答者別クチコミ</span></h1>
 
               <table class="table">
+                回答者情報
                 <tbody>
                   <tr>
                     <td>入社経路</td>
@@ -158,145 +161,185 @@ require('head.php');
                 
               </div>
 
-              <canvas id="header-chart"></canvas>
+              <div class="mb-5">
+                <div class="mb-3">
+                  <ul class="list-unstyled">
+                    <?php foreach($dbPostData['rating'] as $key => $val){ ?>
+                      <li class="p-0 mb-3">
+                        <div class="row">
+                          <div class="col-6"><?php echo $val['name']; ?></div>
+                          <div class="col-6">
+                            <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
+                            <span class=""><?php echo $val['rating']; ?></span>
+                          </div>
+                        </div>
+                      </li>
+                    <?php } ?>
+                  </ul>
+                  <div class="border"></div>
+                </div>
+                
+                <div class="mb-3">
+                  <ul class="list-unstyled">
+                    <li>
+                      <div class="row">
+                        <div class="col-6">残業時間</div>
+                        <div class="col-6"><?php echo $dbPostData['post']['over_time']; ?>時間</div>
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="border"></div>
+                </div>
 
-              <div class="main-params-summary row text-center mb-4">
-                <div class="col-6 border-end">
-                  <div class="title">
-                    平均年収<br>（正社員薬剤師）
-                  </div>
-                  <div class="mb-2">
-                    <span class="param"><?php echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0); ?></span>
-                    <span> 万円</span>
-                  </div>
-                  <div>
-                    <span>（回答：<?php echo $dbCompanyData['user_data']['COUNT(anual_total_salary)']; ?>件）</span>
-                  </div>
+                <div class="mb-3">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <td>年収</td>
+                        <td><?php echo $dbPostData['post']['anual_total_salary']; ?>万円</td>
+                      </tr>
+                      <tr>
+                        <td>月給（総額）</td>
+                        <td><?php echo $dbPostData['post']['monthly_total_salary']; ?>万円</td>
+                      </tr>
+                      <tr>
+                        <td>残業代（月額）</td>
+                        <td><?php echo $dbPostData['post']['monthly_overtime_salary']; ?>万円</td>
+                      </tr>
+                      <tr>
+                        <td>手当て（月額）</td>
+                        <td><?php echo $dbPostData['post']['monthly_allowance']; ?>万円</td>
+                      </tr>
+                      <tr>
+                        <td>賞与（年額）</td>
+                        <td><?php echo $dbPostData['post']['anual_bonus_salary']; ?>万円</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <div class="col-6">
-                  <div class="title">
-                    平均残業時間<br>（月間）
-                  </div>
-                  <div class="mb-2">
-                    <span class="param"><?php echo round($dbCompanyData['user_data']['AVG(over_time)'], 0); ?></span>
-                    <span> 時間</span>
-                  </div>
-                  <div>
-                    <span>（回答：<?php echo $dbCompanyData['user_data']['COUNT(over_time)']; ?>件）</span>
-                  </div>
-                </div>
+
               </div>
-              <div class="params">
-                <div class="item">
-                  <div class="item-name">
-                    <?php echo $dbCompanyRatings[10]['name']; ?>
-                    <div class="param">
-                      <span class="value"><?php echo round($dbCompanyRatings[10]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
-                    </div>
-                  </div>
-                  <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[10]['AVG(rating)'], 1)*20; ?>"></span>
-                </div>
-                <div>
-                  <div class="item-name">
-                    <?php echo $dbCompanyRatings[8]['name']; ?>
-                    <div class="param">
-                      <span class="value"><?php echo round($dbCompanyRatings[8]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
-                    </div>
-                  </div>
-                  <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[8]['AVG(rating)'], 1)*20; ?>"></span>
-                </div>
-                <div>
-                  <div class="item-name">
-                    <?php echo $dbCompanyRatings[9]['name']; ?>
-                    <div class="param">
-                      <span class="value"><?php echo round($dbCompanyRatings[9]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
-                    </div>
-                  </div>
-                  <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[9]['AVG(rating)'], 1)*20; ?>"></span>
-                </div>
-                <div>
-                  <div class="item-name">
-                    <?php echo $dbCompanyRatings[7]['name']; ?>
-                    人間関係の満足度
-                    <div class="param">
-                      <span class="value"><?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
-                    </div>
-                  </div>
-                  <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?>"></span>
-                </div>
-              </div>
+
+              
             </section>
           </div>
 
           <div class="page-content">
-            <section>
-              <h2>年収データ</h2>
-              <p>回答者の平均年収：<?php echo round($dbCompanyData['user_data']['AVG(anual_total_salary)'], 0); ?>万円</p>
-              <p>回答者の年収範囲：<?php echo round($dbCompanyData['user_data']['MIN(anual_total_salary)'], 0); ?>〜<?php echo round($dbCompanyData['user_data']['MAX(anual_total_salary)'], 0); ?>万円</p>
-              <p>回答者数：<?php echo $dbCompanyData['user_data']['COUNT(anual_total_salary)']; ?>人</p>
-              <p>回答者の平均年齢：<?php echo date('Y')-round($dbCompanyData['user_data']['AVG(users.birth_year)']); ?>歳</p>
-            </section>
-
-            <!-- <section>
-              <h2>処方せん処理枚数</h2>
-              <p>回答者の平均枚数（1日8時間あたり）：枚</p>
-              <p>回答者の枚数範囲：〜枚</p>
-            </section> -->
             
-            <h2>Pick up クチコミ</h2>
+            <h2>回答者のクチコミ</h2>
             
             <?php foreach($dbCategoryData as $key => $category){ ?>
-              <?php $dbPickUpPosts = getPickUpPosts($company_id, $category['id']); ?>
-              <?php if(!empty($dbPickUpPosts)){ ?>
-                <section>
+              <?php $show_count = 0; ?>
 
-                  <?php foreach($dbPickUpPosts as $key => $val){ ?>
-                    <div class="kutikomi-header">
-                      <div class="user-icon">
-                        <i class="gg-profile"></i>
-                      </div>
-    
-                      <h3>
-                        <span><?php echo $dbCompanyData['info']['name']; ?></span><br>
-                        <?php echo $val['category']; ?>
-                      </h3>
-    
-                      <div class="user-info">
-                        回答者：
-                        <a href="">
-                          <?php echo SEX[$val['sex']]; ?>
-                          <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
-                          <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
-                          <?php echo '、在籍'.getYearDiff($val['a_update_date'], $val['entry_date']).'年'; ?>
-                        </a>
-                      </div>
-    
-                      <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
-                      <span class="fs-3 ms-1">
-                        <?php echo round($val['rating'], 1); ?>
-                      </span>
-                      <p></p>
-                    </div>
+              <?php foreach($dbPostData['answer'] as $key => $answer){ ?>
+                <?php if($category['id'] == $answer['category_id'] && !empty($answer['answer'])){ ?>
 
-                    <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
-                    <p><?php echo $val['answer']; ?></p>
-    
-                    <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
-    
-                    <div class="border-bottom mb-3"></div>
-    
+                  <?php if($show_count === 0){ ?>
+                    <section>
+                      <div class="kutikomi-header">
+                        <div class="user-icon">
+                          <i class="gg-profile"></i>
+                        </div>
+      
+                        <h3>
+                          <span><?php echo $dbCompanyData['info']['name']; ?></span><br>
+                          <?php echo $category['name']; ?>
+                        </h3>
+      
+                        <div class="user-info">
+                          回答者：
+                          <a href="">
+                            <?php echo SEX[$dbUserData['sex']]; ?>
+                            <?php echo '、'.ENTRY_TYPE[$dbPostData['post']['entry_type']]; ?>
+                            <?php echo '、'.REGISTRATION[$dbPostData['post']['registration']].'（回答時）'; ?>
+                            <?php
+                              if($dbPostData['post']['registration'] == 1){
+                                echo '、'.getYearDiff($dbPostData['post']['entry_date'], $dbPostData['post']['update_date']).'年在籍';
+                              }
+                            ?>
+                          </a>
+                        </div>
+      
+                        <div class="px-3">
+                          <span class="heart5_rating" data-rate="<?php echo $dbPostData['rating'][0]['rating']; ?>"></span>
+                          <span class="fs-3 ms-1">
+                            <?php echo round($dbPostData['rating'][0]['rating']); ?>
+                          </span>
+                        </div>
+                        
+                      </div>
+      
+                      <?php foreach($dbPostData['answer'] as $key => $val){ ?>
+      
+                        <?php if($category['id'] == $val['category_id']){ ?>
+                          <h4 class="fs-1rem px-3 fw-bold"><?php echo $val['answer_item']; ?>：</h4>
+                          <p class="mb-3"><?php echo $val['answer']; ?></p>
+                          
+                        <?php } ?>
+                        
+                      <?php } ?>
+      
+                      <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($dbPostData['post']['update_date'])); ?></span>
+                    </section>
+
+                    <?php $show_count = 1; ?>
                   <?php } ?>
 
-                    <div class="category-btn">
-                      <a href="category.php?co=<?php echo $company_id.'&ca='.$category['id']; ?>"><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
-                    </div>
-                    
-                  </section>
+
                 <?php } ?>
+              <?php } ?>
+
+
+
             <?php } ?>            
 
+            <h2><?php echo $dbCompanyData['info']['name']; ?>の回答者別クチコミ（<?php ?>人）</h2>
+            <ul class="list-unstyled">
+              <?php foreach($dbPostList as $key => $val){ ?>
+                <li class="bg-white mb-3 p-3">
+                  <a href="" class="text-decoration-none text-black">
+                    <?php if(!empty($val['department']) || !empty($val['position'])){ ?>
+                      <div class="mb-3">
+                        <?php
+                          echo $val['department'];
+                          if(!empty($val['department']) && !empty($val['position'])) echo '、';
+                          if(!empty($val['position'])) echo $val['position'];
+                        ?>
+                      </div>
+
+                      <div class="mb-3">
+                        <?php
+                          echo SEX[$val['sex']];
+                          if(isset($dbPostData['post']['entry_type'])){
+                            echo '、'.ENTRY_TYPE[$dbPostData['post']['entry_type']];
+                          }
+                          if($val['registration'] == 1){
+                            echo '、'.getYearDiff($val['entry_date'], $val['create_date']).'年在籍';
+                          }
+                          if(isset($val['employment_type'])){
+                            echo '、'.EMP_TYPE[$val['employment_type']];
+                          }
+                          if(isset($val['registration'])){
+                            echo '、'.REGISTRATION[$val['registration']].'（投稿時）';
+                          }
+                        ?>
+                      </div>
+
+                      <div class="mb-3">
+                        <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
+                        <span class=""><?php echo $val['rating']; ?></span>
+                      </div>
+                    <?php } ?>
+
+
+                    <?php var_dump($val); ?>
+                  </a>
+                </li>
+              <?php } ?>
+            </ul>
+
             <section>
-              <h2>カテゴリからクチコミを探す</h2>
+              <h2><?php echo $dbCompanyData['info']['name']; ?>のカテゴリ別クチコミ</h2>
               <div class="kutikomi-category-list">
                 <ul>
                   <?php foreach($dbCategoryData as $key => $val){ ?>
