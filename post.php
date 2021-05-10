@@ -68,19 +68,13 @@ require('head.php');
           <a href="surveyInfo.php">クチコミを投稿する</a>
         </button>
 
-        <?php
-          var_dump($dbPostList);
-          echo '<br><br>';
-          var_dump($dbPostData);
-        ?>
-
         <div class="company-wrapper">
           <div class="company-heading">
             <section>
               <h1 class="page-title"><?php echo $dbCompanyData['info']['name']; ?><span class="company-title-append">の回答者別クチコミ</span></h1>
 
-              <table class="table">
-                回答者情報
+              <div class="mb-2">回答者情報</div>
+              <table class="table border text-center">
                 <tbody>
                   <tr>
                     <td>入社経路</td>
@@ -284,20 +278,15 @@ require('head.php');
 
                     <?php $show_count = 1; ?>
                   <?php } ?>
-
-
                 <?php } ?>
               <?php } ?>
-
-
-
             <?php } ?>            
 
-            <h2><?php echo $dbCompanyData['info']['name']; ?>の回答者別クチコミ（<?php ?>人）</h2>
+            <h2><?php echo $dbCompanyData['info']['name']; ?>の回答者別クチコミ（<?php echo count($dbPostList); ?>人）</h2>
             <ul class="list-unstyled">
               <?php foreach($dbPostList as $key => $val){ ?>
                 <li class="bg-white mb-3 p-3">
-                  <a href="" class="text-decoration-none text-black">
+                  <a href="post.php?c_id=<?php echo $company_id.'&'.'p_id='.$post_id; ?>" class="text-decoration-none">
                     <?php if(!empty($val['department']) || !empty($val['position'])){ ?>
                       <div class="mb-3">
                         <?php
@@ -325,21 +314,23 @@ require('head.php');
                         ?>
                       </div>
 
-                      <div class="mb-3">
+                      <div class="">
                         <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
-                        <span class=""><?php echo $val['rating']; ?></span>
+                        <span class="text-black"><?php echo $val['rating']; ?></span>
+                      </div>
+
+                      <div>
+                        <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['create_date'])); ?></span>
                       </div>
                     <?php } ?>
 
-
-                    <?php var_dump($val); ?>
                   </a>
                 </li>
               <?php } ?>
             </ul>
 
-            <section>
-              <h2><?php echo $dbCompanyData['info']['name']; ?>のカテゴリ別クチコミ</h2>
+            <h2><?php echo $dbCompanyData['info']['name']; ?>のカテゴリ別クチコミ</h2>
+            <section class="pt-3">
               <div class="kutikomi-category-list">
                 <ul>
                   <?php foreach($dbCategoryData as $key => $val){ ?>
@@ -347,9 +338,6 @@ require('head.php');
                   <?php } ?>
                 </ul>
               </div>
-              <p>
-                <a href="">全てのクチコミを見る</a>
-              </p>
             </section>
 
             <section>
@@ -368,100 +356,10 @@ require('head.php');
           </div>
         </div>
   
-        
       </div>
     </div>
   </main>
-    
-    <footer id="footer">
-      <ul class="container">
-        <li><a href="index.php">HOME</a></li>
-        <li><a href="">ご利用案内</a></li>
-        <li><a href="">プライバシーポリシー</a></li>
-        <li><a href="">サイトマップ</a></li>
-        <li><a href="">お問い合わせ</a></li>
-      </ul>
 
-      <span class="copyright">
-        Copyright © ヤクカイ. All Rights Reserved.
-      </span>
-    </footer>
-    
-    <!-- jQuery読み込み -->
-    <script src="js/vender/jquery-3.5.1.min.js"></script>
-    <!-- Chart.js読み込み -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.0/chart.min.js" integrity="sha512-RGbSeD/jDcZBWNsI1VCvdjcDULuSfWTtIva2ek5FtteXeSjLfXac4kqkDRHVGf1TwsXCAqPTF7/EYITD0/CTqw==" crossorigin="anonymous"></script>
-    <script>
-      $(function(){
-        // フッターを最下部に固定
-        var $ftr = $('#footer');
-        if( window.innerHeight > $ftr.offset().top + $ftr.outerHeight() ){
-          //ウインドウ内コンテンツ部分の高さ　＞　普通に表示した時のコンテンツ部分左上からフッターまで高さ + フッターのボーダー外側の高さ
-          $ftr.attr({
-            'style': 
-              'position:fixed; top:' + (window.innerHeight - $ftr.outerHeight()) +'px;'
-          });
-        }
-
-        // レーダーチャート処理
-        var canvas = document.getElementById('header-chart');
-
-        if(canvas.getContext){
-          var ctx = document.getElementById("header-chart");
-          var myRadarChart = new Chart(ctx, {
-            type: 'radar', 
-            data: { 
-              labels: [
-                "<?php echo $dbCompanyRatings[1]['name']; ?>：<?php echo round($dbCompanyRatings[1]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[2]['name']; ?>：<?php echo round($dbCompanyRatings[2]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[3]['name']; ?>：<?php echo round($dbCompanyRatings[3]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[4]['name']; ?>：<?php echo round($dbCompanyRatings[4]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[5]['name']; ?>：<?php echo round($dbCompanyRatings[5]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[6]['name']; ?>：<?php echo round($dbCompanyRatings[6]['AVG(rating)'], 1); ?>",
-              ],
-
-              datasets: [{
-                label: '<?php echo $dbCompanyData['info']['name']; ?>の評価値',
-                data: [
-                  <?php echo round($dbCompanyRatings[1]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[2]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[3]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[4]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[5]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[6]['AVG(rating)'], 1); ?>,
-                ],
-                backgroundColor: 'RGBA(225,95,150, 0.2)',
-                // backgroundColor: '#f88dc8',
-                borderColor: 'RGBA(225,95,150, 1)',
-                borderWidth: 1,
-                pointBackgroundColor: 'RGB(46,106,177,0)',
-                // borderCapStyle: 'round',
-                pointRadius: 0,
-              }, 
-              ]
-            },
-            options: {
-              title: {
-                display: true,
-                text: ''
-              },
-              scale:{
-                min: 0,
-                max: 5,
-                // display: false,
-                ticks:{
-                  // suggestedMin: 0,
-                  // suggestedMax: 5,
-                  stepSize: 1,
-                  callback: function(value, index, values){
-                    return  value +  ''
-                  }
-                }
-              }
-            }
-          });
-        }
-      });
-    </script>
-  </body>
-</html>
+  <?php
+    require('footer.php');
+  ?>
