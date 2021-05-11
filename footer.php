@@ -85,7 +85,7 @@
         });
 
         // ----------------------------------------------------------
-        // クチコミ投稿、テキストエリアカウント
+        // survey03.php、クチコミ投稿、テキストエリアカウント
         var totalCount = 0;
         var $countUp = $('.js-character-count');
         var $countView = $('.js-count-view');
@@ -97,8 +97,12 @@
           }
           if(totalCount >= 500){
             $countView.addClass('text-green');
+            // 送信ボタンの有効化
+            $('.js-disabled-submit').prop('disabled', false);
           }else{
             $countView.removeClass('text-green');
+            // 送信ボタンの無効化
+            $('.js-disabled-submit').prop('disabled', true);
           }
           $countView.html(totalCount);
         });
@@ -142,9 +146,9 @@
 
         // プロフィール登録、社会人用フォーム表示、非表示処理
         $('[name="user_carrier_type"]:radio').change(function(){
-          if($('[id=1]').prop('checked')){
+          if($('[id=user_carrier_type_1]').prop('checked')){
             $('.worker-form').fadeIn();
-          }else if($('[id=0]').prop('checked')) {
+          }else if($('[id=user_carrier_type_0]').prop('checked')) {
             $('.worker-form').fadeOut();
           } 
         });
@@ -154,6 +158,8 @@
           $(this).parents('.survey-list').find('label').removeClass('checked');
           $(this).parent().addClass('checked');
         });
+
+        // survey03.php、合計文字数500字以上のときにボタンを有効化する
 
       });
     </script>
