@@ -37,10 +37,11 @@ if(!empty(getQuestionsAndAnswers($dbPostData[0]['id'], $user_id, $company_id))){
 }else{    // まだDBに登録していなければ項目・質問文を取得
   $dbAnswerItems = getAnswerItemsAndQuestions();
 }
+// 入力合計文字数の変数設定。
+$totalCount = 0;
 
 // 既に回答がDBに登録されている場合、入力合計文字数を算出
 if(!empty(getAnswers($dbPostData[0]['id'], $user_id, $company_id,))){
-  $totalCount = 0;
   foreach($dbAnswerItems as $key => $val){
     $totalCount += mb_strlen($val['answer']);
   }
@@ -173,7 +174,7 @@ require('head.php');
       <div class="container">
         <div class="bg-white py-4">
           <h1 class="page-title mb-4">
-            <?php echo $dbCompanyData['name']; ?>について教えてください。（3/3）
+            <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（3/3）
           </h1>
 
           <div class="border mb-5 m-3 p-3 text-center text-red">
@@ -223,7 +224,7 @@ require('head.php');
               
             <?php } ?>
 
-            <button type="submit" class="btn btn-blue">次へ</button>
+            <button type="submit" class="btn btn-blue js-disabled-submit">次へ</button>
           </form>
         </div>
       </div>
