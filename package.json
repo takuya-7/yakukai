@@ -1,0 +1,24 @@
+{
+  "name": "yakukai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/takuya-7/yakukai.git",
+  "author": "takuya-7 <ts.procd@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "jquery": "^3.6.0",
+    "node-sass": "4.9.4",
+    "nodemon": "^2.0.7",
+    "popper.js": "^1.16.1"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "gulp": "^3.9.1",
+    "gulp-changed": "^3.2.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-sass": "^3.2.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
