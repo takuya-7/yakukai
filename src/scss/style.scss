@@ -1,11 +1,53 @@
 // リセットCSS読み込み
-@import 'reset.scss'; // cssを指定した場合は @import url(../css/reset.css); に変換されるだけなので注意
+@import 'reset'; // cssを指定した場合は @import url(../css/reset.css); に変換されるだけなので注意
 // bootstrap読み込み
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
-// ==============================
-// 変数
-// ==============================
+// ======================================
+// Foundation
+// ======================================
+// base.scss
+// ---------------------------
+html, body {
+  // width: 100%;
+  // color: $font-color_default;
+  // font-size: $font-size_default;
+  // line-height: 1.6;
+  // font-family: Quicksand, 游ゴシック体, "Yu Gothic", YuGothic, "ヒラギノ角ゴシック Pro", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; // TODO:リファクタ必要（変数にする）
+  // text-size-adjust: 100%;
+  // letter-spacing: 0.1em;
+
+  line-height: 150%;
+}
+
+.page-title{
+  @include mq() {
+    font-size: 1.5rem;
+  }
+  // bootstrapでは↓でok
+  //@include media-breakpoint-down(sm) {
+  //}
+}
+
+p, a {
+  -webkit-font-smoothing: antialiased;
+}
+
+a,
+a:active,
+a:focus {
+  color: #41aaf9;
+}
+a:hover {
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}
+// variable.scss
+// ---------------------------
 $font-color_default: #4a4a4a;
 $theme_color: linear-gradient(-20deg, #6e45e2 0%, #88d3ce 100%);
 $cv_color: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
@@ -28,9 +70,6 @@ $space_3l: 40px;
 
 $font-family_corp: 'Amatic SC', cursive;
 
-// ==================================
-// breakpoint
-// ==================================
 $breakpoints: (
   'sm': 'screen and (max-width: 576px)',
   'md': 'screen and (max-width: 768px)',
@@ -38,58 +77,19 @@ $breakpoints: (
   'xl': 'screen and (max-width: 1200px)',
   'xxl': 'screen and (max-width: 1400px)',
 ) !default;
-
-// ==================================
-// mixin
-// ==================================
+// mixin.scss
+// ---------------------------
 @mixin mq($breakpoint: sm) {
   @media #{map-get($breakpoints, $breakpoint)} {
     @content;
   }
 }
 
-// ==================================
-// base
-// ==================================
-html, body {
-  // width: 100%;
-  // color: $font-color_default;
-  // font-size: $font-size_default;
-  // line-height: 1.6;
-  // font-family: Quicksand, 游ゴシック体, "Yu Gothic", YuGothic, "ヒラギノ角ゴシック Pro", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; // TODO:リファクタ必要（変数にする）
-  // text-size-adjust: 100%;
-  // letter-spacing: 0.1em;
-
-  line-height: 150%;
-}
-
-.page-title{
-  @include mq() {
-    font-size: 1.5rem;
-  }
-}
-
-p, a {
-  -webkit-font-smoothing: antialiased;
-}
-
-a,
-a:active,
-a:focus {
-  color: #41aaf9;
-}
-a:hover {
-  text-decoration: none;
-}
-
-img {
-  width: 100%;
-  vertical-align: bottom;
-}
-
-// ==================================
-// header
-// ==================================
+// ======================================
+// Layout
+// ======================================
+// l-header.scss
+// ---------------------------
 header{
   line-height: 4rem;
   height: 4rem;
@@ -150,14 +150,41 @@ header{
 .header-right a:hover{
   background-color: rgba(255, 255, 255, 0.3);
 }
+// l-menu.scss
+// ---------------------------
 
-// ==================================
-// menu
-// ==================================
+// l-main.scss
+// ---------------------------
+.content-wrapper{
+  /* background: #f6f6f4; */
+  background: #edf1f5;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  height: 100%;
+}
+.content-wrapper h1{
+  margin: 0 1rem 1rem;
+  line-height: 2.2rem;
+  font-size: 1.5rem;
+}
+.content-wrapper h2{
+  margin: 1rem;
+  font-size: 1.4rem;
+}
+.content-wrapper h3{
+  margin: 1rem;
+  font-size: 1.2rem;
+}
+.content-wrapper p{
+  padding: 0 1rem;
+}
 
-// ==================================
-// footer
-// ==================================
+section h1.title {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+// l-footer.scss
+// ---------------------------
 footer {
   padding: 15px;
   width: 100%;
@@ -190,194 +217,11 @@ footer a {
 #contact {
   margin-bottom: 150px;
 }
-// ==================================
-// Utility
-// ==================================
-.text-black{
-  color: $font-color_default;
-}
-.text-red{
-  color: #e94f4f;
-}
-.text-green{
-  color: #37c47d;
-}
-.text-gray{
-  color: #969696;
-}
-.bg-red{
-  background: #f7dcd9 !important;
-}
-.bg-gray{
-  background: #f5f5f5;
-}
-.bg-blue{
-  background:  $blue_color;
-}
-
-// ==================================
-// レイアウト
-// ==================================
-.content-wrapper{
-  /* background: #f6f6f4; */
-  background: #edf1f5;
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-  height: 100%;
-}
-.content-wrapper h1{
-  margin: 0 1rem 1rem;
-  line-height: 2.2rem;
-  font-size: 1.5rem;
-}
-.content-wrapper h2{
-  margin: 1rem;
-  font-size: 1.4rem;
-}
-.content-wrapper h3{
-  margin: 1rem;
-  font-size: 1.2rem;
-}
-.content-wrapper p{
-  padding: 0 1rem;
-}
-.fs-1{
-  font-size: 1rem;
-}
-.fs-12{
-  font-size: 1.2rem;
-}
-.fs-08{
-  font-size: .8rem;
-}
-.w-100{
-  width: 100%;
-}
-.w-75{
-  width: 75%;
-}
-.w-65{
-  width: 65% !important;
-}
-.w-60{
-  width: 60% !important;
-}
-.w-50{
-  width: 50%;
-}
-.w-25{
-  width: 25%;
-}
-.h-2-5{
-  height: 2.5rem !important;
-}
-.lh-2-5{
-  line-height: 2.5rem;
-}
-.float-l{
-  float: left;
-}
-.mr-2{
-  margin-right: 2rem;
-}
-.mr-3{
-  margin-right: 3rem;
-}
-.mr-4{
-  margin-right: 4rem;
-}
-
-
-/*========================================
-  レイアウト
-========================================*/
-section h1.title {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-}
-
-/*========================================
-  ページネーション
-========================================*/
-.pagination-heading{
-  text-align: center;
-  margin: 0 auto;
-  margin-bottom: .5rem;
-}
-.pagination {
-  position: relative;
-  overflow: hidden;
-}
-.pagination-list {
-  position: relative;
-  left: 50%;
-  float: left;
-  padding-left: 0;
-  list-style: none;
-}
-.pagination .list-item {
-  position: relative;
-  left: -50%;
-  float: left;
-  margin-right: 5px;
-}
-.pagination .list-item:last-child {
-  margin-right: 0;
-}
-.pagination .list-item a {
-  display: block;
-  padding: 5px 10px;
-  background: #fff;
-  color: #3e3e3e;
-  text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
-}
-.pagination .list-item.active a {
-  background: #3e3e3e;
-  color: white;
-}
-.pagination .list-item a:hover {
-  background: #333;
-  color: white;
-}
-/*========================================
-  検索エリア
-========================================*/
-.search-title {
-  overflow: hidden;
-  margin-bottom: 30px;
-  padding: 5px 10px;
-  height: 40px;
-  background: #f6f5f4;
-  line-height: 40px;
-}
-.search-left {
-  float: left;
-}
-.search-right {
-  float: right;
-}
-.search-title .total-num {
-  padding-right: 5px;
-  font-weight: bold;
-  font-size: 18px;
-  font-family: 'Montserrat', sans-serif;
-}
-.search-box{
-  margin: 1rem;
-  overflow: hidden;
-}
-.search-box input{
-  width: 75% !important; 
-  float: left;
-}
-.search-box button{
-  width: 25% !important;
-  height: 3.125rem
-}
-/*========================================
-  ボタン
-========================================*/
+// ======================================
+// Component
+// ======================================
+// c-button.scss
+// ---------------------------
 button{
   text-align: center;
   border: none;
@@ -419,6 +263,8 @@ button a{
 .btn.btn-mid {
   max-width: 150px;
 }
+
+// p-にすべき？
 .category-btn{
   text-align: center;
   background: $blue_color;
@@ -432,9 +278,175 @@ button a{
   padding: .5rem 1rem;
   color: #fff;
 }
-//========================================
+.category-append{
+  line-height: .5rem;
+}
 
-//========================================
+
+.edit-btn{
+  text-decoration: none;
+  color: #fff;
+  display: inline-block;
+  background: #b1b1b1;
+  margin-top: 1.3rem;
+  padding: .4rem .9rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  float: right;
+  border-radius: 0.1rem;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .2);
+}
+// ======================================
+// Project
+// ======================================
+// p-hero.scss
+// ---------------------------
+.top-wrap{
+  width: 100%;
+  background-image: $theme_color;
+  padding-bottom: 2.5rem;
+  @include mq() {
+    padding-bottom: 1.5rem;
+  }
+}
+.top-head{
+  margin-top: 3rem;
+  margin-left: 2rem;
+  color: #fff;
+  @include mq() {
+    margin-top: 1.5rem;
+    margin-left: 0.3rem;
+  }
+}
+.top-head h1{
+  letter-spacing: 4px;
+  line-height: 3.2rem;
+  @include mq() {
+    font-size: 1.3rem;
+    letter-spacing: 0.1rem;
+  }
+}
+.top-search-box{
+  margin-top: 4rem;
+  margin-left: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  @include mq() {
+    margin-top: 2rem;
+    margin-left: 0.3rem;
+    margin-bottom: 2rem;
+  }
+}
+.top-search-box form{
+  max-width: 700px;
+}
+.top-search-box form input{
+  max-width: 630px;
+  height: 3.5rem;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  float: left;
+  margin: 0;
+  width: 75%;
+  @include mq() {
+    height: 2.7rem;
+    font-size: 0.75rem;
+  }
+}
+.top-search-box form button{
+  width: 25%;
+  height: 3.5rem;
+  color: #fff;
+  border: 0;
+  font-weight: 700;
+  font-size: 0.938rem;
+  background: linear-gradient(90deg,#1b4db1,#091a77);
+  float: left;
+  @include mq() {
+    height: 2.7rem;
+    font-size: 0.8rem;
+  }
+}
+.card-slider-wrapper ul{
+  list-style: none;
+  padding-left: 0;
+}
+.card-slider{
+  background: #fff;
+  width: 9rem;
+  height: 9rem;
+}
+.card-slider-item{
+  margin-right: 1rem;
+}
+.card-slider-item a{
+  text-decoration: none;
+  color: $font-color_default;
+}
+.top-widget{
+  margin-left:  auto;
+  margin-right: auto;
+  margin-bottom: 2.5rem;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  background-color: #fff;;
+  @include mq() {
+    padding: 2rem 0.5rem;
+  }
+}
+.top-widget h2{
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.top-widget .content{
+  margin-top: 20px;
+  padding: 20px;
+}
+.signup-wrap{
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+}
+.signup-wrap .buttons button{
+  width: 100%;
+  line-height: 60px;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  margin-bottom: 20px;
+}
+.signup-wrap .signup{
+  color: #fff;
+  background: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
+  border: none;
+  box-shadow: .2rem .2rem .4rem #cad4e2;
+}
+.signup-wrap .login{
+  background: #fff;
+  border: solid 1px #666666;
+  color: #666666; 
+}
+
+// p-card.scss
+// ---------------------------
+.company-card{
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 1rem .5rem;
+}
+.company-card .company-header{
+  margin-bottom: 1rem;
+}
+.company-card h2{
+  font-size: 1.2rem;
+}
+.company-card .post-content{
+  margin-bottom: 1rem;
+}
+
+// p-form.scss
+// ---------------------------
 label{
   display: block;
   line-height: 2rem;
@@ -567,8 +579,7 @@ input[type="submit"]:hover {
 .form .counter-text{
   text-align: right;
 }
-/* フォームグループ
-=================================*/
+// フォームグループ
 .form-group{
   position: relative;
   overflow: hidden;
@@ -583,158 +594,100 @@ input[type="submit"]:hover {
   float: left;
   padding-left: 10px;
 }
-
-/*========================================
-  その他
-========================================*/
-.msg-slide{
-  position: fixed;
-  top: 0;
-  width:100%;
-  height:40px;
-  background: rgba(122,206,230,0.6);
-  text-align: center;
-  font-size:16px;
-  line-height: 40px;
-}
-
-/*========================================
-  追加
-========================================*/
-
-//========================================
-// トップページ
-//========================================
-.top-wrap{
-  width: 100%;
-  background-image: $theme_color;
-  padding-bottom: 2.5rem;
-  @include mq() {
-    padding-bottom: 1.5rem;
-  }
-}
-.top-head{
-  margin-top: 3rem;
-  margin-left: 2rem;
-  color: #fff;
-  @include mq() {
-    margin-top: 1.5rem;
-    margin-left: 0.3rem;
-  }
-}
-.top-head h1{
-  letter-spacing: 4px;
-  line-height: 3.2rem;
-  @include mq() {
-    font-size: 1.3rem;
-    letter-spacing: 0.1rem;
-  }
-}
-.top-search-box{
-  margin-top: 4rem;
-  margin-left: 2rem;
-  margin-bottom: 3rem;
-  position: relative;
-  display: block;
+/* プロフィール入力 survey01.php */
+.form-item{
   overflow: hidden;
-  @include mq() {
-    margin-top: 2rem;
-    margin-left: 0.3rem;
-    margin-bottom: 2rem;
-  }
 }
-.top-search-box form{
-  max-width: 700px;
+.custom-control{
+  padding-left: 1.5rem;
 }
-.top-search-box form input{
-  max-width: 630px;
-  height: 3.5rem;
-  padding-left: 20px;
-  font-size: 0.9rem;
-  float: left;
-  margin: 0;
-  width: 75%;
-  @include mq() {
-    height: 2.7rem;
-    font-size: 0.75rem;
-  }
+.custom-control-inline{
+  display: inline-flex;
+  /* margin-right: 1rem; */
 }
-.top-search-box form button{
-  width: 25%;
-  height: 3.5rem;
-  color: #fff;
-  border: 0;
-  font-weight: 700;
-  font-size: 0.938rem;
-  background: linear-gradient(90deg,#1b4db1,#091a77);
-  float: left;
-  @include mq() {
-    height: 2.7rem;
-    font-size: 0.8rem;
-  }
+.radio-custom{
+  padding-left: 1rem;
 }
-.card-slider-wrapper ul{
+.radio-custom label{
+  padding-left: 0.5rem;
+}
+.form-check{
+  margin-right: 4rem;
+}
+.form-check-input{
+  margin-top: 0.5rem;
+}
+.worker-form{
+  display: none;
+}
+.form-show{
+  display: block;
+}
+// p-list.scss
+// ---------------------------
+.search-company-list ul{
+  list-style: none;
+  padding: 1rem;
+}
+.search-company-list li{
+  border: .12rem solid $blue_color;
+  margin-bottom: 1rem;
+}
+.search-company-list button{
+  padding: .5rem 1rem;
+  text-align: left;
+  background: none;
+  color: $blue_color;
+  height: 100%;
+  width: 100%;
+}
+.search-company-list span{
+  color: #919191;
+  margin-left: 1rem;
+}
+.survey-list ul{
   list-style: none;
   padding-left: 0;
 }
-.card-slider{
-  background: #fff;
-  width: 9rem;
-  height: 9rem;
+.survey-list ul li{
+  margin-bottom: .5rem;
 }
-.card-slider-item{
-  margin-right: 1rem;
-}
-.card-slider-item a{
-  text-decoration: none;
-  color: $font-color_default;
-}
-.top-widget{
-  margin-left:  auto;
-  margin-right: auto;
-  margin-bottom: 2.5rem;
-  padding: 30px 20px;
-  box-sizing: border-box;
-  background-color: #fff;;
-  @include mq() {
-    padding: 2rem 0.5rem;
-  }
-}
-.top-widget h2{
-  font-size: 1.5em;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.top-widget .content{
-  margin-top: 20px;
-  padding: 20px;
-}
-.signup-wrap{
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
-}
-.signup-wrap .buttons button{
+.survey-list ul li label{
+  border: 1px solid $blue_color;
+  padding: .3rem;
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
   width: 100%;
-  line-height: 60px;
-  font-size: 1.2rem;
-  border-radius: 50px;
-  margin-bottom: 20px;
+  text-align: center;
 }
-.signup-wrap .signup{
+.survey-list ul li .checked{
+  background: $blue_color;
   color: #fff;
-  background: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
-  border: none;
-  box-shadow: .2rem .2rem .4rem #cad4e2;
 }
-.signup-wrap .login{
-  background: #fff;
-  border: solid 1px #666666;
-  color: #666666;
-  
+.survey-list input[type="radio"]{
+  display: none;
 }
-//===============================
-// セレクトボックス
-//===============================
+
+.kutikomi-category-list ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.kutikomi-category-list ul li{
+  margin-bottom: .7rem;
+}
+.kutikomi-category-list a{
+  text-decoration: none;
+  color: $blue_color;
+  display: inline-block;
+  border: .11rem solid $blue_color;
+  width: 100%;
+  padding: .6rem 1rem;
+  margin: 0;
+}
+// p-select_box.scss
+// ---------------------------
 .cp_ipselect {
 	overflow: hidden;
   width: 9.5rem;
@@ -858,46 +811,24 @@ input[type="submit"]:hover {
   }
 }
 
-
-/* マテリアルデザイン */
-.natural-shadow{
-  /* box-shadow: 4px 4px 8px #cad4e2, -4px -4px 8px #fff; */
-  box-shadow: 4px 4px 8px #cad4e2;
-  border-radius: .5rem;
+// 個別企業画面 category.php company.php
+// p-company.scss
+// ---------------------------
+.company-wrapper section{
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+.company-wrapper section h2{
+  margin-bottom: 1rem;
+}
+.company-title-append{
+  font-size: .9rem;
 }
 
-/* プロフィール入力 */
-.form-item{
-  overflow: hidden;
-}
-.custom-control{
-  padding-left: 1.5rem;
-}
-.custom-control-inline{
-  display: inline-flex;
-  /* margin-right: 1rem; */
-}
-.radio-custom{
-  padding-left: 1rem;
-}
-.radio-custom label{
-  padding-left: 0.5rem;
-}
-.form-check{
-  margin-right: 4rem;
-}
-.form-check-input{
-  margin-top: 0.5rem;
-}
-.worker-form{
-  display: none;
-}
-.form-show{
-  display: block;
-}
-//========================================
-// マイページ
-//========================================
+// p-profile.scss
+// ---------------------------
+// mypage.php
 .nav-link{
   width: 50%;
 }
@@ -913,19 +844,7 @@ input[type="submit"]:hover {
   font-size: 1.2rem;
   display: inline-block;
 }
-.edit-btn{
-  text-decoration: none;
-  color: #fff;
-  display: inline-block;
-  background: #b1b1b1;
-  margin-top: 1.3rem;
-  padding: .4rem .9rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-  float: right;
-  border-radius: 0.1rem;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, .2);
-}
+
 .tile{
   border: 1px solid #e1e1e1;
   box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
@@ -967,7 +886,6 @@ input[type="submit"]:hover {
 }
 .menus-container ul li{
   border-bottom: 1px solid #e1e1e1;
-  
 }
 .menus-container ul li a{
   text-decoration: none;
@@ -975,61 +893,25 @@ input[type="submit"]:hover {
   display: block;
   padding: 1rem 1.5rem;
 }
-/*========================================
-  検索画面
-========================================*/
-.page-heading{
-  background: #fff;
+// company-info
+.company-info dl{
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .9rem;
+  word-break: break-all;
+  box-sizing: border-box;
 }
-.search-wrap{
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-.search-wrap .search-item{
-  margin-bottom: 1rem;
-}
-.search-wrap button{
-  background: var(--cv-color);
-  color: #fff;
-  border: none;
-  width: 100%;
+.company-info dt{
   display: block;
-  height: 3rem;
-  line-height: 3rem;
-  border-radius: .3rem;
-  box-shadow: 4px 4px 8px #cad4e2;
-  font-size: .8rem;
+  width: 5.5rem;
+  color: $blue_color;
 }
-.result-heading{
-  overflow: hidden;
-  margin-bottom: .5rem;
-}
-.result-num{
-  float: right;
+.company-info dd{
   display: block;
+  width: calc(100% - 90px);
 }
-.result-form ul{
-  list-style: none;
-  padding: 0;
-}
-.result-form ul a{
-  text-decoration: none;
-  color: $font-color_default;
-}
-.company-card{
-  background: #fff;
-  margin-bottom: 1rem;
-  padding: 1rem .5rem;
-}
-.company-card .company-header{
-  margin-bottom: 1rem;
-}
-.company-card h2{
-  font-size: 1.2rem;
-}
-.company-card .post-content{
-  margin-bottom: 1rem;
-}
+// p-rating.scss
+// ---------------------------
 .level-of-well-being{
   color: #fff;
   background: #f88dc8;
@@ -1111,20 +993,9 @@ input[type="submit"]:hover {
 .heart5_rating[data-rate="0.2"]:after{ width: 4%; }
 .heart5_rating[data-rate="0.1"]:after{ width: 2%; }
 .heart5_rating[data-rate="0.0"]:after{ width: 0%; } /* ハート0 */
-/*========================================
-  個別企業画面
-========================================*/
-.company-wrapper section{
-  background: #fff;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-.company-wrapper section h2{
-  margin-bottom: 1rem;
-}
-.company-title-append{
-  font-size: .9rem;
-}
+
+// 個別企業画面 category.php company.php
+// head-ratingにまとめる
 .head-rating{
   font-size: 1.67rem;
 }
@@ -1289,23 +1160,126 @@ input[type="submit"]:hover {
 .bar_rating[data-rate="1"]:after{ width: 1%; }
 .bar_rating[data-rate="0"]:after{ width: 0%; }
 
-.kutikomi-category-list ul{
+
+// p-pagination.scss
+// ---------------------------
+.pagination-heading{
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: .5rem;
+}
+.pagination {
+  position: relative;
+  overflow: hidden;
+}
+.pagination-list {
+  position: relative;
+  left: 50%;
+  float: left;
+  padding-left: 0;
   list-style: none;
-  margin: 0;
+}
+.pagination .list-item {
+  position: relative;
+  left: -50%;
+  float: left;
+  margin-right: 5px;
+}
+.pagination .list-item:last-child {
+  margin-right: 0;
+}
+.pagination .list-item a {
+  display: block;
+  padding: 5px 10px;
+  background: #fff;
+  color: #3e3e3e;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+}
+.pagination .list-item.active a {
+  background: #3e3e3e;
+  color: white;
+}
+.pagination .list-item a:hover {
+  background: #333;
+  color: white;
+}
+
+
+// p-search.scss
+// ---------------------------
+// search.php
+.search-wrap{
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.search-wrap .search-item{
+  margin-bottom: 1rem;
+}
+.search-wrap button{
+  background: var(--cv-color);
+  color: #fff;
+  border: none;
+  width: 100%;
+  display: block;
+  height: 3rem;
+  line-height: 3rem;
+  border-radius: .3rem;
+  box-shadow: 4px 4px 8px #cad4e2;
+  font-size: .8rem;
+}
+// search-box
+.search-title {
+  overflow: hidden;
+  margin-bottom: 30px;
+  padding: 5px 10px;
+  height: 40px;
+  background: #f6f5f4;
+  line-height: 40px;
+}
+.search-left {
+  float: left;
+}
+.search-right {
+  float: right;
+}
+.search-title .total-num {
+  padding-right: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: 'Montserrat', sans-serif;
+}
+.search-box{
+  margin: 1rem;
+  overflow: hidden;
+}
+.search-box input{
+  width: 75% !important; 
+  float: left;
+}
+.search-box button{
+  width: 25% !important;
+  height: 3.125rem
+}
+// result-form
+.result-heading{
+  overflow: hidden;
+  margin-bottom: .5rem;
+}
+.result-num{
+  float: right;
+  display: block;
+}
+.result-form ul{
+  list-style: none;
   padding: 0;
 }
-.kutikomi-category-list ul li{
-  margin-bottom: .7rem;
-}
-.kutikomi-category-list a{
+.result-form ul a{
   text-decoration: none;
-  color: $blue_color;
-  display: inline-block;
-  border: .11rem solid $blue_color;
-  width: 100%;
-  padding: .6rem 1rem;
-  margin: 0;
+  color: $font-color_default;
 }
+// p-post.scss
+// ---------------------------
 .kutikomi-header{
   margin-bottom: 1rem;
   overflow: hidden;
@@ -1318,7 +1292,19 @@ input[type="submit"]:hover {
   color: #666666;
   font-size: .8rem;
 }
-/* ユーザーアイコン */
+.user-info{
+  margin-bottom: .5rem;
+}
+.post-date{
+  margin-top: 1rem;
+  display: block;
+  color: #6e6e6e;
+  font-size: .8rem;
+  text-align: right;
+}
+// p-icon.scss
+// ---------------------------
+// user icon
 .user-icon{
   position: relative;
   width: 3rem;
@@ -1362,80 +1348,97 @@ input[type="submit"]:hover {
     width: 90%;
     height: 90%;
 }
-
-.user-info{
-  margin-bottom: .5rem;
-}
-.post-date{
-  margin-top: 1rem;
-  display: block;
-  color: #6e6e6e;
-  font-size: .8rem;
-  text-align: right;
-}
-.category-append{
-  line-height: .5rem;
-}
-.company-info dl{
-  display: flex;
-  flex-wrap: wrap;
-  font-size: .9rem;
-  word-break: break-all;
-  box-sizing: border-box;
-}
-.company-info dt{
-  display: block;
-  width: 5.5rem;
-  color: $blue_color;
-}
-.company-info dd{
-  display: block;
-  width: calc(100% - 90px);
-}
-
-/*========================================
-  クチコミ投稿
-========================================*/
-.search-company-list ul{
-  list-style: none;
-  padding: 1rem;
-}
-.search-company-list li{
-  border: .12rem solid $blue_color;
-  margin-bottom: 1rem;
-}
-.search-company-list button{
-  padding: .5rem 1rem;
-  text-align: left;
-  background: none;
-  color: $blue_color;
-  height: 100%;
-  width: 100%;
-}
-.search-company-list span{
-  color: #919191;
-  margin-left: 1rem;
-}
-.survey-list ul{
-  list-style: none;
-  padding-left: 0;
-}
-.survey-list ul li{
-  margin-bottom: .5rem;
-}
-.survey-list ul li label{
-  border: 1px solid $blue_color;
-  padding: .3rem;
-  cursor: pointer;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
+// p-message.scss
+// ---------------------------
+.msg-slide{
+  position: fixed;
+  top: 0;
+  width:100%;
+  height:40px;
+  background: rgba(122,206,230,0.6);
   text-align: center;
+  font-size:16px;
+  line-height: 40px;
 }
-.survey-list ul li .checked{
-  background: $blue_color;
-  color: #fff;
+// ======================================
+// Utility
+// ======================================
+// u-utility.scss
+// ---------------------------
+.natural-shadow{
+  /* box-shadow: 4px 4px 8px #cad4e2, -4px -4px 8px #fff; */
+  box-shadow: 4px 4px 8px #cad4e2;
+  border-radius: .5rem;
 }
-.survey-list input[type="radio"]{
-  display: none;
+.fs-1{
+  font-size: 1rem;
 }
+.fs-12{
+  font-size: 1.2rem;
+}
+.fs-08{
+  font-size: .8rem;
+}
+.w-100{
+  width: 100%;
+}
+.w-75{
+  width: 75%;
+}
+.w-65{
+  width: 65% !important;
+}
+.w-60{
+  width: 60% !important;
+}
+.w-50{
+  width: 50%;
+}
+.w-25{
+  width: 25%;
+}
+.h-2-5{
+  height: 2.5rem !important;
+}
+.lh-2-5{
+  line-height: 2.5rem;
+}
+.float-l{
+  float: left;
+}
+// u-color.scss
+// ---------------------------
+.text-black{
+  color: $font-color_default;
+}
+.text-red{
+  color: #e94f4f;
+}
+.text-green{
+  color: #37c47d;
+}
+.text-gray{
+  color: #969696;
+}
+.bg-red{
+  background: #f7dcd9 !important;
+}
+.bg-gray{
+  background: #f5f5f5;
+}
+.bg-blue{
+  background:  $blue_color;
+}
+// u-margin.scss
+// ---------------------------
+.mr-2{
+  margin-right: 2rem;
+}
+.mr-3{
+  margin-right: 3rem;
+}
+.mr-4{
+  margin-right: 4rem;
+}
+// u-padding.scss
+// ---------------------------
