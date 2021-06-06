@@ -62,7 +62,7 @@ require('head.php');
 
     
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <button class="btn-blue mb-3">
           <a href="surveyInfo.php">クチコミを投稿する</a>
@@ -266,7 +266,7 @@ require('head.php');
                       <?php foreach($dbPostData['answer'] as $key => $val){ ?>
       
                         <?php if($category['id'] == $val['category_id']){ ?>
-                          <h4 class="fs-1rem px-3 fw-bold"><?php echo $val['answer_item']; ?>：</h4>
+                          <h4 class="fs-1 px-3 fw-bold"><?php echo $val['answer_item']; ?>：</h4>
                           <p class="mb-3"><?php echo $val['answer']; ?></p>
                           
                         <?php } ?>
