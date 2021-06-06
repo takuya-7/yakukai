@@ -58,13 +58,11 @@ require('head.php');
 
     
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <button class="btn-blue mb-3">
           <a href="surveyInfo.php">クチコミを投稿する</a>
         </button>
-
-        
 
         <div class="company-wrapper">
           <div class="company-heading">
@@ -202,7 +200,7 @@ require('head.php');
                     <p></p>
                   </div>
   
-                  <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
+                  <h4 class="fs-1 fw-bold"><?php echo $val['answer_item']; ?>：</h4>
                   <p><?php echo $val['answer']; ?></p>
   
                   <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
