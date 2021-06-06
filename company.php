@@ -32,9 +32,7 @@ if(empty($dbCompanyData)){
   error_log('エラー発生:指定ページに不正な値が入りました');
   header('Location:search.php');
 }
-
 debug('企業データ：'.print_r($dbCompanyData,true));
-
 ?>
 
 <?php
@@ -52,9 +50,8 @@ require('head.php');
     <?php echo getSessionFlash('msg_success'); ?>
   </p>
 
-    
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <button class="btn-blue mb-3">
           <a href="surveyInfo.php">クチコミを投稿する</a>
@@ -131,7 +128,6 @@ require('head.php');
                 <div>
                   <div class="item-name">
                     <?php echo $dbCompanyRatings[7]['name']; ?>
-                    人間関係の満足度
                     <div class="param">
                       <span class="value"><?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
                     </div>
@@ -177,7 +173,7 @@ require('head.php');
     
                       <div class="user-info">
                         回答者：
-                        <a href="">
+                        <a href="post.php<?php echo '?c_id='.$company_id.'&p_id='.$val['id']; ?>">
                           <?php echo SEX[$val['sex']]; ?>
                           <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
                           <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
@@ -185,14 +181,16 @@ require('head.php');
                         </a>
                       </div>
     
-                      <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
-                      <span class="fs-3 ms-1">
-                        <?php echo round($val['rating'], 1); ?>
-                      </span>
-                      <p></p>
+                      <div class="px-3">
+                        <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
+                        <span class="fs-3 ms-1">
+                          <?php echo round($val['rating'], 1); ?>
+                        </span>
+                      </div>
+                      
                     </div>
 
-                    <h4 class="fs-1rem fw-bold"><?php echo $val['answer_item']; ?>：</h4>
+                    <h4 class="fs-1 px-3 fw-bold"><?php echo $val['answer_item']; ?>：</h4>
                     <p><?php echo $val['answer']; ?></p>
     
                     <span class="post-date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
@@ -202,7 +200,7 @@ require('head.php');
                   <?php } ?>
 
                     <div class="category-btn">
-                      <a href=""><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
+                      <a href="category.php?co=<?php echo $company_id.'&ca='.$category['id']; ?>"><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
                     </div>
                     
                   </section>
@@ -218,9 +216,6 @@ require('head.php');
                   <?php } ?>
                 </ul>
               </div>
-              <p>
-                <a href="">全てのクチコミを見る</a>
-              </p>
             </section>
 
             <section>
@@ -259,7 +254,7 @@ require('head.php');
     </footer>
     
     <!-- jQuery読み込み -->
-    <script src="js/vender/jquery-3.5.1.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Chart.js読み込み -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.0/chart.min.js" integrity="sha512-RGbSeD/jDcZBWNsI1VCvdjcDULuSfWTtIva2ek5FtteXeSjLfXac4kqkDRHVGf1TwsXCAqPTF7/EYITD0/CTqw==" crossorigin="anonymous"></script>
     <script>
