@@ -1,10 +1,10 @@
-<header class="header-bg">
+<header class="l-header l-header--bg-theme">
   <div class="container">
-    <div class="header-left">
+    <div class="l-header__left">
       <a href="index.php">ヤクカイ</a>
     </div>
 
-    <div class="header-right">
+    <div class="l-header__right">
       <nav>
         <ul>
           <?php if(empty($_SESSION['user_id'])){ ?>
