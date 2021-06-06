@@ -96,7 +96,7 @@ require('head.php');
     </p>
 
     <main>
-      <div class="content-wrapper">
+      <div class="l-content-wrapper">
         <div class="container">
           <div class="form-container py-3 col col-sm-9 col-md-7 col-lg-6">
             <form method="post" action="" class="px-4">
