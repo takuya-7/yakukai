@@ -110,7 +110,7 @@ require('head.php');
   </p>
 
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <div class="bg-white pt-3">
           <h1 class="page-title mb-4">クチコミ投稿について</h1>

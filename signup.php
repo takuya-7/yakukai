@@ -99,7 +99,7 @@ require('head.php');
     ?>
 
     <main>
-        <div class="content-wrapper">
+        <div class="l-content-wrapper">
             <div class="container">
                 <div class="form-container">
                     <form action="" method="post" class="form col col-sm-9 col-md-7 col-lg-6">

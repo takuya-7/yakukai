@@ -103,11 +103,11 @@ require('head.php');
   </p>
 
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <div class="bg-white py-4">
           <h1 class="page-title mb-4">
-            <?php echo $dbCompanyData['name']; ?>の就業状況について教えてください。（1/3）
+            <?php echo $dbCompanyData['info']['name']; ?>の就業状況について教えてください。（1/3）
           </h1>
 
           <p class="mb-4 text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>

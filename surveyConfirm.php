@@ -100,7 +100,6 @@ if(!empty($_POST)){
     exit();
   }
   
-  
 }
 
 ?>
@@ -121,7 +120,7 @@ require('head.php');
   </p>
 
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <div class="bg-white py-4 mb-3">
           <h1 class="page-title mb-4">
@@ -138,10 +137,10 @@ require('head.php');
         <div class="bg-white py-4 mb-3 px-3">
           <div class="">
             <span class="fw-bold">
-              <?php echo sanitize($dbCompanyData['name']); ?>
+              <?php echo sanitize($dbCompanyData['info']['name']); ?>
             </span>
             <br>
-            <span class="ms-3">本社所在地：<?php echo sanitize($dbCompanyData['prefecture_name'].$dbCompanyData['city_name']); ?></span>
+            <span class="ms-3">本社所在地：<?php echo sanitize($dbCompanyData['info']['prefecture_name'].$dbCompanyData['info']['city_name']); ?></span>
           </div>
         </div>
 
@@ -153,7 +152,7 @@ require('head.php');
               <div class="mb-3">
                 <?php echo $val['question']; ?>
               </div>
-  
+
               <div class="mb-3 ms-3 fw-bold">
                 <?php echo RATING_ANSWER[$val['rating']]; ?>
               </div>

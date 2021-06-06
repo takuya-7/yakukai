@@ -214,7 +214,7 @@ require('head.php');
   </p>
 
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <div class="bg-white py-4">
           <h1 class="page-title mb-4">
