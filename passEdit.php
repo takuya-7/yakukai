@@ -116,7 +116,7 @@ require('head.php');
     ?>
 
     <main>
-        <div class="content-wrapper py-5">
+        <div class="l-content-wrapper py-5">
             <div class="container">
             
                 <div class="bg-white py-3">
