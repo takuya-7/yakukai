@@ -279,7 +279,10 @@ function getUser($u_id){
   debug('ユーザー情報を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT email, sex, birth_year, addr, ph_license, carrier_type, ex_phtype, ex_year, industry.name AS i_name, employment_type.name AS e_name FROM users LEFT JOIN industry ON users.ex_phtype = industry.id LEFT JOIN employment_type ON users.emp_type = employment_type.id WHERE users.id = :u_id AND users.delete_flg = 0';
+    $sql = 'SELECT email, sex, birth_year, addr, ph_license, carrier_type, ex_phtype, ex_year, industry.name AS i_name, employment_type.name AS e_name FROM users
+      LEFT JOIN industry ON users.ex_phtype = industry.id
+      LEFT JOIN employment_type ON users.emp_type = employment_type.id
+      WHERE users.id = :u_id AND users.delete_flg = 0';
     $data = array(':u_id' => $u_id);
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
