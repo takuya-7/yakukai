@@ -51,11 +51,11 @@ require('head.php');
 
     
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
         <div class="row">
           <h1 class="page-title">マイページ</h1>
-    
+
           <!-- <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">プロフィール</a>
@@ -119,7 +119,7 @@ require('head.php');
                 <h2>個人設定</h2>
                 <ul class="bg-white">
                   <li><a href="">メールアドレス変更</a></li>
-                  <li><a href="">パスワード変更</a></li>
+                  <li><a href="passEdit.php">パスワード変更</a></li>
                 </ul>
                 <h2>ユーザー情報</h2>
                 <ul class="bg-white">
