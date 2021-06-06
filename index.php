@@ -45,13 +45,13 @@ require('head.php');
     
     <main>
       <div class="top-wrap">
-        <header>
+        <header class="l-header">
           <div class="container">
-            <div class="header-left">
+            <div class="l-header__left">
               <a href="index.php">ヤクカイ</a>
             </div>
 
-            <div class="header-right">
+            <div class="l-header__right">
               <nav>
                 <ul>
                   <?php if(empty($_SESSION['user_id'])){ ?>
@@ -83,11 +83,28 @@ require('head.php');
         </div>
       </div>
       
-      <div class="content-wrapper">
+      <div class="l-content-wrapper">
         <div class="container">
+                    
+          <section>
+            <h2>投稿数の多い企業</h2>
+            <div class="card-slider-wrapper">
+              <ul class="card-slider">
+                <li class="card-slider-item">
+                    <a href="">
+                      <h3>会社名</h3>
+                      <div>評価値</div>
+                      <div>投稿数字</div>
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+
           <section class="top-widget natural-shadow">
             <div class="top-widget-title">
-              <h2>人気の企業</h2>
+              <h2>投稿数の多い企業</h2>
             </div>
             <div></div>
           </section>
