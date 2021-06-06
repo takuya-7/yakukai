@@ -1,4 +1,4 @@
-    <footer id="footer">
+    <footer class="l-footer">
       
       <ul class="container">
         <li><a href="index.php">HOME</a></li>
@@ -8,17 +8,21 @@
         <li><a href="">お問い合わせ</a></li>
       </ul>
 
-      <span class="copyright">
+      <span class="l-footer__copyright">
         Copyright © ヤクカイ. All Rights Reserved.
       </span>
     </footer>
     
     <!-- jQuery読み込み -->
-    <script src="js/vender/jquery-3.5.1.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- Propper.js読み込み -->
+    <script src="node_modules/popper.js/dist/js/popper.min.js"></script>
+    <!-- Bootstrapのjs読み込み -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Chart.js読み込み -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.0/chart.min.js" integrity="sha512-RGbSeD/jDcZBWNsI1VCvdjcDULuSfWTtIva2ek5FtteXeSjLfXac4kqkDRHVGf1TwsXCAqPTF7/EYITD0/CTqw==" crossorigin="anonymous"></script>
-    <!-- 自作のmain.jsを読み込み -->
-    <script src="js/main.js"></script>
+    <!-- bundle.js読み込み -->
+    <script src="dist/js/bundle.js"></script>
 
     <script>
       $(function(){
@@ -153,7 +157,7 @@
           } 
         });
 
-        // survey-list選択時のスタイル変更
+        // survey02.php、survey-list選択時のスタイル変更
         $('.survey-list input[type="radio"]').change(function(){
           $(this).parents('.survey-list').find('label').removeClass('checked');
           $(this).parent().addClass('checked');
