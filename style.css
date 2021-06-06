@@ -41,6 +41,12 @@ h1,h2,h3,h4,h5,h6,p{
 .content-wrapper p{
   padding: 0 1rem;
 }
+.fs-1rem{
+  font-size: 1rem;
+}
+.fs-12{
+  font-size: 1.2rem;
+}
 .fs-08{
   font-size: .8rem;
 }
@@ -50,11 +56,59 @@ h1,h2,h3,h4,h5,h6,p{
 .w-75{
   width: 75%;
 }
+.w-65{
+  width: 65% !important;
+}
+.w-60{
+  width: 60% !important;
+}
+.w-50{
+  width: 50%;
+}
 .w-25{
   width: 25%;
 }
+.h-2-5{
+  height: 2.5rem !important;
+}
+.lh-2-5{
+  line-height: 2.5rem;
+}
 .float-l{
   float: left;
+}
+.mr-2{
+  margin-right: 2rem;
+}
+.mr-3{
+  margin-right: 3rem;
+}
+.mr-4{
+  margin-right: 4rem;
+}
+/*========================================
+  カラー
+========================================*/
+.text-black{
+  color: #4a4a4a;
+}
+.text-red{
+  color: rgb(233, 79, 79);
+}
+.text-green{
+  color: rgb(55, 196, 125);
+}
+.text-gray{
+  color: #969696;
+}
+.bg-red{
+  background: #f7dcd9 !important;
+}
+.bg-gray{
+  background: #f5f5f5;
+}
+.bg-blue{
+  background:  #0981ca;
 }
 /*========================================
   リンク
@@ -155,7 +209,6 @@ section h1.title {
   margin: 20px auto;
 }
 /* ページタイトル */
-
 /* .page-title {
   margin-bottom: .5rem;
   padding-top: .8rem;
@@ -672,6 +725,22 @@ input[type="submit"]:hover {
   background: linear-gradient(90deg,#1b4db1,#091a77);
   float: left;
 }
+.card-slider-wrapper ul{
+  list-style: none;
+  padding-left: 0;
+}
+.card-slider{
+  background: #fff;
+  width: 9rem;
+  height: 9rem;
+}
+.card-slider-item{
+  margin-right: 1rem;
+}
+.card-slider-item a{
+  text-decoration: none;
+  color: #4a4a4a;
+}
 .top-widget{
   margin-left:  auto;
   margin-right: auto;
@@ -821,10 +890,10 @@ input[type="submit"]:hover {
 }
 .custom-control-inline{
   display: inline-flex;
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
 }
 .radio-custom{
-  padding-left: 2rem;
+  padding-left: 1rem;
 }
 .radio-custom label{
   padding-left: 0.5rem;
@@ -1244,7 +1313,7 @@ input[type="submit"]:hover {
   text-decoration: none;
   color: #0981ca;
   display: inline-block;
-  border: .11rem solid #cacaca;
+  border: .11rem solid #0981ca;
   width: 100%;
   padding: .6rem 1rem;
   margin: 0;
@@ -1359,4 +1428,27 @@ input[type="submit"]:hover {
 .search-company-list span{
   color: #919191;
   margin-left: 1rem;
+}
+.survey-list ul{
+  list-style: none;
+  padding-left: 0;
+}
+.survey-list ul li{
+  margin-bottom: .5rem;
+}
+.survey-list ul li label{
+  border: 1px solid #0981ca;
+  padding: .3rem;
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+.survey-list ul li .checked{
+  background: #0981ca;
+  color: #fff;
+}
+.survey-list input[type="radio"]{
+  display: none;
 }
