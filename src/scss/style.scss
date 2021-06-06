@@ -1,12 +1,50 @@
 // リセットCSS読み込み
-@import 'reset'; // cssを指定した場合は @import url(../css/reset.css); に変換されるだけなので注意
+@import 'Foundation/reset'; // cssを指定した場合は @import url(../css/reset.css); に変換されるだけなので注意
 // bootstrap読み込み
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 // ======================================
 // Foundation
 // ======================================
-// base.scss
+// variable.scss
+// ---------------------------
+$font-color_default: #4a4a4a;
+$theme_color: linear-gradient(-20deg, #6e45e2 0%, #88d3ce 100%);
+$cv_color: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
+$blue_color: #0981ca;
+
+$font-size_s: 12px;
+$font-size_m: 14px;
+$font-size_default: 16px;
+$font-size_l: 18px;
+$font-size_xl: 24px;
+$font-size_xxl: 30px;
+$font-size_3l: 38px;
+
+$space_s: 5px;
+$space_m: 10px;
+$space_l: 15px;
+$space_xl: 20px;
+$space_xxl: 30px;
+$space_3l: 40px;
+
+$font-family_corp: 'Amatic SC', cursive;
+
+$breakpoints: (
+  'sm': 'screen and (max-width: 576px)',
+  'md': 'screen and (max-width: 768px)',
+  'lg': 'screen and (max-width: 992px)',
+  'xl': 'screen and (max-width: 1200px)',
+  'xxl': 'screen and (max-width: 1400px)',
+) !default;
+// mixin.scss
+// ---------------------------
+@mixin mq($breakpoint: sm) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+// base.scss：タグ自体にスタイルを定義
 // ---------------------------
 html, body {
   // width: 100%;
@@ -46,137 +84,99 @@ img {
   width: 100%;
   vertical-align: bottom;
 }
-// variable.scss
-// ---------------------------
-$font-color_default: #4a4a4a;
-$theme_color: linear-gradient(-20deg, #6e45e2 0%, #88d3ce 100%);
-$cv_color: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
-$blue_color: #0981ca;
-
-$font-size_s: 12px;
-$font-size_m: 14px;
-$font-size_default: 16px;
-$font-size_l: 18px;
-$font-size_xl: 24px;
-$font-size_xxl: 30px;
-$font-size_3l: 38px;
-
-$space_s: 5px;
-$space_m: 10px;
-$space_l: 15px;
-$space_xl: 20px;
-$space_xxl: 30px;
-$space_3l: 40px;
-
-$font-family_corp: 'Amatic SC', cursive;
-
-$breakpoints: (
-  'sm': 'screen and (max-width: 576px)',
-  'md': 'screen and (max-width: 768px)',
-  'lg': 'screen and (max-width: 992px)',
-  'xl': 'screen and (max-width: 1200px)',
-  'xxl': 'screen and (max-width: 1400px)',
-) !default;
-// mixin.scss
-// ---------------------------
-@mixin mq($breakpoint: sm) {
-  @media #{map-get($breakpoints, $breakpoint)} {
-    @content;
-  }
-}
 
 // ======================================
 // Layout
 // ======================================
 // l-header.scss
 // ---------------------------
-header{
+.l-header{
   line-height: 4rem;
   height: 4rem;
   width: 100%;
   top: 0;
   position: relative;
   text-align: center;
-}
-.header-bg{
-  background-image: $theme_color;
-}
-.header-left{
-  float: left;
-}
-.header-left a{
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.6rem;
-  font-weight: 900;
-  display: block;
-  line-height: 4rem;
-  @include mq() {
-    font-size: 1.2rem;
+  &.l-header--bg-theme{
+    background-image: $theme_color;
   }
-}
-.header-right{
-  float: right;
-  position: relative;
-}
-.header-right ul{
-  overflow: hidden;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
-  height: 4rem;
-  list-style: none;
-  line-height: 4rem;
-}
-.header-right li{
-  float: left;
-}
-.header-right a{
-  padding: 0 1rem;
-  display: block;
-  line-height: 4rem;
-  font-size: 1rem;
-  color: #fff;
-  font-weight: normal;
-  text-decoration: none;
-  transition: all 0.5s;
-  @include mq() {
-    font-size: 0.8rem;
-    padding: 0 0.8rem;
+  &__left{
+    float: left;
+    a{
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.6rem;
+      font-weight: 900;
+      display: block;
+      line-height: 4rem;
+      @include mq() {
+        font-size: 1.2rem;
+      }
+    }
   }
-}
-.header-right a:hover{
-  background-color: rgba(255, 255, 255, 0.3);
+  &__right{
+    float: right;
+    position: relative;
+    ul{
+      overflow: hidden;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      height: 4rem;
+      list-style: none;
+      line-height: 4rem;
+      li{
+        float: left;
+        a{
+          padding: 0 1rem;
+          display: block;
+          line-height: 4rem;
+          font-size: 1rem;
+          color: #fff;
+          font-weight: normal;
+          text-decoration: none;
+          transition: all 0.5s;
+          @include mq() {
+            font-size: 0.8rem;
+            padding: 0 0.8rem;
+          }
+          &:hover{
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
 }
 // l-menu.scss
 // ---------------------------
 
 // l-main.scss
 // ---------------------------
-.content-wrapper{
+.l-content-wrapper{
   /* background: #f6f6f4; */
   background: #edf1f5;
   padding-top: 1rem;
   padding-bottom: 2rem;
   height: 100%;
-}
-.content-wrapper h1{
-  margin: 0 1rem 1rem;
-  line-height: 2.2rem;
-  font-size: 1.5rem;
-}
-.content-wrapper h2{
-  margin: 1rem;
-  font-size: 1.4rem;
-}
-.content-wrapper h3{
-  margin: 1rem;
-  font-size: 1.2rem;
-}
-.content-wrapper p{
-  padding: 0 1rem;
+  h1{
+    margin: 0 1rem 1rem;
+    line-height: 2.2rem;
+    font-size: 1.5rem;
+  }
+  h2{
+    margin: 1rem;
+    font-size: 1.4rem;
+  }
+  h3{
+    margin: 1rem;
+    font-size: 1.2rem;
+  }
+  p{
+    padding: 0 1rem;
+  }
 }
 
 section h1.title {
@@ -185,37 +185,34 @@ section h1.title {
 }
 // l-footer.scss
 // ---------------------------
-footer {
+.l-footer {
   padding: 15px;
   width: 100%;
   background: #3e3e3e;
   font-size: 12px;
   text-align: center;
-}
-footer ul{
-  list-style: none;
-  text-align: center;
-  margin: 30px 0 10px;
-  overflow: hidden;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-footer ul li{
-  text-align: left;
-  float: left;
-  padding: 0 15px;
-  display: inline;
-}
-footer a {
-  color: #fff;
-  text-decoration: none;
-}
-.copyright{
-  color: #8e9398;
-}
-#contact {
-  margin-bottom: 150px;
+  ul{
+    list-style: none;
+    text-align: center;
+    margin: 30px 0 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    li{
+      text-align: left;
+      float: left;
+      padding: 0 15px;
+      display: inline;
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
+  &__copyright{
+    color: #8e9398;
+  }
 }
 // ======================================
 // Component
