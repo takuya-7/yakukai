@@ -39,7 +39,7 @@ $listSpan = 20;
 // sql文、OFFSET句で使用するための現在表示レコードの先頭の値を算出。この値の次のレコードから取得することになる（そのため最初は0。表示件数が20なので次は20となる。pの値から算出すれば良い
 $currentMinNum = ($currentPageNum - 1) * $listSpan;
 
-// DBから商品データ（total:商品総数、total_page:総ページ数、data:表示する商品データ）を取得
+// DBから企業データ（total:企業総数、total_page:総ページ数、data:表示する企業データ）を取得
 $dbCompanyData = getCompanyList($currentMinNum, $companyName, $prefecture, $industry, $sort, $listSpan);
 
 // DBから都道府県データを取得
@@ -71,9 +71,9 @@ require('head.php');
 
     
   <main>
-    <div class="content-wrapper">
+    <div class="l-content-wrapper">
       <div class="container">
-        <div class="page-heading">
+        <div class="bg-white">
           <h1 class="page-title">気になる会社を検索</h1>
           <div class="search-wrap">
             <form method="get" action="">
@@ -117,6 +117,7 @@ require('head.php');
               </div>
               
               <div class="search-item">
+                <span>表示順</span>
                 <div class="cp_ipselect cp_sl01 w-100">
                   <select name="sort">
                     <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
@@ -153,7 +154,13 @@ require('head.php');
                 <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>">
                   <div class="company-header">
                     <h2><?php echo sanitize($val['name']); ?></h2>
-                    <p>幸福度：<?php echo sanitize($val['rating']); ?></p>
+                    <div class="rating">
+                      <p>
+                        幸福度　<span class="heart5_rating" data-rate="<?php echo sanitize($val['rating']); ?>"></span>
+                        <?php echo sanitize($val['rating']); ?>
+                      </p>
+                      
+                    </div>
                     <p>クチコミ数：<?php echo sanitize($val['posts_count']); ?></p>
                     <p>本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></p>
                   </div>
