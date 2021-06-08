@@ -171,9 +171,9 @@ require('head.php');
 
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
+      <div class="l-container">
         <div class="bg-white py-4">
-          <h1 class="page-title mb-4">
+          <h1 class="mb-4">
             <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（3/3）
           </h1>
 
@@ -224,7 +224,7 @@ require('head.php');
               
             <?php } ?>
 
-            <button type="submit" class="btn btn-blue js-disabled-submit">次へ</button>
+            <button type="submit" class="c-button c-button--blue c-button--width100 js-disabled-submit">次へ</button>
           </form>
         </div>
       </div>

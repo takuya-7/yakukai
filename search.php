@@ -72,9 +72,9 @@ require('head.php');
     
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
+      <div class="l-container">
         <div class="bg-white">
-          <h1 class="page-title">気になる会社を検索</h1>
+          <h1>気になる会社を検索</h1>
           <div class="search-wrap">
             <form method="get" action="">
               <div class="search-item">

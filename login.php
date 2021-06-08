@@ -139,54 +139,56 @@ require('head.php');
     
     <main>
       <div class="l-content-wrapper">
-        <div class="container">
-          <div class="form-container">
-            <form action="" method="post" class="form col col-sm-9 col-md-7 col-lg-6">
-              <h2 class="title">ログイン</h2>
-              
-              <div class="area-msg">
-                <?php 
-                  if(!empty($err_msg['common'])) echo $err_msg['common'];
-                ?>
-              </div>
-  
+        <div class="l-container">
+          <form action="" method="post" class="c-form col col-sm-9 col-md-7 col-lg-6">
+            <h2 class="title">ログイン</h2>
+            
+            <div class="c-form__message">
+              <?php 
+                if(!empty($err_msg['common'])) echo $err_msg['common'];
+              ?>
+            </div>
+
+            <fieldset class="c-form__field">
               <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
                 メールアドレス
                 <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo $_POST['email']; ?>">
               </label>
-              <div class="area-msg">
+              <div class="c-form__message">
                 <?php 
                 if(!empty($err_msg['email'])) echo $err_msg['email'];
                 ?>
               </div>
-  
+            </fieldset>
+
+            <fieldset class="c-form__field">
               <label class="<?php if(!empty($err_msg['pass'])) echo 'err'; ?>">
                 パスワード
                 <input type="password" name="pass" value="<?php if(!empty($_POST['pass'])) echo $_POST['pass']; ?>">
               </label>
-              <div class="area-msg">
+              <div class="c-form__message">
                 <?php 
                 if(!empty($err_msg['pass'])) echo $err_msg['pass'];
                 ?>
               </div>
-  
-              <label>
-                  <input type="checkbox" name="pass_save"> 次回ログインを省略する
-              </label>
-  
-              <div class="btn-container mb-3">
-                <button type="submit" class="btn-blue radius-shadow my-4">ログイン</button>
-              </div>
-  
-              <div class="mb-4">
-                パスワードをお忘れの方は<a href="passRemindSend.php">コチラ</a>
-              </div>
-  
-              <div class="mb-2">
-                会員登録がまだの方は<a href="signup.php">コチラ</a>からご登録ください。
-              </div>
-            </form>
-          </div>
+            </fieldset>
+
+            <label class="u-mb-3">
+                <input type="checkbox" name="pass_save"> 次回ログインを省略する
+            </label>
+
+            <div class="u-mb-4">
+              <button type="submit" class="c-button c-button--blue c-button--width100">ログイン</button>
+            </div>
+
+            <div class="u-mb-3">
+              パスワードをお忘れの方は<a href="passRemindSend.php">コチラ</a>
+            </div>
+
+            <div class="u-mb-3">
+              会員登録がまだの方は<a href="signup.php">コチラ</a>からご登録ください。
+            </div>
+          </form>
         </div>
       </div>
     </main>

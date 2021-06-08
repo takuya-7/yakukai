@@ -118,33 +118,39 @@ require('head.php');
       require('header.php');
     ?>
 
-    <div id="contents" class="site-width">
-      <section id="main" >
-        <div class="form-container">
-          <form action="" method="post" class="form">
+    <main>
+      <div class="l-content-wrapper">
+        <div class="l-container">
+          <h1>パスワード再発行</h1>
+          <form action="" method="post" class="c-form">
             <p>ご指定のメールアドレス宛にパスワード再発行用のURLと認証キーをお送りします。</p>
-
-            <div class="area-msg">
-                <?php echo getErrMsg('common'); ?>
-            </div>
-
-            <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
-                Email
-                <input type="text" name="email" value="<?php echo getFormData('email'); ?>">
-            </label>
-
-            <div class="area-msg">
-                <?php echo getErrMsg('email'); ?>
-            </div>
-
-            <div class="btn-container">
-                <input type="submit" class="btn btn-mid" value="送信する">
+      
+            <fieldset class="c-form__field u-mb-5">
+              <div class="c-form__message">
+                  <?php echo getErrMsg('common'); ?>
+              </div>
+      
+              <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
+                  Email
+                  <input type="text" name="email" value="<?php echo getFormData('email'); ?>">
+              </label>
+      
+              <div class="c-form__message">
+                  <?php echo getErrMsg('email'); ?>
+              </div>
+            </fieldset>
+      
+            <div class="u-mb-4">
+              <button type="submit" class="c-button c-button--blue c-button--width100">送信する</button>
             </div>
           </form>
+          <a href="mypage.php">&lt; マイページに戻る</a>
         </div>
-        <a href="mypage.php">&lt; マイページに戻る</a>
-      </section>
-    </div>
+      </div>
+    </main>
+
+    
+
 
     <!-- footer -->
     <?php

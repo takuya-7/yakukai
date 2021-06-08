@@ -104,196 +104,196 @@ require('head.php');
 
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
-        <div class="bg-white py-4">
-          <h1 class="page-title mb-4">
+      <div class="l-container">
+        
+        <form action="" method="post" class="c-form">
+          <h1>
             <?php echo $dbCompanyData['info']['name']; ?>の就業状況について教えてください。（1/3）
           </h1>
-
           <p class="mb-4 text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
 
-          <form action="" method="post" class="mx-4">
-            <div class="mb-5">
-              <label class="fw-bold mb-2">
-                雇用形態<span class="fw-normal text-red">（必須）</span>
-                <span class="text-red ms-3">
-                  <?php if(!empty($err_msg['user_employment_type'])) echo $err_msg['user_employment_type']; ?>
-                </span>
-              </label>
-              <div class="ms-3">
-                <div class="cp_ipselect cp_sl01">
-                  <select name="user_employment_type" class="<?php if(!empty($err_msg['user_employment_type'])) echo 'bg-red'; ?>">
-                    <option value="">雇用形態</option>
-                    <?php foreach($dbEmploymentType as $key => $val){ ?>
-                      <option value="<?php echo $val['id']; ?>"
-                        <?php
-                          if(!empty($_POST['user_employment_type'])){
-                            if($_POST['user_employment_type'] == $val['id']) echo ' selected';
-                          }elseif(!empty($dbPostData[0]['employment_type'])){
-                            if($dbPostData[0]['employment_type'] == $val['id']) echo ' selected';
-                          }
-                        ?>><?php echo $val['name']; ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">
+              雇用形態<span class="c-form__field--required">（必須）</span>
+              <span class="text-red ms-3">
+                <?php if(!empty($err_msg['user_employment_type'])) echo $err_msg['user_employment_type']; ?>
+              </span>
+            </label>
+            <div class="ms-3">
+              <div class="cp_ipselect cp_sl01">
+                <select name="user_employment_type" class="<?php if(!empty($err_msg['user_employment_type'])) echo 'bg-red'; ?>">
+                  <option value="">雇用形態</option>
+                  <?php foreach($dbEmploymentType as $key => $val){ ?>
+                    <option value="<?php echo $val['id']; ?>"
+                      <?php
+                        if(!empty($_POST['user_employment_type'])){
+                          if($_POST['user_employment_type'] == $val['id']) echo ' selected';
+                        }elseif(!empty($dbPostData[0]['employment_type'])){
+                          if($dbPostData[0]['employment_type'] == $val['id']) echo ' selected';
+                        }
+                      ?>><?php echo $val['name']; ?></option>
+                  <?php } ?>
+                </select>
               </div>
             </div>
+          </fieldset>
 
-            <div class="mb-5">
-              <label class="fw-bold mb-2">
-                在籍状況<span class="fw-normal text-red">（必須）</span>
-                <span class="text-red ms-3">
-                  <?php if(!empty($err_msg['user_registration'])) echo $err_msg['user_registration']; ?>
-                </span>
-              </label>
-              <div class="radio-custom d-flex flex-row">
-                <input type="hidden" name="user_registration" value="">
-                <div class="custom-control-inline mr-4">
-                  <label class="form-check-label">
-                    <input class="form-check-input " type="radio" name="user_registration" value="1"<?php
-                      if(isset($_POST['user_registration'])){
-                        if($_POST['user_registration'] == 1) echo ' checked';
-                      }elseif(isset($dbPostData[0]['registration'])){
-                        if($dbPostData[0]['registration'] == 1) echo ' checked';
-                      }
-                    ?>>
-                    <span class="ms-2">現職</span>
-                  </label>
-                </div>
-                <div class="custom-control-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="user_registration" value="0"<?php
-                      if(isset($_POST['user_registration'])){
-                        if($_POST['user_registration'] == 0) echo ' checked';
-                      }elseif(isset($dbPostData[0]['registration'])){
-                        if($dbPostData[0]['registration'] == 0) echo ' checked';
-                      }
-                    ?>>
-                    <span class="ms-2">退職済み</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-5">
-              <label class="fw-bold mb-2">
-                入社形態<span class="fw-normal text-red">（必須）</span>
-                <span class="text-red ms-3">
-                  <?php if(!empty($err_msg['user_entry_type'])) echo $err_msg['user_entry_type']; ?>
-                </span>
-              </label>
-              <div class="radio-custom d-flex flex-row">
-                <input type="hidden" name="user_entry_type" value="">
-                <div class="custom-control-inline mr-2">
-                  <label class="form-check-label">
-                    <input class="form-check-input " type="radio" name="user_entry_type" value="0"<?php
-                      if(isset($_POST['user_entry_type'])){
-                        if($_POST['user_entry_type'] == 0) echo ' checked';
-                      }elseif(isset($dbPostData[0]['entry_type'])){
-                        if($dbPostData[0]['entry_type'] == 0) echo ' checked';
-                      }
-                    ?>>
-                    <span class="ms-2">新卒入社</span>
-                  </label>
-                </div>
-                <div class="custom-control-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="user_entry_type" value="1"<?php
-                      if(isset($_POST['user_entry_type'])){
-                        if($_POST['user_entry_type'] == 1) echo ' checked';
-                      }elseif(isset($dbPostData[0]['entry_type'])){
-                        if($dbPostData[0]['entry_type'] == 1) echo ' checked';
-                      }
-                    ?>>
-                    <span class="ms-2">中途入社</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-5">
-              <label class="fw-bold mb-2">
-                入社年月<span class="fw-normal text-red">（必須）</span>
-                <span class="text-red ms-3">
-                  <?php
-                    if(!empty($err_msg['user_entry_year'])){
-                      echo $err_msg['user_entry_type']; 
-                    }elseif(!empty($err_msg['user_entry_month'])){
-                      echo $err_msg['user_entry_month'];
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">
+              在籍状況<span class="c-form__field--required">（必須）</span>
+              <span class="text-red ms-3">
+                <?php if(!empty($err_msg['user_registration'])) echo $err_msg['user_registration']; ?>
+              </span>
+            </label>
+            <div class="c-radio">
+              <input type="hidden" name="user_registration" value="">
+              <div class="c-radio__item">
+                <label>
+                  <input type="radio" name="user_registration" value="1"<?php
+                    if(isset($_POST['user_registration'])){
+                      if($_POST['user_registration'] == 1) echo ' checked';
+                    }elseif(isset($dbPostData[0]['registration'])){
+                      if($dbPostData[0]['registration'] == 1) echo ' checked';
                     }
-                  ?>
-                    
-                </span>
-              </label>
-
-              <div class="d-flex flex-row">
-                <div class="cp_ipselect cp_sl01 ms-3 me-3<?php if(!empty($err_msg['user_entry_year'])) echo ' bg-red'; ?>">
-                  <select name="user_entry_year" class="">
-                    <option value="" hidden>年</option>
-                    <option value="1990" <?php ?>>1990年以前</option>
-                    <?php for($i=1991; $i<=date('Y'); $i++){ ?>
-                      <option value="<?php echo $i; ?>" 
-                        <?php
-                          if(isset($_POST['user_entry_year'])){
-                            if($_POST['user_entry_year'] == $i) echo ' selected';
-                          }elseif(isset($dbPostData[0]['entry_date'])){
-                            if(date('Y', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
-                          }
-                        ?>><?php echo $i; ?>年</option>
-                    <?php } ?>
-                  </select>
-                </div>
-  
-                <div class="cp_ipselect cp_sl01<?php if(!empty($err_msg['user_entry_month'])) echo ' bg-red'; ?>">
-                  <select name="user_entry_month" class="">
-                    <option value="" hidden>月</option>
-                    <?php for($i=1; $i<=12; $i++){ ?>
-                      <option value="<?php echo $i; ?>" 
-                        <?php
-                          if(isset($_POST['user_entry_month'])){
-                            if($_POST['user_entry_month'] == $i) echo ' selected';
-                          }elseif(isset($dbPostData[0]['entry_date'])){
-                            if(date('m', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
-                          }
-                        ?>><?php echo $i; ?>月</option>
-                    <?php } ?>
-                  </select>
-                </div>
+                  ?>>
+                  <span>現職</span>
+                </label>
+              </div>
+              <div class="c-radio__item">
+                <label>
+                  <input type="radio" name="user_registration" value="0"<?php
+                    if(isset($_POST['user_registration'])){
+                      if($_POST['user_registration'] == 0) echo ' checked';
+                    }elseif(isset($dbPostData[0]['registration'])){
+                      if($dbPostData[0]['registration'] == 0) echo ' checked';
+                    }
+                  ?>>
+                  <span>退職済み</span>
+                </label>
               </div>
             </div>
+          </fieldset>
 
-            <div class="mb-5">
-              <label class="fw-bold mb-2">事業部・部署<span class="fw-normal text-green">（任意）</span></label>
-              <input type="text" name="user_department" placeholder="例：薬局運営、人事" value="<?php
-                if(isset($_POST['user_department'])){
-                  echo $_POST['user_department'];
-                }elseif(isset($dbPostData[0]['department'])){
-                  echo $dbPostData[0]['department'];
-                }
-              ?>">
-              <div class="area-msg text-red">
-                <?php if(!empty($err_msg['user_department'])) echo $err_msg['user_department']; ?>
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">
+              入社形態<span class="c-form__field--required">（必須）</span>
+              <span class="text-red ms-3">
+                <?php if(!empty($err_msg['user_entry_type'])) echo $err_msg['user_entry_type']; ?>
+              </span>
+            </label>
+            <div class="c-radio">
+              <input type="hidden" name="user_entry_type" value="">
+              <div class="c-radio__item">
+                <label>
+                  <input type="radio" name="user_entry_type" value="0"<?php
+                    if(isset($_POST['user_entry_type'])){
+                      if($_POST['user_entry_type'] == 0) echo ' checked';
+                    }elseif(isset($dbPostData[0]['entry_type'])){
+                      if($dbPostData[0]['entry_type'] == 0) echo ' checked';
+                    }
+                  ?>>
+                  <span>新卒入社</span>
+                </label>
+              </div>
+              <div class="c-radio__item">
+                <label>
+                  <input type="radio" name="user_entry_type" value="1"<?php
+                    if(isset($_POST['user_entry_type'])){
+                      if($_POST['user_entry_type'] == 1) echo ' checked';
+                    }elseif(isset($dbPostData[0]['entry_type'])){
+                      if($dbPostData[0]['entry_type'] == 1) echo ' checked';
+                    }
+                  ?>>
+                  <span>中途入社</span>
+                </label>
               </div>
             </div>
+          </fieldset>
 
-            <div class="mb-5">
-              <label class="fw-bold mb-2">役職<span class="fw-normal text-green">（任意）</span></label>
-              <input type="text" name="user_position" placeholder="例：薬局長、管理薬剤師、一般薬剤師" value="<?php
-                if(isset($_POST['user_position'])){
-                  echo $_POST['user_position'];
-                }elseif(isset($dbPostData[0]['position'])){
-                  echo $dbPostData[0]['position'];
-                }
-              ?>">
-              <div class="area-msg text-red">
-                <?php if(!empty($err_msg['user_position'])) echo $err_msg['user_position']; ?>
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">
+              入社年月<span class="c-form__field--required">（必須）</span>
+              <span class="text-red ms-3">
+                <?php
+                  if(!empty($err_msg['user_entry_year'])){
+                    echo $err_msg['user_entry_type']; 
+                  }elseif(!empty($err_msg['user_entry_month'])){
+                    echo $err_msg['user_entry_month'];
+                  }
+                ?>
+              </span>
+            </label>
+
+            <div class="u-d-flex flex-row">
+              <div class="cp_ipselect cp_sl01 u-me-3<?php if(!empty($err_msg['user_entry_year'])) echo ' bg-red'; ?>">
+                <select name="user_entry_year" class="">
+                  <option value="" hidden>年</option>
+                  <option value="1990" <?php ?>>1990年以前</option>
+                  <?php for($i=1991; $i<=date('Y'); $i++){ ?>
+                    <option value="<?php echo $i; ?>" 
+                      <?php
+                        if(isset($_POST['user_entry_year'])){
+                          if($_POST['user_entry_year'] == $i) echo ' selected';
+                        }elseif(isset($dbPostData[0]['entry_date'])){
+                          if(date('Y', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
+                        }
+                      ?>><?php echo $i; ?>年</option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="cp_ipselect cp_sl01<?php if(!empty($err_msg['user_entry_month'])) echo ' bg-red'; ?>">
+                <select name="user_entry_month" class="">
+                  <option value="" hidden>月</option>
+                  <?php for($i=1; $i<=12; $i++){ ?>
+                    <option value="<?php echo $i; ?>" 
+                      <?php
+                        if(isset($_POST['user_entry_month'])){
+                          if($_POST['user_entry_month'] == $i) echo ' selected';
+                        }elseif(isset($dbPostData[0]['entry_date'])){
+                          if(date('m', strtotime($dbPostData[0]['entry_date'])) == $i) echo ' selected';
+                        }
+                      ?>><?php echo $i; ?>月</option>
+                  <?php } ?>
+                </select>
               </div>
             </div>
+          </fieldset>
 
-            <button type="submit" class="btn btn-blue">次へ</button>
-          </form>
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">事業部・部署<span class="c-form__field--free">（任意）</span></label>
+            <input type="text" name="user_department" placeholder="例：薬局運営、人事" value="<?php
+              if(isset($_POST['user_department'])){
+                echo $_POST['user_department'];
+              }elseif(isset($dbPostData[0]['department'])){
+                echo $dbPostData[0]['department'];
+              }
+            ?>">
+            <div class="c-form__message">
+              <?php if(!empty($err_msg['user_department'])) echo $err_msg['user_department']; ?>
+            </div>
+          </fieldset>
+
+          <fieldset class="c-form__field">
+            <label class="c-form__field__name">役職<span class="c-form__field--free">（任意）</span></label>
+            <input type="text" name="user_position" placeholder="例：薬局長、管理薬剤師、一般薬剤師" value="<?php
+              if(isset($_POST['user_position'])){
+                echo $_POST['user_position'];
+              }elseif(isset($dbPostData[0]['position'])){
+                echo $dbPostData[0]['position'];
+              }
+            ?>">
+            <div class="c-form__message">
+              <?php if(!empty($err_msg['user_position'])) echo $err_msg['user_position']; ?>
+            </div>
+          </fieldset>
+
+          <div class="u-mb-3">
+            <button type="submit" class="c-button c-button--blue c-button--width100">次へ</button>
+          </div>
+        </form>
           
-        </div>
+
         
       </div>
     </div>

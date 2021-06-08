@@ -117,7 +117,7 @@ require('head.php');
 
     <main>
         <div class="l-content-wrapper py-5">
-            <div class="container">
+            <div class="l-container">
             
                 <div class="bg-white py-3">
                     <h1 class="">パスワード変更</h1>
@@ -125,7 +125,7 @@ require('head.php');
                     <form action="" method="post" class="form py-0">
 
                         <?php if(getErrMsg('common')){ ?>
-                            <div class="area-msg">
+                            <div class="c-form__message">
                                 <?php echo getErrMsg('common'); ?>
                             </div>
                         <?php } ?>
@@ -134,7 +134,7 @@ require('head.php');
                             現在のパスワード
                             <input type="password" name="pass_old" value="<?php echo getFormData('pass_old'); ?>">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php echo getErrMsg('pass_old'); ?>
                         </div>
         
@@ -142,7 +142,7 @@ require('head.php');
                             新しいパスワード
                             <input type="password" name="pass_new" value="<?php echo getFormData('pass_new'); ?>">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php echo getErrMsg('pass_new'); ?>
                         </div>
         
@@ -150,11 +150,13 @@ require('head.php');
                             新しいパスワード（再入力）
                             <input type="password" name="pass_new_re" value="<?php echo getFormData('pass_new_re'); ?>">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php echo getErrMsg('pass_new_re'); ?>
                         </div>
         
-                        <button type="submit" class="btn btn-blue">変更する</button>
+                        <div class="mb-3">
+                            <button type="submit" class="c-button c-button--blue c-button--width100">変更する</button>
+                        </div>
         
                     </form>
                 </div>

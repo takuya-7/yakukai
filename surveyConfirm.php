@@ -121,9 +121,9 @@ require('head.php');
 
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
+      <div class="l-container">
         <div class="bg-white py-4 mb-3">
-          <h1 class="page-title mb-4">
+          <h1 class="mb-4">
             入力内容の確認
           </h1>
           
@@ -223,7 +223,7 @@ require('head.php');
             
           <form action="" method="post" class="mx-3">
             <input type="hidden" name="post_flg" value="1">
-            <button type="submit" class="btn btn-blue">投稿する</button>
+            <button type="submit" class="c-button c-button--blue c-button--width100">投稿する</button>
           </form>
       </div>
     </div>

@@ -63,15 +63,15 @@ require('head.php');
     
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
-        <button class="btn-blue mb-3">
-          <a href="surveyInfo.php">クチコミを投稿する</a>
-        </button>
-
+      <div class="l-container">
+        <div class="mb-3">
+          <a href="surveyInfo.php" class="c-button c-button--blue c-button--width100">クチコミを投稿する</a>
+        </div>
+        
         <div class="company-wrapper">
           <div class="company-heading">
             <section>
-              <h1 class="page-title"><?php echo $dbCompanyData['info']['name']; ?><span class="company-title-append">の回答者別クチコミ</span></h1>
+              <h1><?php echo $dbCompanyData['info']['name']; ?><span class="company-title-append">の回答者別クチコミ</span></h1>
 
               <div class="mb-2">回答者情報</div>
               <table class="table border text-center">

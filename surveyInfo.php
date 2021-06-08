@@ -19,25 +19,25 @@ $dbRatingData = getRatingByUserId($_SESSION['user_id']);
 $dbAnswerData = getAnswer($_SESSION['user_id']);
 
 // 画面遷移処理
-if(empty($dbPostData[0]['company_id'])){
-  debug('会社登録がありません。画面遷移を行いません。');
-}elseif(empty($dbPostData[0]['employment_type'])){
-  debug('クチコミ登録がありません。クチコミ投稿ページ（1/3）へ遷移します。');
-  header('Location:survey01.php');
-  exit();
-}elseif(empty($dbRatingData[0]['rating'])){
-  debug('評価値が投稿されていません。クチコミ投稿ページ（2/3）へ遷移します。');
-  header('Location:survey02.php');
-  exit();
-}elseif(empty($dbAnswerData[0]['answer'])){
-  debug('フリー回答がありません。クチコミ投稿ページ（3/3）へ遷移します。');
-  header('Location:survey03.php');
-  exit();
-}else{
-  debug('クチコミ情報が全て登録されているためマイページへ遷移します。');
-  header('Location:mypage.php');
-  exit();
-}
+// if(empty($dbPostData[0]['company_id'])){
+//   debug('会社登録がありません。画面遷移を行いません。');
+// }elseif(empty($dbPostData[0]['employment_type'])){
+//   debug('クチコミ登録がありません。クチコミ投稿ページ（1/3）へ遷移します。');
+//   header('Location:survey01.php');
+//   exit();
+// }elseif(empty($dbRatingData[0]['rating'])){
+//   debug('評価値が投稿されていません。クチコミ投稿ページ（2/3）へ遷移します。');
+//   header('Location:survey02.php');
+//   exit();
+// }elseif(empty($dbAnswerData[0]['answer'])){
+//   debug('フリー回答がありません。クチコミ投稿ページ（3/3）へ遷移します。');
+//   header('Location:survey03.php');
+//   exit();
+// }else{
+//   debug('クチコミ情報が全て登録されているためマイページへ遷移します。');
+//   header('Location:mypage.php');
+//   exit();
+// }
 
 // 画面表示用データ取得
 //================================
@@ -111,9 +111,9 @@ require('head.php');
 
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
+      <div class="l-container">
         <div class="bg-white pt-3">
-          <h1 class="page-title mb-4">クチコミ投稿について</h1>
+          <h1 class="mb-4">クチコミ投稿について</h1>
     
           <p class="mb-4">クチコミを投稿していただくと、半年間クチコミを読み放題になります。</p>
     
@@ -127,10 +127,13 @@ require('head.php');
 
           <div class="py-4">
             <h2>在籍中または在籍していた企業を教えてください。</h2>
-            <form action="" method="get" class="search-box">
-              <input type="text" name="src_str" class="" placeholder="会社名を入力してください">
-              <button class="btn-blue" type="submit">検索</button>
-            </form>
+            
+            <div class="mb-4">
+              <form action="" method="get" class="p-search-box">
+                <input type="text" name="src_str" class="p-search-box__input" placeholder="会社名を入力してください">
+                <button class="p-search-box__button c-button c-button--blue" type="submit">検索</button>
+              </form>
+            </div>
 
             <?php if(!empty($_GET)){ ?>
               <?php if($dbCompanyData['total'] >= 20){ ?>

@@ -19,21 +19,6 @@ $dbPrefectureData = getPrefecture();
 // DBから業種データを取得
 $dbIndustryData = getIndustry();
 
-// GETパラメータを取得
-//----------------------------
-// （現在のページ番号）カレントページのGETパラメータを取得。pの値がなければ1を入れる
-// $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
-// DBから商品データ（total:商品総数、total_page:総ページ数、data:表示する商品データ）を取得
-// $dbProductData = getProductList($currentMinNum, $category, $sort, $listSpan);
-
-// DBからカテゴリデータを取得
-// $dbCategoryData = getCategory();
-
-// debug('現在のページ：' . $currentPageNum);
-
-//debug('フォーム用DBデータ：'.print_r($dbFormData,true));
-//debug('カテゴリデータ：'.print_r($dbCategoryData,true));
-
 ?>
 
 <?php
@@ -44,9 +29,12 @@ require('head.php');
   <body>
     
     <main>
+
+
+
       <div class="top-wrap">
         <header class="l-header">
-          <div class="container">
+          <div class="l-container">
             <div class="l-header__left">
               <a href="index.php">ヤクカイ</a>
             </div>
@@ -66,25 +54,25 @@ require('head.php');
             </div>
           </div>
         </header>
-        <div class="container">
+        <div class="l-container">
           <div class="top-head">
             <h1>
-              会社クチコミ・転職例で<br>
+              会社クチコミで<br>
               薬剤師により良い選択肢を。
             </h1>
           </div>
   
-          <div class="top-search-box">
-            <form method="get" action="search.php">
-              <input class="" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
-              <button class="" type="submit">検索</button>
+          <div class="p-top-search-box">
+            <form method="get" action="search.php" class="p-top-search-box__form">
+              <input class="p-top-search-box__input" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
+              <button class="p-top-search-box__button" type="submit">検索</button>
             </form>
           </div>
         </div>
       </div>
       
       <div class="l-content-wrapper">
-        <div class="container">
+        <div class="l-container">
                     
           <section>
             <h2>投稿数の多い企業</h2>

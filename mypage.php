@@ -52,9 +52,9 @@ require('head.php');
     
   <main>
     <div class="l-content-wrapper">
-      <div class="container">
+      <div class="l-container">
         <div class="row">
-          <h1 class="page-title">マイページ</h1>
+          <h1>マイページ</h1>
 
           <!-- <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -66,9 +66,7 @@ require('head.php');
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"> -->
               <div class="profile-container col-md-8">
                 
-                <button class="btn-blue radius-shadow">
-                  <a href="surveyInfo.php">クチコミを投稿する</a>
-                </button>
+                <a href="surveyInfo.php" class="c-button c-button--blue c-button--width100">クチコミを投稿する</a>
                 
                 <h2>あなたのプロフィール</h2>
                 <a href="profRegist.php" class="edit-btn">編集する</a>

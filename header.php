@@ -1,5 +1,5 @@
 <header class="l-header l-header--bg-theme">
-  <div class="container">
+  <div class="l-container">
     <div class="l-header__left">
       <a href="index.php">ヤクカイ</a>
     </div>

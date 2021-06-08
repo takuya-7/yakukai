@@ -100,45 +100,49 @@ require('head.php');
 
     <main>
         <div class="l-content-wrapper">
-            <div class="container">
-                <div class="form-container">
-                    <form action="" method="post" class="form col col-sm-9 col-md-7 col-lg-6">
-                        <h2 class="title">ユーザー登録</h2>
-        
-                        <div class="area-msg">
-                            <?php if(!empty($err_msg['common'])) echo $err_msg['common']; ?>
-                        </div>
-        
+            <div class="l-container">
+                <form action="" method="post" class="c-form col col-sm-9 col-md-7 col-lg-6">
+                    <h2 class="title">ユーザー登録</h2>
+                    
+                    <div class="c-form__message">
+                        <?php if(!empty($err_msg['common'])) echo $err_msg['common']; ?>
+                    </div>
+
+                    <fieldset class="c-form__field">
                         <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
                             メールアドレス
                             <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo $_POST['email']; ?>" placeholder="メールアドレスを入力してください">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php if(!empty($err_msg['email'])) echo $err_msg['email']; ?>
                         </div>
-        
+                    </fieldset>
+
+                    <fieldset class="c-form__field">
                         <label class="<?php if(!empty($err_msg['pass'])) echo 'err'; ?>">
                             パスワード
                             <input type="password" name="pass" value="<?php if(!empty($_POST['pass'])) echo $_POST['pass']; ?>" placeholder="パスワードを入力してください">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php if(!empty($err_msg['pass'])) echo $err_msg['pass']; ?>
                         </div>
-        
+                    </fieldset>
+
+                    <fieldset class="c-form__field u-mb-4">
                         <label class="<?php if(!empty($err_msg['pass_re'])) echo 'err' ?>">
                             パスワード（再入力）
                             <input type="password" name="pass_re" value="<?php if(!empty($_POST['pass_re'])) echo $_POST['pass_re']; ?>" placeholder="もう一度入力してください">
                         </label>
-                        <div class="area-msg">
+                        <div class="c-form__message">
                             <?php if(!empty($err_msg['pass_re'])) echo $err_msg['pass_re']; ?>
                         </div>
-                        
-                        <div class="btn-container">
-                            <input type="submit" class="btn btn-wide bg-cv" value="登録する">
-                        </div>
-        
-                    </form>
-                </div>
+                    </fieldset>
+                    
+                    <div class="u-mb-4">
+                        <input type="submit" class="c-button c-button--green c-button--width100" value="登録する">
+                    </div>
+    
+                </form>
             </div>
         </div>
     </main>
