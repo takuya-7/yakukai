@@ -1,12 +1,14 @@
     <footer id="js-footer" class="l-footer">
       
-      <ul class="l-container">
-        <li><a href="index.php">HOME</a></li>
-        <li><a href="">ご利用案内</a></li>
-        <li><a href="">プライバシーポリシー</a></li>
-        <li><a href="">サイトマップ</a></li>
-        <li><a href="">お問い合わせ</a></li>
-      </ul>
+      <div class="l-container">
+        <ul class="">
+          <li><a href="index.php">HOME</a></li>
+          <li><a href="">ご利用案内</a></li>
+          <li><a href="">プライバシーポリシー</a></li>
+          <li><a href="">サイトマップ</a></li>
+          <li><a href="">お問い合わせ</a></li>
+        </ul>
+      </div>
 
       <span class="l-footer__copyright">
         Copyright © ヤクカイ. All Rights Reserved.
