@@ -112,55 +112,52 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <div class="bg-white pt-3">
-          <h1 class="mb-4">クチコミ投稿について</h1>
-    
-          <p class="mb-4">クチコミを投稿していただくと、半年間クチコミを読み放題になります。</p>
-    
-          <div class="border mx-2 p-1">
-            <h2 class="mb-2">確認事項</h2>
-            <ul class="mb-4">
-              <li>個人情報に関しては適切に収集、管理し、法律で定められた場合や裁判所からの開示命令を除き、投稿者の同意なく第三者に個人情報を開示することはございません。</li>
-              <li>投稿内容についてはガイドラインに遵守していただくようお願いいたします。</li>
-            </ul>
-          </div>
-
-          <div class="py-4">
+        <div class="l-content">
+          <div class="l-inner-container">
+            <h1 class="c-page-title">クチコミ投稿について</h1>
+      
+            <p class="u-mb-4">クチコミを投稿していただくと、半年間クチコミを読み放題になります。</p>
+      
+            <div class="c-box">
+              <h2 class="c-box__title">確認事項</h2>
+              <ul class="">
+                <li>個人情報に関しては適切に収集、管理し、法律で定められた場合や裁判所からの開示命令を除き、投稿者の同意なく第三者に個人情報を開示することはございません。</li>
+                <li>投稿内容についてはガイドラインに遵守していただくようお願いいたします。</li>
+              </ul>
+            </div>
+  
             <h2>在籍中または在籍していた企業を教えてください。</h2>
             
-            <div class="mb-4">
-              <form action="" method="get" class="p-search-box">
-                <input type="text" name="src_str" class="p-search-box__input" placeholder="会社名を入力してください">
-                <button class="p-search-box__button c-button c-button--blue" type="submit">検索</button>
+            <div class="u-mb-4">
+              <form action="" method="get" class="c-search-box p-survey-search-box">
+                <input type="text" name="src_str" class="c-search-box__input" placeholder="会社名を入力してください">
+                <button class="c-search-box__button c-button c-button--blue" type="submit">検索</button>
               </form>
             </div>
 
             <?php if(!empty($_GET)){ ?>
               <?php if($dbCompanyData['total'] >= 20){ ?>
                 <p>検索結果が20件以上あります。再度検索し直してください。</p>
-
               <?php }else{ ?>
-              
-                <div class="search-company-list">
-                  <h3>検索結果</h3>
-                  <p>該当の会社を選択してください</p>
-                  <ul>
-                    <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
-                      <li>
-                        <form action="" method="post">
-                          <input type="hidden" name="c_id" value="<?php echo $val['id']; ?>">
-                          <button type="submit">
-                            <?php echo sanitize($val['name']); ?>
-                            <br>
-                            <span>本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
-                          </button>
-                        </form>
-                      </li>
-                    <?php } ?>
-                  </ul>
-                </div>
+                <h3>検索結果</h3>
+                <p>該当の会社を選択してください</p>
+                <ul class="p-search-result-list">
+                  <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
+                    <li class="p-search-company-list__item">
+                      <form action="" method="post">
+                        <input type="hidden" name="c_id" value="<?php echo $val['id']; ?>">
+                        <button type="submit" class="p-search-company-list__button">
+                          <?php echo sanitize($val['name']); ?>
+                          <br>
+                          <span class="p-search-company-list__info">本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
+                        </button>
+                      </form>
+                    </li>
+                  <?php } ?>
+                </ul>
               <?php } ?>
             <?php } ?>
+            
           </div>
         </div>
         
