@@ -172,60 +172,62 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <div class="bg-white py-4">
-          <h1 class="mb-4">
-            <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（3/3）
-          </h1>
-
-          <div class="border mb-5 m-3 p-3 text-center text-red">
-            <p>合計500文字以上になるようにご回答下さい。</p>
-          </div>
-
-          <?php if(!empty($err_msg['total_count'])){ ?>
-            <div class="mb-4 text-center">
-              <span class="fw-bold text-red">
-                <?php echo $err_msg['total_count']; ?>
-              </span>
+        <div class="l-content">
+          <div class="l-inner-container">
+            <h1 class="c-page-title">
+              <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（3/3）
+            </h1>
+    
+            <div class="c-box">
+              <p class="c-box__caution">合計500文字以上になるようにご回答下さい。</p>
             </div>
-          <?php } ?>
-
-          <form action="" method="post" class="mx-3">
-            <?php foreach($dbAnswerItems as $key => $val){ ?>
-
-              <div class="mb-5">
-                <div class="mb-2 fw-bold">
-                  <?php echo $val['name']; ?>
-                </div>
-
-                <div class="mb-3">
-                  <?php echo $val['question']; ?>
-                </div>
-
-                <div class="d-block">
-                  <span class="text-red">
-                    <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
-                  </span>
-                </div>
-
-                <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $key; ?>" class="js-character-count" style="min-height: 8rem;"><?php
-                  if(!empty($_POST[$val['english_name']])){
-                    echo $_POST[$val['english_name']];
-                  }elseif(!empty($val['answer'])){
-                    echo $val['answer'];
-                  }
-                ?></textarea>
-
-                <div class="fs-08 float-end">
-                  <span class="text-gray">
-                    合計文字数：<span class="js-count-view fw-bold text-black<?php if($totalCount >= 500) echo ' text-green'; ?>"><?php echo (!empty($totalCount)) ? $totalCount : 0;  ?></span> / 500字
-                  </span>
-                </div>
+    
+            <?php if(!empty($err_msg['total_count'])){ ?>
+              <div class="mb-4 u-text-center">
+                <span class="fw-bold u-text-red">
+                  <?php echo $err_msg['total_count']; ?>
+                </span>
               </div>
-              
             <?php } ?>
-
-            <button type="submit" class="c-button c-button--blue c-button--width100 js-disabled-submit">次へ</button>
-          </form>
+    
+            <form action="" method="post" class="c-form">
+              <?php foreach($dbAnswerItems as $key => $val){ ?>
+    
+                <div class="c-form__field">
+                  <div class="c-form__field__name">
+                    <?php echo $val['name']; ?>
+                  </div>
+    
+                  <div class="u-mb-3">
+                    <?php echo $val['question']; ?>
+                  </div>
+    
+                  <div class="d-block">
+                    <span class="u-text-red">
+                      <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
+                    </span>
+                  </div>
+    
+                  <textarea name="<?php echo $val['english_name']; ?>" id="js-count<?php echo $key; ?>" class="c-form__field__textarea js-character-count" style="min-height: 8rem;"><?php
+                    if(!empty($_POST[$val['english_name']])){
+                      echo $_POST[$val['english_name']];
+                    }elseif(!empty($val['answer'])){
+                      echo $val['answer'];
+                    }
+                  ?></textarea>
+    
+                  <div class="c-form__field__text-count">
+                    <span>
+                      合計文字数：<span class="js-count-view u-fw-bold u-text-black<?php if($totalCount >= 500) echo ' u-text-green'; ?>"><?php echo (!empty($totalCount)) ? $totalCount : 0;  ?></span> / 500字
+                    </span>
+                  </div>
+                </div>
+                
+              <?php } ?>
+    
+              <button type="submit" class="c-button c-button--blue c-button--width100 js-disabled-submit">次へ</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

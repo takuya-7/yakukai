@@ -73,64 +73,64 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <div class="bg-white">
-          <h1>気になる会社を検索</h1>
-          <div class="search-wrap">
-            <form method="get" action="">
-              <div class="search-item">
-                <input class="" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
-              </div>
-              
-              <div class="search-item">
-                <div class="cp_ipselect cp_sl01 w-100">
-                  <select name="pref">
-                    <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
-                    <?php
-                      foreach($dbPrefectureData as $key => $val){
-                        ?>
-                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
-                      <?php echo $val['name']; ?>
-                    </option>
-                    <?php
-                      }
+        
+        <h1 class="c-page-title">気になる会社を検索</h1>
+        <div class="p-search-box">
+          <form method="get" action="">
+            <div class="p-search-box__item">
+              <input class="p-search-box__textarea" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
+            </div>
+            
+            <div class="p-search-box__item">
+              <div class="cp_ipselect cp_sl01 w-100">
+                <select name="pref">
+                  <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
+                  <?php
+                    foreach($dbPrefectureData as $key => $val){
                       ?>
-                  </select>
-                </div>
+                    <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
+                    <?php echo $val['name']; ?>
+                  </option>
+                  <?php
+                    }
+                    ?>
+                </select>
               </div>
-              
-              <div class="search-item">
-                <div class="cp_ipselect cp_sl01 w-100">
-                  <select name="i">
-                    <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
-                    
-                    <?php
-                      foreach($dbIndustryData as $key => $val){
-                        ?>
-                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
-                      <?php echo $val['name']; ?>
-                    </option>
-                    <?php
-                      }
+            </div>
+            
+            <div class="p-search-box__item">
+              <div class="cp_ipselect cp_sl01 w-100">
+                <select name="i">
+                  <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
+                  
+                  <?php
+                    foreach($dbIndustryData as $key => $val){
                       ?>
-                  </select>
-                </div>
+                    <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
+                    <?php echo $val['name']; ?>
+                  </option>
+                  <?php
+                    }
+                    ?>
+                </select>
               </div>
-              
-              <div class="search-item">
-                <span>表示順</span>
-                <div class="cp_ipselect cp_sl01 w-100">
-                  <select name="sort">
-                    <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
-                    <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
-                    <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
-                  </select>
-                </div>
+            </div>
+            
+            <div class="p-search-box__item">
+              <span class="p-search-box__item-name">表示順</span>
+              <div class="cp_ipselect cp_sl01 w-100">
+                <select name="sort">
+                  <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
+                  <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                  <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
+                </select>
               </div>
+            </div>
 
-              <button class="" type="submit">口コミを検索する</button>
-            </form>
-          </div>
+            <button class="c-button c-button--blue c-button--width100" type="submit">クチコミを検索する</button>
+          </form>
         </div>
+        
   
         <div class="result-form">
           <div class="result-heading">

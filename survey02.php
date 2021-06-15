@@ -216,291 +216,300 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <div class="bg-white py-4">
-          <h1 class="mb-4">
-            <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（2/3）
-          </h1>
-
-          <?php if(!empty($err_msg)){ ?>
-            <div class="mb-4 text-center">
-              <span class="fw-bold text-red">
-                入力不備がございます。
-              </span>
-            </div>
-          <?php } ?>
-
-          <form action="" method="post" class="mx-3">
-            <?php foreach($dbRatingItems as $key => $val){ ?>
-
-              <div class="mb-2 fw-bold">
-                <?php echo $val['name']; ?><span class="fw-normal text-red">（必須）</span>
-                <div class="d-block">
-                  <span class="text-red">
-                    <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
-                  </span>
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <?php echo $val['question']; ?>
-              </div>
-
-              <div class="survey-list mb-5">
-                <ul class="">
-                  <li>
-                    <label class="<?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 5) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 5) echo ' checked';
-                        }
-                      ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"
-                      <?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 5) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 5) echo ' checked';
-                        }
-                      ?>>
-                      <span>そう思う</span>
-                    </label>
-                  </li>
-
-                  <li>
-                    <label class="<?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 4) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 4) echo ' checked';
-                        }
-                      ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"
-                      <?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 4) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 4) echo ' checked';
-                        }
-                      ?>>
-                      <span>まあそう思う</span>
-                    </label>
-                  </li>
-
-                  <li>
-                    <label class="<?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 3) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 3) echo ' checked';
-                        }
-                      ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"
-                      <?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 3) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 3) echo ' checked';
-                        }
-                      ?>>
-                      <span>どちらとも言えない</span>
-                    </label>
-                  </li>
-
-                  <li>
-                    <label class="<?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 2) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 2) echo ' checked';
-                        }
-                      ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"
-                      <?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 2) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 2) echo ' checked';
-                        }
-                      ?>>
-                      <span>あまりそう思わない</span>
-                    </label>
-                  </li>
-
-                  <li>
-                    <label class="<?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 1) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 1) echo ' checked';
-                        }
-                      ?>">
-                      <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"
-                      <?php
-                        if(!empty($_POST[$val['english_name']])){
-                          if($_POST[$val['english_name']] == 1) echo ' checked';
-                        }elseif(!empty($val['rating'])){
-                          if($val['rating'] == 1) echo ' checked';
-                        }
-                      ?>>
-                      <span>そう思わない</span>
-                    </label>
-                  </li>
-                </ul>
+        <div class="l-content">
+          <div class="l-inner-container">
+            <h1 class="c-page-title">
+              <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（2/3）
+            </h1>
+    
+            <?php if(!empty($err_msg)){ ?>
+              <div class="u-mb-4 u-text-center">
+                <span class="fw-bold u-text-red">
+                  入力不備がございます。
+                </span>
               </div>
             <?php } ?>
-
-            <div class="mb-2 fw-bold">
-              残業時間<span class="fw-normal text-red">（必須）</span>
-            </div>
-
-            <div class="mb-3">
-              あなたのこの会社での残業時間（月間）はどの程度か教えてください。
-            </div>
-
-            <div class="d-block mb-2">
-              <span class="text-red fw-bold">
-                <?php if(!empty($err_msg['over_time'])) echo $err_msg['over_time']; ?>
-              </span>
-            </div>
-
-            <div class="ms-3 mb-5">
-              <div class="cp_ipselect cp_sl01">
-                <select name="over_time" class="<?php if(!empty($err_msg['over_time'])) echo 'bg-red'; ?>">
-                  <option value="">残業時間</option>
-                  <?php foreach($form_over_time as $val){ ?>
-                    <option value="<?php echo $val; ?>"
-                      <?php
-                        if(!empty($_POST['over_time'])){
-                          if($_POST['over_time'] == $val) echo ' selected';
-                        }elseif(!empty($dbPostData[0]['over_time'])){
-                          if($dbPostData[0]['over_time'] == $val) echo ' selected';
-                        }
-                      ?>><?php echo $val; ?>時間</option>
-                  <?php } ?>
-
-                </select>
-              </div>
-            </div>
-
-
-
-            <div class="mb-2 fw-bold">
-              給与・年収<span class="fw-normal text-red">（必須）</span>
-            </div>
-
-            <div class="mb-3">
-              あなたのこの会社での給与・年収について教えてください（手取りではなく額面）。
-            </div>
-
-            <div class="mb-2 row">
-              <div class="col-5 pe-0">
-                <span class="fw-bold lh-2-5">年収</span><span class="fw-normal text-red">（必須）</span>
-                <div class="d-block">
-                  <span class="text-red fw-bold">
-                    <?php if(!empty($err_msg['anual_total_salary'])) echo $err_msg['anual_total_salary']; ?>
+    
+            <form action="" method="post" class="c-form">
+              <?php foreach($dbRatingItems as $key => $val){ ?>
+    
+                <div class="c-form__field">
+                  <div class="c-form__field__name">
+                    <?php echo $val['name']; ?><span class="fw-normal u-text-red">（必須）</span>
+                    <div class="d-block">
+                      <span class="u-text-red">
+                        <?php if(!empty($err_msg[$val['english_name']])) echo $err_msg[$val['english_name']]; ?>
+                      </span>
+                    </div>
+                  </div>
+      
+                  <div class="u-mb-3">
+                    <?php echo $val['question']; ?>
+                  </div>
+      
+                  <div class="survey-list mb-5">
+                    <ul class="">
+                      <li>
+                        <label class="<?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 5) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 5) echo ' checked';
+                            }
+                          ?>">
+                          <input type="radio" name="<?php echo $val['english_name']; ?>" value="5"
+                          <?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 5) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 5) echo ' checked';
+                            }
+                          ?>>
+                          <span>そう思う</span>
+                        </label>
+                      </li>
+      
+                      <li>
+                        <label class="<?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 4) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 4) echo ' checked';
+                            }
+                          ?>">
+                          <input type="radio" name="<?php echo $val['english_name']; ?>" value="4"
+                          <?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 4) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 4) echo ' checked';
+                            }
+                          ?>>
+                          <span>まあそう思う</span>
+                        </label>
+                      </li>
+      
+                      <li>
+                        <label class="<?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 3) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 3) echo ' checked';
+                            }
+                          ?>">
+                          <input type="radio" name="<?php echo $val['english_name']; ?>" value="3"
+                          <?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 3) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 3) echo ' checked';
+                            }
+                          ?>>
+                          <span>どちらとも言えない</span>
+                        </label>
+                      </li>
+      
+                      <li>
+                        <label class="<?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 2) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 2) echo ' checked';
+                            }
+                          ?>">
+                          <input type="radio" name="<?php echo $val['english_name']; ?>" value="2"
+                          <?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 2) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 2) echo ' checked';
+                            }
+                          ?>>
+                          <span>あまりそう思わない</span>
+                        </label>
+                      </li>
+      
+                      <li>
+                        <label class="<?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 1) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 1) echo ' checked';
+                            }
+                          ?>">
+                          <input type="radio" name="<?php echo $val['english_name']; ?>" value="1"
+                          <?php
+                            if(!empty($_POST[$val['english_name']])){
+                              if($_POST[$val['english_name']] == 1) echo ' checked';
+                            }elseif(!empty($val['rating'])){
+                              if($val['rating'] == 1) echo ' checked';
+                            }
+                          ?>>
+                          <span>そう思わない</span>
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              <?php } ?>
+    
+              <div class="c-form__field">
+                <div class="c-form__field__name">
+                  残業時間<span class="c-form__field--required">（必須）</span>
+                </div>
+      
+                <div class="u-mb-3">
+                  あなたのこの会社での残業時間（月間）はどの程度か教えてください。
+                </div>
+      
+                <div class="d-block mb-2">
+                  <span class="u-text-red fw-bold">
+                    <?php if(!empty($err_msg['over_time'])) echo $err_msg['over_time']; ?>
                   </span>
                 </div>
-              </div>
-              <div class="col-7 d-inline">
-                <input type="text" name="anual_total_salary" placeholder="例：400" value="<?php
-                  if(!empty($_POST['anual_total_salary'])){
-                    echo $_POST['anual_total_salary'];
-                  }elseif(!empty($dbPostData[0]['anual_total_salary'])){
-                    echo $dbPostData[0]['anual_total_salary'];
-                  }
-                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_total_salary'])) echo ' bg-red'; ?>">
-                <span class="fs-08">万円</span>
-              </div>
-            </div>
-
-            <div class="mb-2 row">
-              <div class="col-5 pe-0">
-                <span class="lh-2-5">月給（総額）</span>
-                <div class="d-block">
-                  <span class="text-red fw-bold">
-                    <?php if(!empty($err_msg['monthly_total_salary'])) echo $err_msg['monthly_total_salary']; ?>
-                  </span>
+      
+                <div class="ms-3 mb-5">
+                  <div class="cp_ipselect cp_sl01">
+                    <select name="over_time" class="<?php if(!empty($err_msg['over_time'])) echo 'u-bg-red'; ?>">
+                      <option value="">残業時間</option>
+                      <?php foreach($form_over_time as $val){ ?>
+                        <option value="<?php echo $val; ?>"
+                          <?php
+                            if(!empty($_POST['over_time'])){
+                              if($_POST['over_time'] == $val) echo ' selected';
+                            }elseif(!empty($dbPostData[0]['over_time'])){
+                              if($dbPostData[0]['over_time'] == $val) echo ' selected';
+                            }
+                          ?>><?php echo $val; ?>時間</option>
+                      <?php } ?>
+      
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div class="col-7 d-inline">
-                <input type="text" name="monthly_total_salary" value="<?php
-                  if(!empty($_POST['monthly_total_salary'])){
-                    echo $_POST['monthly_total_salary'];
-                  }elseif(!empty($dbPostData[0]['monthly_total_salary'])){
-                    echo $dbPostData[0]['monthly_total_salary'];
-                  }
-                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_total_salary'])) echo ' bg-red'; ?>">
-                <span class="fs-08">万円</span>
-              </div>
-            </div>
-
-            <div class="mb-2 row">
-              <div class="col-5 pe-0">
-                <span class="lh-2-5"> - 残業代（月額）</span>
-                <div class="d-block">
-                  <span class="text-red fw-bold">
-                    <?php if(!empty($err_msg['monthly_overtime_salary'])) echo $err_msg['monthly_overtime_salary']; ?>
-                  </span>
+    
+    
+              <div class="c-form__field">
+                <div class="c-form__field__name">
+                  給与・年収<span class="c-form__field--required">（必須）</span>
+                </div>
+      
+                <div class="u-mb-4">
+                  あなたのこの会社での給与・年収について教えてください（手取りではなく額面）。
+                </div>
+      
+                <div class="c-form__child-item">
+                  <div class="c-form__child-item__left">
+                    <span class="c-form__child-item-name">年収</span><span class="c-form__field--required">（必須）</span>
+                    <div class="d-block">
+                      <span class="u-text-red fw-bold">
+                        <?php if(!empty($err_msg['anual_total_salary'])) echo $err_msg['anual_total_salary']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="c-form__child-item__right">
+                    <input type="text" name="anual_total_salary" placeholder="例：400" value="<?php
+                      if(!empty($_POST['anual_total_salary'])){
+                        echo $_POST['anual_total_salary'];
+                      }elseif(!empty($dbPostData[0]['anual_total_salary'])){
+                        echo $dbPostData[0]['anual_total_salary'];
+                      }
+                    ?>" class="<?php if(!empty($err_msg['anual_total_salary'])) echo ' u-bg-red'; ?>">
+                    <span class="u-fs-08">万円</span>
+                  </div>
+                </div>
+      
+                <div class="c-form__child-item">
+                  <div class="c-form__child-item__left">
+                    <span class="c-form__child-item-name">月給（総額）</span>
+                    <div class="d-block">
+                      <span class="u-text-red fw-bold">
+                        <?php if(!empty($err_msg['monthly_total_salary'])) echo $err_msg['monthly_total_salary']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="c-form__child-item__right">
+                    <input type="text" name="monthly_total_salary" value="<?php
+                      if(!empty($_POST['monthly_total_salary'])){
+                        echo $_POST['monthly_total_salary'];
+                      }elseif(!empty($dbPostData[0]['monthly_total_salary'])){
+                        echo $dbPostData[0]['monthly_total_salary'];
+                      }
+                    ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_total_salary'])) echo ' u-bg-red'; ?>">
+                    <span class="u-fs-08">万円</span>
+                  </div>
+                </div>
+      
+                <div class="c-form__child-item">
+                  <div class="c-form__child-item__left">
+                    <span class="c-form__child-item-name"> - 残業代（月額）</span>
+                    <div class="d-block">
+                      <span class="u-text-red fw-bold">
+                        <?php if(!empty($err_msg['monthly_overtime_salary'])) echo $err_msg['monthly_overtime_salary']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="c-form__child-item__right">
+                    <input type="text" name="monthly_overtime_salary" value="<?php
+                      if(!empty($_POST['monthly_overtime_salary'])){
+                        echo $_POST['monthly_overtime_salary'];
+                      }elseif(!empty($dbPostData[0]['monthly_overtime_salary'])){
+                        echo $dbPostData[0]['monthly_overtime_salary'];
+                      }
+                    ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_overtime_salary'])) echo ' u-bg-red'; ?>">
+                    <span class="u-fs-08">万円</span>
+                  </div>
+                </div>
+      
+                <div class="c-form__child-item">
+                  <div class="c-form__child-item__left">
+                    <span class="c-form__child-item-name"> - 手当て（月額）</span>
+                    <div class="d-block">
+                      <span class="u-text-red fw-bold">
+                        <?php if(!empty($err_msg['monthly_allowance'])) echo $err_msg['monthly_allowance']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="c-form__child-item__right">
+                    <input type="text" name="monthly_allowance" value="<?php
+                      if(!empty($_POST['monthly_allowance'])){
+                        echo $_POST['monthly_allowance'];
+                      }elseif(!empty($dbPostData[0]['monthly_allowance'])){
+                        echo $dbPostData[0]['monthly_allowance'];
+                      }
+                    ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_allowance'])) echo ' u-bg-red'; ?>">
+                    <span class="u-fs-08">万円</span>
+                  </div>
+                </div>
+      
+                <div class="c-form__child-item">
+                  <div class="c-form__child-item__left">
+                    <span class="c-form__child-item-name">賞与（年額）</span>
+                    <div class="d-block">
+                      <span class="u-text-red fw-bold">
+                        <?php if(!empty($err_msg['anual_bonus_salary'])) echo $err_msg['anual_bonus_salary']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="c-form__child-item__right">
+                    <input type="text" name="anual_bonus_salary" value="<?php
+                      if(!empty($_POST['anual_bonus_salary'])){
+                        echo $_POST['anual_bonus_salary'];
+                      }elseif(!empty($dbPostData[0]['anual_bonus_salary'])){
+                        echo $dbPostData[0]['anual_bonus_salary'];
+                      }
+                    ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_bonus_salary'])) echo ' u-bg-red'; ?>">
+                    <span class="u-fs-08">万円</span>
+                  </div>
                 </div>
               </div>
-              <div class="col-7 d-inline">
-                <input type="text" name="monthly_overtime_salary" value="<?php
-                  if(!empty($_POST['monthly_overtime_salary'])){
-                    echo $_POST['monthly_overtime_salary'];
-                  }elseif(!empty($dbPostData[0]['monthly_overtime_salary'])){
-                    echo $dbPostData[0]['monthly_overtime_salary'];
-                  }
-                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_overtime_salary'])) echo ' bg-red'; ?>">
-                <span class="fs-08">万円</span>
-              </div>
-            </div>
-
-            <div class="mb-2 row">
-              <div class="col-5 pe-0">
-                <span class="lh-2-5"> - 手当て（月額）</span>
-                <div class="d-block">
-                  <span class="text-red fw-bold">
-                    <?php if(!empty($err_msg['monthly_allowance'])) echo $err_msg['monthly_allowance']; ?>
-                  </span>
-                </div>
-              </div>
-              <div class="col-7 d-inline">
-                <input type="text" name="monthly_allowance" value="<?php
-                  if(!empty($_POST['monthly_allowance'])){
-                    echo $_POST['monthly_allowance'];
-                  }elseif(!empty($dbPostData[0]['monthly_allowance'])){
-                    echo $dbPostData[0]['monthly_allowance'];
-                  }
-                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['monthly_allowance'])) echo ' bg-red'; ?>">
-                <span class="fs-08">万円</span>
-              </div>
-            </div>
-
-            <div class="mb-2 row">
-              <div class="col-5 pe-0">
-                <span class="lh-2-5">賞与（年額）</span>
-                <div class="d-block">
-                  <span class="text-red fw-bold">
-                    <?php if(!empty($err_msg['anual_bonus_salary'])) echo $err_msg['anual_bonus_salary']; ?>
-                  </span>
-                </div>
-              </div>
-              <div class="col-7 d-inline">
-                <input type="text" name="anual_bonus_salary" value="<?php
-                  if(!empty($_POST['anual_bonus_salary'])){
-                    echo $_POST['anual_bonus_salary'];
-                  }elseif(!empty($dbPostData[0]['anual_bonus_salary'])){
-                    echo $dbPostData[0]['anual_bonus_salary'];
-                  }
-                ?>" class="w-75 d-inline h-2-5<?php if(!empty($err_msg['anual_bonus_salary'])) echo ' bg-red'; ?>">
-                <span class="fs-08">万円</span>
-              </div>
-            </div>
-
-            <button type="submit" class="c-button c-button--blue c-button--width100">次へ</button>
-          </form>
+    
+              <button type="submit" class="c-button c-button--blue c-button--width100">次へ</button>
+            </form>
+          </div>
         </div>
+        
+        
       </div>
     </div>
   </main>

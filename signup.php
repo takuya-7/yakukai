@@ -101,8 +101,8 @@ require('head.php');
     <main>
         <div class="l-content-wrapper">
             <div class="l-container">
-                <form action="" method="post" class="c-form col col-sm-9 col-md-7 col-lg-6">
-                    <h2 class="title">ユーザー登録</h2>
+                <form action="" method="post" class="c-form c-form--small">
+                    <h2 class="c-form__title">ユーザー登録</h2>
                     
                     <div class="c-form__message">
                         <?php if(!empty($err_msg['common'])) echo $err_msg['common']; ?>
@@ -138,7 +138,7 @@ require('head.php');
                         </div>
                     </fieldset>
                     
-                    <div class="u-mb-4">
+                    <div class="">
                         <input type="submit" class="c-button c-button--green c-button--width100" value="登録する">
                     </div>
     

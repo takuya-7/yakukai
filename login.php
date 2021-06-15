@@ -128,10 +128,6 @@ require('head.php');
       require('header.php');
     ?>
 
-    <!-- サクセスメッセージ表示 -->
-    <!-- 表示されないんだが？？？？？passRemindReceive.phpからlogin.phpに来るとmsg_successの中身が消えてるんだが？？？？？？？？？？？？なんで？？？？？？ -->
-    <!-- ↑の答え：passRemindReceive.phpで、header後にexit()をしておらず、その後の処理が走り、getSessionFlash内で中身が空にされていたため -->
-    <!-- 結論：headerの後はexitをつけろ！ -->
     <p id="js-show-msg" style="display:none;" class="msg-slide">
       <?php echo getSessionFlash('msg_success'); ?>
     </p>
@@ -140,8 +136,9 @@ require('head.php');
     <main>
       <div class="l-content-wrapper">
         <div class="l-container">
-          <form action="" method="post" class="c-form col col-sm-9 col-md-7 col-lg-6">
-            <h2 class="title">ログイン</h2>
+          
+          <form action="" method="post" class="c-form c-form--small">
+            <h2 class="c-form__title">ログイン</h2>
             
             <div class="c-form__message">
               <?php 
@@ -185,7 +182,7 @@ require('head.php');
               パスワードをお忘れの方は<a href="passRemindSend.php">コチラ</a>
             </div>
 
-            <div class="u-mb-3">
+            <div>
               会員登録がまだの方は<a href="signup.php">コチラ</a>からご登録ください。
             </div>
           </form>

@@ -116,13 +116,13 @@ require('head.php');
               <fieldset class="c-form__field">
                 <label class="c-form__field__name">
                   雇用形態<span class="c-form__field--required">（必須）</span>
-                  <span class="text-red ms-3">
+                  <span class="u-text-red ms-3">
                     <?php if(!empty($err_msg['user_employment_type'])) echo $err_msg['user_employment_type']; ?>
                   </span>
                 </label>
                 <div class="ms-3">
                   <div class="cp_ipselect cp_sl01">
-                    <select name="user_employment_type" class="<?php if(!empty($err_msg['user_employment_type'])) echo 'bg-red'; ?>">
+                    <select name="user_employment_type" class="<?php if(!empty($err_msg['user_employment_type'])) echo 'u-bg-red'; ?>">
                       <option value="">雇用形態</option>
                       <?php foreach($dbEmploymentType as $key => $val){ ?>
                         <option value="<?php echo $val['id']; ?>"
@@ -142,7 +142,7 @@ require('head.php');
               <fieldset class="c-form__field">
                 <label class="c-form__field__name">
                   在籍状況<span class="c-form__field--required">（必須）</span>
-                  <span class="text-red ms-3">
+                  <span class="u-text-red ms-3">
                     <?php if(!empty($err_msg['user_registration'])) echo $err_msg['user_registration']; ?>
                   </span>
                 </label>
@@ -178,7 +178,7 @@ require('head.php');
               <fieldset class="c-form__field">
                 <label class="c-form__field__name">
                   入社形態<span class="c-form__field--required">（必須）</span>
-                  <span class="text-red ms-3">
+                  <span class="u-text-red ms-3">
                     <?php if(!empty($err_msg['user_entry_type'])) echo $err_msg['user_entry_type']; ?>
                   </span>
                 </label>
@@ -214,7 +214,7 @@ require('head.php');
               <fieldset class="c-form__field">
                 <label class="c-form__field__name">
                   入社年月<span class="c-form__field--required">（必須）</span>
-                  <span class="text-red ms-3">
+                  <span class="u-text-red ms-3">
                     <?php
                       if(!empty($err_msg['user_entry_year'])){
                         echo $err_msg['user_entry_type']; 
@@ -226,7 +226,7 @@ require('head.php');
                 </label>
     
                 <div class="u-d-flex flex-row">
-                  <div class="cp_ipselect cp_sl01 u-me-3<?php if(!empty($err_msg['user_entry_year'])) echo ' bg-red'; ?>">
+                  <div class="cp_ipselect cp_sl01 u-me-3<?php if(!empty($err_msg['user_entry_year'])) echo ' u-bg-red'; ?>">
                     <select name="user_entry_year" class="">
                       <option value="" hidden>年</option>
                       <option value="1990" <?php ?>>1990年以前</option>
@@ -243,7 +243,7 @@ require('head.php');
                     </select>
                   </div>
     
-                  <div class="cp_ipselect cp_sl01<?php if(!empty($err_msg['user_entry_month'])) echo ' bg-red'; ?>">
+                  <div class="cp_ipselect cp_sl01<?php if(!empty($err_msg['user_entry_month'])) echo ' u-bg-red'; ?>">
                     <select name="user_entry_month" class="">
                       <option value="" hidden>月</option>
                       <?php for($i=1; $i<=12; $i++){ ?>

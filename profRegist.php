@@ -105,7 +105,7 @@ require('head.php');
               <label class="c-form__field__name">性別<span class="c-form__field--required">（必須）</span></label>
               <?php if(!empty($err_msg['user_sex'])){ ?>
                 <div class="mb-2">
-                  <span class="text-red ms-3 fw-bold">
+                  <span class="u-text-red ms-3 fw-bold">
                     <?php echo $err_msg['user_sex']; ?>
                   </span>
                 </div>
@@ -142,7 +142,7 @@ require('head.php');
               <label class="c-form__field__name">生まれ年<span class="c-form__field--required">（必須）</span></label>
               <?php if(!empty($err_msg['user_birth_year'])){ ?>
                 <div class="mb-2">
-                  <span class="text-red ms-3 fw-bold">
+                  <span class="u-text-red ms-3 fw-bold">
                     <?php echo $err_msg['user_birth_year']; ?>
                   </span>
                 </div>
@@ -182,7 +182,7 @@ require('head.php');
               <label class="c-form__field__name">現住所<span class="c-form__field--required">（必須）</span></label>
               <?php if(!empty($err_msg['user_pref'])){ ?>
                 <div class="mb-2">
-                  <span class="text-red ms-3 fw-bold">
+                  <span class="u-text-red ms-3 fw-bold">
                     <?php echo $err_msg['user_pref']; ?>
                   </span>
                 </div>
@@ -210,7 +210,7 @@ require('head.php');
               <label class="c-form__field__name">薬剤師免許<span class="c-form__field--required">（必須）</span></label>
               <?php if(!empty($err_msg['user_phlicense'])){ ?>
                 <div class="mb-2">
-                  <span class="text-red ms-3 fw-bold">
+                  <span class="u-text-red ms-3 fw-bold">
                     <?php echo $err_msg['user_phlicense']; ?>
                   </span>
                 </div>
@@ -247,7 +247,7 @@ require('head.php');
               <label class="c-form__field__name">キャリア状況<span class="c-form__field--required">（必須）</span></label>
               <?php if(!empty($err_msg['user_carrier_type'])){ ?>
                 <div class="mb-2">
-                  <span class="text-red ms-3 fw-bold">
+                  <span class="u-text-red ms-3 fw-bold">
                     <?php echo $err_msg['user_carrier_type']; ?>
                   </span>
                 </div>
@@ -294,13 +294,13 @@ require('head.php');
                 <label class="c-form__field__name">経歴<span class="c-form__field--required">（必須）</span></label>
                 <?php if(!empty($err_msg['user_experience_phtype'])){ ?>
                   <div class="mb-2">
-                    <span class="text-red ms-3 fw-bold">
+                    <span class="u-text-red ms-3 fw-bold">
                       <?php echo $err_msg['user_experience_phtype']; ?>
                     </span>
                   </div>
                 <?php }elseif(!empty($err_msg['user_experience_years'])){ ?>
                   <div class="mb-2">
-                    <span class="text-red ms-3 fw-bold">
+                    <span class="u-text-red ms-3 fw-bold">
                       <?php echo $err_msg['user_experience_years']; ?>
                     </span>
                   </div>
@@ -351,7 +351,7 @@ require('head.php');
                 <label class="c-form__field__name">現在の状況<span class="c-form__field--required">（必須）</span></label>
                 <?php if(!empty($err_msg['user_employment_type'])){ ?>
                   <div class="mb-2">
-                    <span class="text-red ms-3 fw-bold">
+                    <span class="u-text-red ms-3 fw-bold">
                       <?php echo $err_msg['user_employment_type']; ?>
                     </span>
                   </div>
@@ -376,7 +376,7 @@ require('head.php');
               </fieldset>
             </div>
 
-            <div class="mb-3">
+            <div class="u-mb-3">
               <button type="submit" class="c-button c-button--blue c-button--width100">登録する</button>
             </div>
             
