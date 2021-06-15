@@ -11,8 +11,10 @@
 $font-color_default: #4a4a4a;
 $theme_color: linear-gradient(-20deg, #6e45e2 0%, #88d3ce 100%);
 $cv_color: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
+$red_color: #e94f4f;
 $blue_color: #0981ca;
 $green_color: #37c47d;
+$gray_color: #969696;
 
 $font-size_s: 12px;
 $font-size_m: 14px;
@@ -29,7 +31,9 @@ $space_xl: 20px;
 $space_xxl: 30px;
 $space_3l: 40px;
 
-$font-family_corp: 'Amatic SC', cursive;
+$font-family_corp: 'メイリオ', sans-serif;
+// $font-family_corp: 'Roboto', sans-serif;
+// $font-family_corp: 'Amatic SC', cursive;
 
 $breakpoints: (
   'sm': 'screen and (max-width: 576px)',
@@ -48,17 +52,27 @@ $breakpoints: (
 // base.scss：タグ自体にスタイルを定義
 // ---------------------------
 html, body {
-  // width: 100%;
+  // height: 100%;
+  width: 100%;
   // color: $font-color_default;
-  // font-size: $font-size_default;
+  font-size: $font-size_default;
   // line-height: 1.6;
   // font-family: Quicksand, 游ゴシック体, "Yu Gothic", YuGothic, "ヒラギノ角ゴシック Pro", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; // TODO:リファクタ必要（変数にする）
   // text-size-adjust: 100%;
   // letter-spacing: 0.1em;
 
   line-height: 150%;
+  // font-family: $font-family_corp;
+  // -webkit-font-smoothing: antialiased;
+}
+main{
+  height: 100%;
+}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6{
+  line-height: 150%;
 }
 h1{
+  font-size: 1.8rem;
   @include mq() {
     font-size: 1.5rem;
   }
@@ -66,20 +80,42 @@ h1{
   //@include media-breakpoint-down(sm) {
   //}
 }
+h2{
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  @include mq(){
+    font-size: 1.3rem;
+  }
+}
+h3{
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  @include mq(){
+    font-size: 1.2rem;
+  }
+}
+
 
 p, a {
-  -webkit-font-smoothing: antialiased;
+  font-family: $font-family_corp;
+  // -webkit-font-smoothing: antialiased;
 }
 
 a,
 a:active,
 a:focus {
-  color: #41aaf9;
+  // color: #41aaf9;
 }
 a:hover {
+  cursor: pointer;
   text-decoration: none;
 }
-
+ul{
+  padding-left: 1.5rem;
+}
+li{
+  line-height: 150%;
+}
 img {
   width: 100%;
   vertical-align: bottom;
@@ -194,32 +230,23 @@ input[type="number"] {
 // l-main.scss
 // ---------------------------
 .l-content-wrapper{
-  /* background: #f6f6f4; */
+  // background: #f6f6f4;
   background: #edf1f5;
   padding-top: 1rem;
   padding-bottom: 2rem;
   height: 100%;
-  h1{
-    margin: 0 1rem 1rem;
-    line-height: 2.2rem;
-    font-size: 1.5rem;
-  }
-  h2{
-    margin: 1rem;
-    font-size: 1.4rem;
-  }
-  h3{
-    margin: 1rem;
-    font-size: 1.2rem;
-  }
-  p{
-    padding: 0 1rem;
+}
+.l-content{
+  background: #fff;
+  padding: 3rem;
+  @include mq() {
+    padding: .7rem;
   }
 }
-
-section h1.title {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
+.l-inner-container{
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 700px;
 }
 // l-footer.scss
 // ---------------------------
@@ -255,6 +282,16 @@ section h1.title {
 // ======================================
 // Component
 // ======================================
+
+.c-page-title{
+  text-align: center;
+  margin-bottom: 3rem;
+  @include mq(){
+    margin-bottom: 1.5rem;
+  }
+}
+
+
 // c-button.scss
 // ---------------------------
 .c-button{
@@ -274,9 +311,6 @@ section h1.title {
   align-items: center;
 
 }
-.c-button--width100{
-  width: 100%;
-}
 .c-button--blue{
   background: $blue_color;
   color: #fff;
@@ -291,7 +325,16 @@ section h1.title {
   border-radius: 5px;
   box-shadow: .2rem .2rem .4rem #cad4e2;
 }
-
+.c-button--width100{
+  width: 100%;
+}
+.c-button--radius100{
+  width: 100%;
+  line-height: 2.3rem;
+  font-size: 1rem;
+  border-radius: 2rem;
+  margin-bottom: 1rem;
+}s
 
 button{
   text-align: center;
@@ -360,23 +403,73 @@ button a{
   box-shadow: 0 1px 8px rgba(0, 0, 0, .2);
 }
 
+
+// c-box.scss
+// ---------------------------
+.c-box{
+  border: 1px solid #dee2e6;
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 3rem;
+  @include mq(){
+    margin-bottom: 2rem;
+  }
+}
+.c-box__title{
+  text-align: center;
+  font-size: 1.2rem;
+}
+.c-box__note{
+  text-align: center;
+  margin-bottom: 0;
+}
+.c-box__caution{
+  margin-bottom: 0;
+  text-align: center;
+  color: $red_color;
+}
+.c-box01{
+  border-left: 5px solid $blue_color;
+  padding-left: 1rem;
+}
+
 // c-form.scss
 // ---------------------------
-.c-form {
-  margin-bottom: 3rem;
+.c-form{
+  margin-left: auto;
+  margin-right: auto;
+  // margin-bottom: 3rem;
   background: #fff;
-  padding: 30px;
+  // padding: 30px;
   /* width: 400px; */
   @include mq() {
     margin-bottom: 2rem;
-    padding: 1.1rem;
+    // padding: 1.1rem;
+  }
+}
+.c-form--small{
+  width: 25rem;
+  padding: 2rem;
+  @include mq() {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+.c-form__title{
+  text-align: center;
+  font-size: 1.5rem;
+  @include mq() {
+    font-size: 1.2rem;
   }
 }
 .c-form__field{
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  @include mq(){
+    margin-bottom: 1.5rem;
+  }
   input[type="text"], input[type="password"], input[type="number"]{
     width: 100%;
-    height: 3.125rem;
+    height: 2.5rem;
   }
 }
 .c-form__field__name{
@@ -385,300 +478,66 @@ button a{
 }
 .c-form__field--required{
   font-weight: normal;
-  color: red;
+  color: $red_color;
 }
 .c-form__field--free{
   font-weight: normal;
   color: $green_color;
 }
 .c-form__message{
-  color: red;
+  color: $red_color;
 }
-
-/* プロフィール入力 survey01.php */
-.c-radio{
-  padding-left: 1rem;
-
-}
-.c-radio__item{
-  margin-right: 4rem;
-  display: inline-flex;
-  margin-top: .5rem;
-  // label{
-  //   padding-left: 0.5rem;
-  // }
-  input[type="radio"]{
-    margin-top: .5rem;
-    margin-right: 1rem;
-  }
-}
-
-.js-worker-form{
-  display: none;
-}
-.is-active{
-  display: block;
-}
-
-
-// ======================================
-// Project
-// ======================================
-// p-home.scss
-// ---------------------------
-
-.p-home-visual{
+.c-form__field__textarea{
   width: 100%;
-  background-image: $theme_color;
-  padding-bottom: 2.5rem;
-  @include mq() {
-    padding-bottom: 1.5rem;
-  }
-}
-
-
-
-.top-wrap{
-  width: 100%;
-  background-image: $theme_color;
-  padding-bottom: 2.5rem;
-  @include mq() {
-    padding-bottom: 1.5rem;
-  }
-}
-.top-head{
-  margin-top: 3rem;
-  margin-left: 2rem;
-  color: #fff;
-  @include mq() {
-    margin-top: 1.5rem;
-    margin-left: 0.3rem;
-  }
-}
-.top-head h1{
-  letter-spacing: 4px;
-  line-height: 3.2rem;
-  @include mq() {
-    font-size: 1.3rem;
-    letter-spacing: 0.1rem;
-  }
-}
-
-.p-top-search-box{
-  margin-top: 4rem;
-  // margin-left: 2rem;
-  margin-bottom: 3rem;
-  position: relative;
-  display: block;
-  overflow: hidden;
-  @include mq() {
-    margin-top: 2rem;
-    margin-left: 0.3rem;
-    margin-bottom: 2rem;
-  }
-}
-.p-top-search-box__form{
-  max-width: 700px;
-}
-.p-top-search-box__input{
-  max-width: 630px;
-  height: 3.5rem;
-  padding-left: 20px;
-  font-size: 0.9rem;
-  float: left;
-  margin: 0;
-  width: 75%;
-  @include mq() {
-    height: 2.7rem;
-    font-size: 0.75rem;
-  }
-}
-.p-top-search-box__button{
-  width: 25%;
-  height: 3.5rem;
-  color: #fff;
-  border: 0;
-  font-size: 0.938rem;
-  background: linear-gradient(90deg,#1b4db1,#091a77);
-  float: left;
-  @include mq() {
-    height: 2.7rem;
-    font-size: 0.8rem;
-  }
-}
-.card-slider-wrapper ul{
-  list-style: none;
-  padding-left: 0;
-}
-.card-slider{
-  background: #fff;
-  width: 9rem;
-  height: 9rem;
-}
-.card-slider-item{
-  margin-right: 1rem;
-}
-.card-slider-item a{
-  text-decoration: none;
-  color: $font-color_default;
-}
-.top-widget{
-  margin-left:  auto;
-  margin-right: auto;
-  margin-bottom: 2.5rem;
-  padding: 30px 20px;
-  box-sizing: border-box;
-  background-color: #fff;;
-  @include mq() {
-    padding: 2rem 0.5rem;
-  }
-}
-.top-widget h2{
-  font-size: 1.5em;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.top-widget .content{
-  margin-top: 20px;
-  padding: 20px;
-}
-.signup-wrap{
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
-}
-.signup-wrap .buttons button{
-  width: 100%;
-  line-height: 60px;
-  font-size: 1.2rem;
-  border-radius: 50px;
-  margin-bottom: 20px;
-}
-.signup-wrap .signup{
-  color: #fff;
-  background: linear-gradient(-20deg, #0cb699 0%, #8ddad5 100%);
-  border: none;
-  box-shadow: .2rem .2rem .4rem #cad4e2;
-}
-.signup-wrap .login{
-  background: #fff;
-  border: solid 1px #666666;
-  color: #666666; 
-}
-
-// p-card.scss
-// ---------------------------
-.company-card{
-  background: #fff;
-  margin-bottom: 1rem;
-  padding: 1rem .5rem;
-}
-.company-card .company-header{
-  margin-bottom: 1rem;
-}
-.company-card h2{
-  font-size: 1.2rem;
-}
-.company-card .post-content{
-  margin-bottom: 1rem;
-}
-
-// p-form.scss
-// ---------------------------
-
-.bg-cv{
-  background: $cv_color;
-}
-select:hover,
-input[type="submit"]:hover {
-  cursor: pointer;
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-
-// p-list.scss
-// ---------------------------
-.search-company-list ul{
-  list-style: none;
-  padding: 1rem;
-}
-.search-company-list li{
-  border: .12rem solid $blue_color;
-  margin-bottom: 1rem;
-}
-.search-company-list button{
-  padding: .5rem 1rem;
-  text-align: left;
-  background: none;
-  color: $blue_color;
-  height: 100%;
-  width: 100%;
-}
-.search-company-list span{
-  color: #919191;
-  margin-left: 1rem;
-}
-.survey-list ul{
-  list-style: none;
-  padding-left: 0;
-}
-.survey-list ul li{
   margin-bottom: .5rem;
 }
-.survey-list ul li label{
-  border: 1px solid $blue_color;
-  padding: .3rem;
-  cursor: pointer;
+.c-form__field__text-count{
+  font-size: .8rem;
+  color: $gray_color;
+  text-align: right;
+}
+.c-form__child-item{
+  margin-bottom: 1.5rem;
+}
+.c-form__child-item__left{
+  width: 40%;
   display: inline-block;
-  height: 100%;
-  width: 100%;
-  text-align: center;
 }
-.survey-list ul li .checked{
-  background: $blue_color;
-  color: #fff;
+.c-form__child-item__right{
+  width: 55%;
+  display: inline-block;
 }
-.survey-list input[type="radio"]{
-  display: none;
+.c-form__child-item__right input[type="text"]{
+  width: 80%;
+  margin: 0;
+  display: inline-block;
+}
+.c-form__child-item-name{
+  margin-left: 1.5rem;
+  line-height: 2.5rem;
+  @include mq(){
+    margin-left: .5rem;
+  }
 }
 
-.kutikomi-category-list ul{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.kutikomi-category-list ul li{
-  margin-bottom: .7rem;
-}
-.kutikomi-category-list a{
-  text-decoration: none;
-  color: $blue_color;
-  display: inline-block;
-  border: .11rem solid $blue_color;
-  width: 100%;
-  padding: .6rem 1rem;
-  margin: 0;
-}
-// p-select_box.scss
-// ---------------------------
 .cp_ipselect {
 	overflow: hidden;
-  width: 9.5rem;
-  height: 3.5rem;
-  line-height: 3.5rem;
+  // width: 9.5rem;
+  // height: 3.5rem;
+  // line-height: 3.5rem;
   text-align: left;
-  font-size: 1rem;
+  // font-size: 1rem;
   @include mq() {
-    height: 2.7rem;
-    line-height: 2.7rem;
-    font-size: 0.8rem;
-    width: 7rem;
   }
+  width: 7rem;
+  height: 2.7rem;
+  line-height: 2.7rem;
+  font-size: 0.8rem;
 }
 .cp_ipselect select {
   text-align: center;
-  height: 3.5rem;
-  line-height: 2.5rem;
+  // height: 3.5rem;
+  // line-height: 2.5rem;
 	padding-right: 1em;
 	cursor: pointer;
 	text-indent: 0.01px;
@@ -691,9 +550,9 @@ input[type="submit"]:hover {
 	-webkit-appearance: none;
   appearance: none;
   @include mq() {
-    height: 2.7rem;
-    line-height: 1.7rem;
   }
+  line-height: 1.7rem;
+  height: 2.7rem;
 }
 .cp_ipselect select::-ms-expand {
     display: none;
@@ -784,106 +643,46 @@ input[type="submit"]:hover {
   }
 }
 
-// 個別企業画面 category.php company.php
-// p-company.scss
-// ---------------------------
-.company-wrapper section{
-  background: #fff;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-.company-wrapper section h2{
-  margin-bottom: 1rem;
-}
-.company-title-append{
-  font-size: .9rem;
-}
-
-// p-profile.scss
-// ---------------------------
-// mypage.php
-.nav-link{
-  width: 50%;
-}
-.nav-tabs a{
-  text-align: center;
-}
-.profile-container{
-  margin-bottom: 2rem;
-}
-.profile-container h2{
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  display: inline-block;
-}
-
-.tile{
-  border: 1px solid #e1e1e1;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
-  border-radius: 0.3rem;
-}
-.profile-block{
-  border-bottom: 1px solid #e1e1e1;
-  padding: 1rem 1.5rem;
-}
-.profile-block span{
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-.profile-block p{
+/* プロフィール入力 survey01.php */
+.c-radio{
   padding-left: 1rem;
-  line-height: 1.7rem;
+
 }
-.student-hidden{
-  display: none;
-}
-.menus-container{
-  /* padding: 1rem 1rem 1.5rem; */
-  box-sizing: border-box;
-  @include mq(md) {
-    width: 100rem;
+.c-radio__item{
+  margin-right: 4rem;
+  display: inline-flex;
+  margin-top: .5rem;
+  // label{
+  //   padding-left: 0.5rem;
+  // }
+  input[type="radio"]{
+    margin-top: .5rem;
+    margin-right: 1rem;
   }
 }
-.menus-container h2{
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
+
+.js-worker-form{
+  display: none;
 }
-.menus-container ul{
-  border: 1px solid #e1e1e1;
-  list-style: none;
-  padding: 0;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
-  border-radius: 0.3rem;
-}
-.menus-container ul li{
-  border-bottom: 1px solid #e1e1e1;
-}
-.menus-container ul li a{
-  text-decoration: none;
-  color: #333;
+.is-active{
   display: block;
-  padding: 1rem 1.5rem;
 }
-// company-info
-.company-info dl{
+
+.c-search-box{
+  overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
-  font-size: .9rem;
-  word-break: break-all;
-  box-sizing: border-box;
+  padding: 0 1rem;
 }
-.company-info dt{
-  display: block;
-  width: 5.5rem;
-  color: $blue_color;
+.c-search-box__input{
+  width: 70%;
 }
-.company-info dd{
-  display: block;
-  width: calc(100% - 90px);
+.c-search-box__button{
+  width: 30%;
+  border-radius: 0;
+  box-shadow: none;
 }
-// p-rating.scss
+
+// c-rating.scss
 // ---------------------------
 .level-of-well-being{
   color: #fff;
@@ -1134,6 +933,418 @@ input[type="submit"]:hover {
 .bar_rating[data-rate="0"]:after{ width: 0%; }
 
 
+
+// ======================================
+// Project
+// ======================================
+// p-home.scss
+// ---------------------------
+
+
+.p-home-visual{
+  width: 100%;
+  background-image: $theme_color;
+  padding-bottom: 2.5rem;
+  @include mq() {
+    padding-bottom: 1.5rem;
+  }
+}
+
+
+
+
+.top-wrap{
+  width: 100%;
+  background-image: $theme_color;
+  padding-bottom: 2.5rem;
+  @include mq() {
+    padding-bottom: 1.5rem;
+  }
+}
+.top-head{
+  margin-top: 3rem;
+  margin-left: 2rem;
+  color: #fff;
+  @include mq() {
+    margin-top: 1.5rem;
+    margin-left: 0.3rem;
+  }
+}
+.top-head h1{
+  letter-spacing: 4px;
+  line-height: 3.2rem;
+  @include mq() {
+    font-size: 1.3rem;
+    letter-spacing: 0.1rem;
+  }
+}
+
+.p-top-search-box{
+  margin-top: 4rem;
+  // margin-left: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  @include mq() {
+    margin-top: 2rem;
+    margin-left: 0.3rem;
+    margin-bottom: 2rem;
+  }
+}
+.p-top-search-box__form{
+  max-width: 700px;
+}
+.p-top-search-box__input{
+  max-width: 630px;
+  height: 3.5rem;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  float: left;
+  margin: 0;
+  width: 75%;
+  @include mq() {
+    height: 2.7rem;
+    font-size: 0.75rem;
+  }
+}
+.p-top-search-box__button{
+  width: 25%;
+  height: 3.5rem;
+  color: #fff;
+  border: 0;
+  font-size: 0.938rem;
+  background: linear-gradient(90deg,#1b4db1,#091a77);
+  float: left;
+  @include mq() {
+    height: 2.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+.p-survey-search-box{
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-top-section{
+  margin-bottom: 2rem;
+}
+.p-top-section__about{
+  background: #fff;
+  padding: 1.5rem;
+  @include mq() {
+    padding: 1rem;
+  }
+}
+.p-top-section__about .p-top-section__title{
+  font-size: 1.6rem;
+  line-height: 2rem;
+  @include mq() {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+  }
+}
+.p-top-section__title{
+  font-size: 1.4rem;
+  line-height: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  @include mq() {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+  }
+}
+.p-top-section__image{
+  margin-bottom: 1rem;
+}
+.p-top-section__content{
+  
+}
+.p-top-section__subtitle{
+  display: block;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+  @include mq () {
+    font-size: 1.1rem;
+  }
+}
+.p-top-section__login-link{
+  color: $gray_color;
+  text-align: center;
+  display: block;
+}
+
+.p-card-slider-wrapper{
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+.p-card-slider{
+  list-style: none;
+  padding-left: 0;
+}
+.p-card-slider__item{
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+  width: 9rem;
+  height: 9rem;
+  background: #fff;
+  border-radius: 2px;
+  margin: 0 6px 0 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+.p-card-slider__item a{
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  text-decoration: none;
+  color: $font-color_default;
+}
+.p-card-slider__item h3{
+  margin-bottom: 1rem;
+}
+.p-card-slider__item-name{
+  font-size: 1rem;
+}
+.p-card-slider__heart{
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.p-card-slider__param{
+  font-size: .8rem;
+  color: $gray_color;
+}
+
+.top-widget{
+  margin-left:  auto;
+  margin-right: auto;
+  margin-bottom: 2.5rem;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  background-color: #fff;;
+  @include mq() {
+    padding: 2rem 0.5rem;
+  }
+}
+.top-widget h2{
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.top-widget .content{
+  margin-top: 20px;
+  padding: 20px;
+}
+
+
+
+
+// p-card.scss
+// ---------------------------
+.company-card{
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 1rem .5rem;
+}
+.company-card .company-header{
+  margin-bottom: 1rem;
+}
+.company-card h2{
+  font-size: 1.2rem;
+}
+.company-card .post-content{
+  margin-bottom: 1rem;
+}
+
+// p-form.scss
+// ---------------------------
+
+.bg-cv{
+  background: $cv_color;
+}
+select:hover,
+input[type="submit"]:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+// p-list.scss
+// ---------------------------
+.p-search-result-list{
+  list-style: none;
+  padding: 1rem;
+}
+.p-search-company-list__item{
+  margin-bottom: 1rem;
+}
+.p-search-company-list__button{
+  padding: .5rem 1rem;
+  text-align: left;
+  background: none;
+  border: .12rem solid $blue_color;
+  color: $blue_color;
+  height: 100%;
+  width: 100%;
+}
+.p-search-company-list__info{
+  color: #919191;
+  margin-left: 1rem;
+}
+.survey-list ul{
+  list-style: none;
+  padding-left: 0;
+}
+.survey-list ul li{
+  margin-bottom: .5rem;
+}
+.survey-list ul li label{
+  border: 1px solid $blue_color;
+  padding: .3rem;
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+.survey-list ul li .checked{
+  background: $blue_color;
+  color: #fff;
+}
+.survey-list input[type="radio"]{
+  display: none;
+}
+
+.kutikomi-category-list ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.kutikomi-category-list ul li{
+  margin-bottom: .7rem;
+}
+.kutikomi-category-list a{
+  text-decoration: none;
+  color: $blue_color;
+  display: inline-block;
+  border: .11rem solid $blue_color;
+  width: 100%;
+  padding: .6rem 1rem;
+  margin: 0;
+}
+// p-select_box.scss
+// ---------------------------
+
+
+// 個別企業画面 category.php company.php
+// p-company.scss
+// ---------------------------
+.company-wrapper section{
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+.company-wrapper section h2{
+  margin-bottom: 1rem;
+}
+.company-title-append{
+  font-size: .9rem;
+}
+
+// p-profile.scss
+// ---------------------------
+.p-profile{
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
+  border-radius: 0.3rem;
+}
+.p-profile__field{
+  border-bottom: 1px solid #e1e1e1;
+  padding: 1rem 1.5rem;
+}
+.p-profile__field span{
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.p-profile__field p{
+  padding-left: 1rem;
+  line-height: 1.7rem;
+}
+// mypage.php
+.nav-link{
+  width: 50%;
+}
+.nav-tabs a{
+  text-align: center;
+}
+.profile-container{
+  margin-bottom: 2rem;
+}
+.profile-container h2{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+.student-hidden{
+  display: none;
+}
+.menus-container{
+  /* padding: 1rem 1rem 1.5rem; */
+  box-sizing: border-box;
+  @include mq(md) {
+    width: 100rem;
+  }
+}
+.menus-container h2{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+.menus-container ul{
+  border: 1px solid #e1e1e1;
+  list-style: none;
+  padding: 0;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
+  border-radius: 0.3rem;
+}
+.menus-container ul li{
+  border-bottom: 1px solid #e1e1e1;
+}
+.menus-container ul li a{
+  text-decoration: none;
+  color: #333;
+  display: block;
+  padding: 1rem 1.5rem;
+}
+// company-info
+.company-info dl{
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .9rem;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+.company-info dt{
+  display: block;
+  width: 5.5rem;
+  color: $blue_color;
+}
+.company-info dd{
+  display: block;
+  width: calc(100% - 90px);
+}
+
+
 // p-pagination.scss
 // ---------------------------
 .pagination-heading{
@@ -1182,25 +1393,26 @@ input[type="submit"]:hover {
 // p-search.scss
 // ---------------------------
 // search.php
-.search-wrap{
-  padding: 1rem;
+.p-search-box{
+  padding: 2rem 8rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  @include mq () {
+    padding: 1rem;
+  }
+}
+.p-search-box__item{
   margin-bottom: 1rem;
 }
-.search-wrap .search-item{
-  margin-bottom: 1rem;
+.p-search-box__item-name{
+  font-size: .9rem;
+  margin-bottom: .3rem;
+  color: $gray_color;
 }
-.search-wrap button{
-  background: var(--cv-color);
-  color: #fff;
-  border: none;
+.p-search-box__textarea{
   width: 100%;
-  display: block;
-  height: 3rem;
-  line-height: 3rem;
-  border-radius: .3rem;
-  box-shadow: 4px 4px 8px #cad4e2;
-  font-size: .8rem;
 }
+
 // search-box
 .search-title {
   overflow: hidden;
@@ -1223,20 +1435,6 @@ input[type="submit"]:hover {
   font-family: 'Montserrat', sans-serif;
 }
 
-
-.p-search-box{
-  overflow: hidden;
-  display: flex;
-  padding: 0 1rem;
-}
-.p-search-box__input{
-  width: 70%;
-}
-.p-search-box__button{
-  width: 30%;
-  border-radius: 0;
-  box-shadow: none;
-}
 
 
 // result-form
@@ -1343,18 +1541,18 @@ input[type="submit"]:hover {
 // ======================================
 // u-utility.scss
 // ---------------------------
-.natural-shadow{
+.u-natural-shadow{
   /* box-shadow: 4px 4px 8px #cad4e2, -4px -4px 8px #fff; */
   box-shadow: 4px 4px 8px #cad4e2;
   border-radius: .5rem;
 }
-.fs-1{
+.u-fs-1{
   font-size: 1rem;
 }
-.fs-12{
+.u-fs-12{
   font-size: 1.2rem;
 }
-.fs-08{
+.u-fs-08{
   font-size: .8rem;
 }
 .w-100{
@@ -1386,36 +1584,36 @@ input[type="submit"]:hover {
 }
 // u-color.scss
 // ---------------------------
-.text-black{
+.u-text-black{
   color: $font-color_default;
 }
-.text-red{
-  color: #e94f4f;
+.u-text-red{
+  color: $red_color;
 }
-.text-green{
+.u-text-green{
   color: #37c47d;
 }
-.text-gray{
-  color: #969696;
+.u-text-gray{
+  color: $gray_color;
 }
-.bg-red{
+.u-bg-red{
   background: #f7dcd9 !important;
 }
-.bg-gray{
+.u-bg-gray{
   background: #f5f5f5;
 }
-.bg-blue{
+.u-bg-blue{
   background:  $blue_color;
 }
 // u-margin.scss
 // ---------------------------
-.mr-2{
+.u-mr-2{
   margin-right: 2rem;
 }
-.mr-3{
+.u-mr-3{
   margin-right: 3rem;
 }
-.mr-4{
+.u-mr-4{
   margin-right: 4rem;
 }
 // u-padding.scss
