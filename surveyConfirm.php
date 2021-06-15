@@ -122,109 +122,115 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <div class="bg-white py-4 mb-3">
-          <h1 class="mb-4">
-            入力内容の確認
-          </h1>
-          
-          <div class="border m-3 p-3 text-center">
-            <p>入力内容を確認して投稿を完了させてください。</p>
-          </div>
-          
-        </div>
-
-        <!-- 会社確認 -->
-        <div class="bg-white py-4 mb-3 px-3">
-          <div class="">
-            <span class="fw-bold">
-              <?php echo sanitize($dbCompanyData['info']['name']); ?>
-            </span>
-            <br>
-            <span class="ms-3">本社所在地：<?php echo sanitize($dbCompanyData['info']['prefecture_name'].$dbCompanyData['info']['city_name']); ?></span>
-          </div>
-        </div>
-
+        <div class="l-content u-mb-5">
+          <div class="l-inner-container">
+            <h1 class="c-page-title">
+              入力内容の確認
+            </h1>
             
-        <!-- STEP2 -->
-        <div class="bg-white py-4 mb-3 px-3">
-          <?php foreach($dbQuestionsAndRatings as $key => $val){ ?>
-            <div class="mb-4">
-              <div class="mb-3">
-                <?php echo $val['question']; ?>
-              </div>
-
-              <div class="mb-3 ms-3 fw-bold">
-                <?php echo RATING_ANSWER[$val['rating']]; ?>
-              </div>
-  
-              <div class="border-bottom"></div>
+            <div class="c-box">
+              <p class="c-box__note">入力内容を確認して投稿を完了させてください。</p>
             </div>
-          <?php } ?>
-
-          <div class="mb-3">
-
-            <div class="mb-3">
-              あなたのこの会社での給与・年収について教えてください（手取りではなく額面）。
-            </div>
-
-            <table class="table">
-              <tr>
-                <td>年収</td>
-                <td class="fw-bold"><span class="fs-12"><?php echo $dbPostData[0]['anual_total_salary']; ?></span><span class="fs-08"> 万円</span></td>
-              </tr>
-              <?php if(!empty($dbPostData[0]['monthly_total_salary'])){ ?>
-                <tr>
-                  <td>月給（総額）</td>
-                  <td class="fw-bold"><span class="fs-12"><?php echo $dbPostData[0]['monthly_total_salary']; ?></span><span class="fs-08"> 万円</span></td>
-                </tr>
-              <?php } ?>
-              <?php if(!empty($dbPostData[0]['monthly_overtime_salary'])){ ?>
-                <tr>
-                  <td>残業代（月額）</td>
-                  <td class="fw-bold"><span class="fs-12"><?php echo $dbPostData[0]['monthly_overtime_salary']; ?></span><span class="fs-08"> 万円</span></td>
-                </tr>
-              <?php } ?>
-              <?php if(!empty($dbPostData[0]['monthly_allowance'])){ ?>
-                <tr>
-                  <td>手当て（月額）</td>
-                  <td class="fw-bold"><span class="fs-12"><?php echo $dbPostData[0]['monthly_allowance']; ?></span><span class="fs-08"> 万円</span></td>
-                </tr>
-              <?php } ?>
-              <?php if(!empty($dbPostData[0]['anual_bonus_salary'])){ ?>
-                <tr>
-                  <td>賞与（年額）</td>
-                  <td class="fw-bold"><span class="fs-12"><?php echo $dbPostData[0]['anual_bonus_salary']; ?></span><span class="fs-08"> 万円</span></td>
-                </tr>
-              <?php } ?>
-            </table>
-          </div>
-
-          <a href="survey02.php">STEP2の回答を修正する</a>
-        </div>
-
-        <!-- STEP3 -->
-        <div class="bg-white py-4 mb-3 px-3">
-          <?php foreach($dbQuestionsAndAnswers as $key => $val){ ?>
-            <div class="mb-4">
-              <div class="mb-3">
-                <?php echo $val['question']; ?>
-              </div>
-  
-              <div class="mb-4 p-2 border bg-gray">
-                <?php echo $val['answer']; ?>
-              </div>
-  
-              <div class="border-bottom"></div>
-            </div>
-          <?php } ?>
-
-          <a href="survey03.php">STEP3の回答を修正する</a>
-        </div>
             
-          <form action="" method="post" class="mx-3">
-            <input type="hidden" name="post_flg" value="1">
-            <button type="submit" class="c-button c-button--blue c-button--width100">投稿する</button>
-          </form>
+  
+            <!-- 会社確認 -->
+            <div class="c-box01">
+              <span class="u-fw-bold u-mb-3">
+                <?php echo sanitize($dbCompanyData['info']['name']); ?>
+              </span>
+              <br>
+              <span class="ms-3">本社所在地：<?php echo sanitize($dbCompanyData['info']['prefecture_name'].$dbCompanyData['info']['city_name']); ?></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="l-content u-mb-5">
+          <div class="l-inner-container">
+            <!-- STEP2 -->
+            <div class="">
+              <?php foreach($dbQuestionsAndRatings as $key => $val){ ?>
+                <div class="u-mb-4">
+                  <div class="u-mb-3">
+                    <?php echo $val['question']; ?>
+                  </div>
+    
+                  <div class="u-mb-3 u-ms-3 u-fw-bold">
+                    <?php echo RATING_ANSWER[$val['rating']]; ?>
+                  </div>
+      
+                  <div class="border-bottom"></div>
+                </div>
+              <?php } ?>
+            </div>
+    
+            <div class="u-mb-3">
+    
+              <div class="u-mb-3">
+                あなたのこの会社での給与・年収について教えてください（手取りではなく額面）。
+              </div>
+    
+              <table class="table">
+                <tr>
+                  <td>年収</td>
+                  <td class="fw-bold"><span class="u-fs-12"><?php echo $dbPostData[0]['anual_total_salary']; ?></span><span class="u-fs-08"> 万円</span></td>
+                </tr>
+                <?php if(!empty($dbPostData[0]['monthly_total_salary'])){ ?>
+                  <tr>
+                    <td>月給（総額）</td>
+                    <td class="fw-bold"><span class="u-fs-12"><?php echo $dbPostData[0]['monthly_total_salary']; ?></span><span class="u-fs-08"> 万円</span></td>
+                  </tr>
+                <?php } ?>
+                <?php if(!empty($dbPostData[0]['monthly_overtime_salary'])){ ?>
+                  <tr>
+                    <td>残業代（月額）</td>
+                    <td class="fw-bold"><span class="u-fs-12"><?php echo $dbPostData[0]['monthly_overtime_salary']; ?></span><span class="u-fs-08"> 万円</span></td>
+                  </tr>
+                <?php } ?>
+                <?php if(!empty($dbPostData[0]['monthly_allowance'])){ ?>
+                  <tr>
+                    <td>手当て（月額）</td>
+                    <td class="fw-bold"><span class="u-fs-12"><?php echo $dbPostData[0]['monthly_allowance']; ?></span><span class="u-fs-08"> 万円</span></td>
+                  </tr>
+                <?php } ?>
+                <?php if(!empty($dbPostData[0]['anual_bonus_salary'])){ ?>
+                  <tr>
+                    <td>賞与（年額）</td>
+                    <td class="fw-bold"><span class="u-fs-12"><?php echo $dbPostData[0]['anual_bonus_salary']; ?></span><span class="u-fs-08"> 万円</span></td>
+                  </tr>
+                <?php } ?>
+              </table>
+            </div>
+            <a href="survey02.php">STEP2の回答を修正する</a>
+          </div>
+        </div>
+        
+    
+        <div class="l-content  u-mb-5">
+          <div class="l-inner-container">
+            <!-- STEP3 -->
+            <?php foreach($dbQuestionsAndAnswers as $key => $val){ ?>
+              <div class="u-mb-4">
+                <div class="u-mb-3">
+                  <?php echo $val['question']; ?>
+                </div>
+    
+                <div class="u-mb-4 u-p-2 border u-bg-gray">
+                  <?php echo $val['answer']; ?>
+                </div>
+    
+                <div class="border-bottom"></div>
+              </div>
+            <?php } ?>
+
+            <a href="survey03.php">STEP3の回答を修正する</a>
+          </div>
+        </div>
+          
+        <form action="" method="post" class="mx-3">
+          <input type="hidden" name="post_flg" value="1">
+          <button type="submit" class="c-button c-button--blue c-button--width100">この内容で投稿する</button>
+        </form>
+          
       </div>
     </div>
   </main>
