@@ -73,122 +73,120 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        
-        <h1 class="c-page-title">気になる会社を検索</h1>
-        <div class="p-search-box">
-          <form method="get" action="">
-            <div class="p-search-box__item">
-              <input class="p-search-box__textarea" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
-            </div>
-            
-            <div class="p-search-box__item">
-              <div class="cp_ipselect cp_sl01 w-100">
-                <select name="pref">
-                  <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
-                  <?php
-                    foreach($dbPrefectureData as $key => $val){
+        <div class="l-inner-container">
+          <h1 class="c-page-title p-search-title">気になる会社を検索</h1>
+          <div class="p-search-box">
+            <form method="get" action="">
+              <div class="p-search-box__item">
+                <input class="p-search-box__textarea" type="text" placeholder="企業名で検索" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
+              </div>
+              
+              <div class="p-search-box__item">
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="pref">
+                    <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
+                    <?php
+                      foreach($dbPrefectureData as $key => $val){
+                        ?>
+                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
+                      <?php echo $val['name']; ?>
+                    </option>
+                    <?php
+                      }
                       ?>
-                    <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
-                    <?php echo $val['name']; ?>
-                  </option>
-                  <?php
-                    }
-                    ?>
-                </select>
+                  </select>
+                </div>
               </div>
-            </div>
-            
-            <div class="p-search-box__item">
-              <div class="cp_ipselect cp_sl01 w-100">
-                <select name="i">
-                  <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
-                  
-                  <?php
-                    foreach($dbIndustryData as $key => $val){
+              
+              <div class="p-search-box__item">
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="i">
+                    <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
+                    
+                    <?php
+                      foreach($dbIndustryData as $key => $val){
+                        ?>
+                      <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
+                      <?php echo $val['name']; ?>
+                    </option>
+                    <?php
+                      }
                       ?>
-                    <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
-                    <?php echo $val['name']; ?>
-                  </option>
-                  <?php
-                    }
-                    ?>
-                </select>
+                  </select>
+                </div>
               </div>
-            </div>
-            
-            <div class="p-search-box__item">
-              <span class="p-search-box__item-name">表示順</span>
-              <div class="cp_ipselect cp_sl01 w-100">
-                <select name="sort">
-                  <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
-                  <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
-                  <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
-                </select>
+              
+              <div class="p-search-box__item">
+                <span class="p-search-box__item-name">表示順</span>
+                <div class="cp_ipselect cp_sl01 w-100">
+                  <select name="sort">
+                    <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
+                    <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                    <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
+                  </select>
+                </div>
               </div>
-            </div>
-
-            <button class="c-button c-button--blue c-button--width100" type="submit">クチコミを検索する</button>
-          </form>
-        </div>
-        
   
-        <div class="result-form">
-          <div class="result-heading">
-            <div class="result-num">
+              <button class="c-button c-button--blue c-button--width100" type="submit">クチコミを検索する</button>
+            </form>
+          </div>
+          
+    
+          <div class="result-form">
+            <div class="result-heading">
+              <div class="result-num">
+                <p>
+                  <span><?php echo sanitize($dbCompanyData['total']); ?></span>
+                   件中　
+                  <span><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
+                  〜
+                  <span><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
+                  件表示
+                </p>
+              </div>
+            </div>
+  
+            <ul>
+              <?php
+                foreach($dbCompanyData['data'] as $key => $val):
+              ?>
+                <li>
+                  <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>" class="c-card c-card--link c-card--shadow">
+                    <div class="c-card__header">
+                      <h2 class="c-card__title"><?php echo sanitize($val['name']); ?></h2>
+                      <div class="c-card__header__item rating">
+                        <span class="level-of-well-being u-vertical-middle">幸福度</span>　<span class="heart5_rating u-vertical-middle" data-rate="<?php echo sanitize($val['rating']); ?>"></span>
+                        <span class="u-vertical-middle">
+                          <?php echo sanitize($val['rating']); ?>
+                        </span>
+                      </div>
+                      <span class="c-card__header__item">クチコミ数：<?php echo sanitize($val['posts_count']); ?></span>
+                      <span class="c-card__header__item">本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
+                    </div>
+                    <div class="c-card__content">
+                      <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
+                    </div>
+                  </a>
+                </li>
+              <?php
+                endforeach;
+              ?>
+            </ul>
+  
+  
+            <div class="pagination-heading">
               <p>
                 <span><?php echo sanitize($dbCompanyData['total']); ?></span>
-                 件中　
+                  件中　
                 <span><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
                 〜
                 <span><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
                 件表示
               </p>
             </div>
+            <?php pagination($currentPageNum, $dbCompanyData['total_page']); ?>
+  
           </div>
-
-          <ul>
-            <?php
-              foreach($dbCompanyData['data'] as $key => $val):
-            ?>
-              <li class="company-card">
-                <a href="company.php<?php echo(!empty(appendGetParam())) ? appendGetParam().'&c_id='.$val['id'] : '?c_id='.$val['id']; ?>">
-                  <div class="company-header">
-                    <h2><?php echo sanitize($val['name']); ?></h2>
-                    <div class="rating">
-                      <p>
-                        幸福度　<span class="heart5_rating" data-rate="<?php echo sanitize($val['rating']); ?>"></span>
-                        <?php echo sanitize($val['rating']); ?>
-                      </p>
-                      
-                    </div>
-                    <p>クチコミ数：<?php echo sanitize($val['posts_count']); ?></p>
-                    <p>本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></p>
-                  </div>
-                  <div class="item-content">
-                    <div class="post-content">
-                      <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            <?php
-              endforeach;
-            ?>
-          </ul>
-
-
-          <div class="pagination-heading">
-            <p>
-              <span><?php echo sanitize($dbCompanyData['total']); ?></span>
-                件中　
-              <span><?php echo (!empty($dbCompanyData['data'])) ? $currentMinNum+1 : 0; ?></span>
-              〜
-              <span><?php echo $currentMinNum+count($dbCompanyData['data']); ?></span>
-              件表示
-            </p>
-          </div>
-          <?php pagination($currentPageNum, $dbCompanyData['total_page']); ?>
-
         </div>
       </div>
     </div>
