@@ -140,27 +140,29 @@ require('head.php');
                 <p>検索結果が20件以上あります。再度検索し直してください。</p>
               <?php }else{ ?>
                 <h3>検索結果</h3>
-                <p>該当の会社を選択してください</p>
-                <ul class="p-search-result-list">
-                  <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
-                    <li class="p-search-company-list__item">
-                      <form action="" method="post">
-                        <input type="hidden" name="c_id" value="<?php echo $val['id']; ?>">
-                        <button type="submit" class="p-search-company-list__button">
-                          <?php echo sanitize($val['name']); ?>
-                          <br>
-                          <span class="p-search-company-list__info">本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
-                        </button>
-                      </form>
-                    </li>
-                  <?php } ?>
-                </ul>
+                <?php if(empty($dbCompanyData['data'])){ ?>
+                  申し訳ございません。まだ会社が登録されておりません。
+                <?php }else{ ?>
+                  <p>該当の会社を選択してください</p>
+                  <ul class="p-search-result-list">
+                    <?php foreach($dbCompanyData['data'] as $key => $val){ ?>
+                      <li class="p-search-company-list__item">
+                        <form action="" method="post">
+                          <input type="hidden" name="c_id" value="<?php echo $val['id']; ?>">
+                          <button type="submit" class="p-search-company-list__button">
+                            <?php echo sanitize($val['name']); ?>
+                            <br>
+                            <span class="p-search-company-list__info">本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
+                          </button>
+                        </form>
+                      </li>
+                    <?php } ?>
+                  </ul>
+                <?php } ?>
               <?php } ?>
             <?php } ?>
-            
           </div>
         </div>
-        
       </div>
     </div>
   </main>
