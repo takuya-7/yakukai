@@ -18,6 +18,8 @@ debugLogStart();
 $dbPrefectureData = getPrefecture();
 // DBから業種データを取得
 $dbIndustryData = getIndustry();
+// DBから企業情報を取得
+$dbCompanyData = getCompanyRanking();
 
 ?>
 
@@ -27,10 +29,9 @@ require('head.php');
 ?>
 
   <body>
-    
     <main>
 
-
+      <?php var_dump($dbCompanyData); ?>
 
       <div class="top-wrap">
         <header class="l-header">
@@ -57,7 +58,7 @@ require('head.php');
         <div class="l-container">
           <div class="top-head">
             <h1>
-              会社クチコミで<br>
+              会社クチコミで、<br>
               薬剤師により良い選択肢を。
             </h1>
           </div>
@@ -73,101 +74,136 @@ require('head.php');
       
       <div class="l-content-wrapper">
         <div class="l-container">
+          <section class="p-top-section">
+            <div class="p-top-section__about">
+              <h2 class="p-top-section__title">はじめよう、薬剤師のキャリア会議</h2>
+              <img src="dist/img/4380.jpg" alt="" class="p-top-section__image">
+              <div class="p-top-section__content">
+                <span class="p-top-section__subtitle">ヤクカイ - 薬剤師のためのキャリア会議</span>
+                <p>ヤクカイは、「働く人の幸福度」という視点を取り入れた薬剤師に特化したクチコミ情報プラットフォームです。</p>
+                <p>薬剤師同士が会社クチコミ・仕事経験を共有する場を提供し、就職・転職時のより良い選択を応援します。</p>
+              </div>
+            </div>
+          </section>
                     
-          <section>
-            <h2>投稿数の多い企業</h2>
-            <div class="card-slider-wrapper">
-              <ul class="card-slider">
-                <li class="card-slider-item">
+          <section class="p-top-section">
+            <h2 class="p-top-section__title">幸福度の高い企業</h2>
+            <div class="p-card-slider-wrapper">
+              <ul class="p-card-slider">
+
+                <?php foreach($dbCompanyData['rating'] as $key => $val){ ?>
+
+                  <li class="p-card-slider__item">
+                      <a href="">
+                        <h3 class="p-card-slider__item-name"><?php echo $val['name']; ?></h3>
+                        <span class="heart5_rating p-card-slider__heart" data-rate="<?php echo number_format($val['AVG(ratings.rating)'], 1); ?>"></span>
+                        <span class=""><?php echo number_format($val['AVG(ratings.rating)'], 1); ?></span>
+                        <span class="p-card-slider__param">クチコミ数：<?php echo $val['COUNT(answers.answer)']; ?>件</span>
+                      </a>
+                  </li>
+                
+                <?php } ?>
+
+                <li class="p-card-slider__item">
                     <a href="">
-                      <h3>会社名</h3>
-                      <div>評価値</div>
-                      <div>投稿数字</div>
+                      <h3 class="p-card-slider__item-name">ウエルシア薬局株式会社</h3>
+                      <span class="heart5_rating p-card-slider__heart" data-rate="4.0"></span>
+                      <span class="">4.0</span>
+                      <span class="p-card-slider__param">クチコミ数：23件</span>
                     </a>
                 </li>
+
+                
               </ul>
             </div>
           </section>
 
+          <section class="p-top-section">
+            <h2 class="p-top-section__title">クチコミの多い企業</h2>
+            <div class="p-card-slider-wrapper">
+              <ul class="p-card-slider">
 
-          <section class="top-widget natural-shadow">
-            <div class="top-widget-title">
-              <h2>投稿数の多い企業</h2>
+                <?php foreach($dbCompanyData['answer'] as $key => $val){ ?>
+                  <li class="p-card-slider__item">
+                      <a href="">
+                        <h3 class="p-card-slider__item-name"><?php echo $val['name']; ?></h3>
+                        <span class="heart5_rating p-card-slider__heart" data-rate="<?php echo number_format($val['AVG(ratings.rating)'], 1); ?>"></span>
+                        <span class=""><?php echo number_format($val['AVG(ratings.rating)'], 1); ?></span>
+                        <span class="p-card-slider__param">クチコミ数：<?php echo $val['COUNT(answers.answer)']; ?>件</span>
+                      </a>
+                  </li>
+                <?php } ?>
+                
+              </ul>
             </div>
-            <div></div>
           </section>
-  
-          <section class="top-widget natural-shadow">
-            <div class="top-widget-title">
-              <h2>エリア・業種から口コミを探す</h2>
-            </div>
-            <div class="select-box">
+
+          <section class="p-top-section">
+            <h2 class="p-top-section__title">企業名や業種からクチコミを探す</h2>
+            <div class="p-search-box">
               <form method="get" action="search.php">
-                <div class="select-box-items">
-                  <div class="select-box-item">
-                    <div class="cp_ipselect cp_sl01">
-                      <select name="pref">
-                      <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県</option>
-                        <?php
-                          foreach($dbPrefectureData as $key => $val){
+                <div class="p-search-box__item">
+                  <input class="p-search-box__textarea" type="text" placeholder="企業名" name="src_str" value="<?php if(!empty($_GET['src_str'])) echo $_GET['src_str']; ?>">
+                </div>
+                
+                <div class="p-search-box__item">
+                  <div class="cp_ipselect cp_sl01 w-100">
+                    <select name="pref">
+                      <option value="0" <?php if(getFormData('pref', true) == 0) echo 'selected'; ?>>都道府県（本社所在地）</option>
+                      <?php
+                        foreach($dbPrefectureData as $key => $val){
+                          ?>
+                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
+                        <?php echo $val['name']; ?>
+                      </option>
+                      <?php
+                        }
                         ?>
-                          <option value="<?php echo $val['id']; ?>" <?php if(getFormData('pref', true) == $val['id']) echo 'selected'; ?>>
-                            <?php echo $val['name']; ?>
-                          </option>
-                        <?php
-                          }
-                        ?>
-                      </select>
-                    </div>
-                  </div>
-    
-                  <div class="select-box-item-x">
-                    ×
-                  </div>
-    
-                  <div class="select-box-item">
-                    <div class="cp_ipselect cp_sl01">
-                      <select name="i">
-                        <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
-  
-                        <?php
-                          foreach($dbIndustryData as $key => $val){
-                        ?>
-                          <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
-                            <?php echo $val['name']; ?>
-                          </option>
-                        <?php
-                          }
-                        ?>
-                      </select>
-                    </div>
+                    </select>
                   </div>
                 </div>
-  
-                <button type="submit">
-                  この条件で口コミを探す
-                </button>
+                
+                <div class="p-search-box__item">
+                  <div class="cp_ipselect cp_sl01 w-100">
+                    <select name="i">
+                      <option value="0" <?php if(getFormData('i', true) == 0) echo 'selected'; ?>>業種</option>
+                      
+                      <?php
+                        foreach($dbIndustryData as $key => $val){
+                          ?>
+                        <option value="<?php echo $val['id']; ?>" <?php if(getFormData('i', true) == $val['id']) echo 'selected'; ?>>
+                        <?php echo $val['name']; ?>
+                      </option>
+                      <?php
+                        }
+                        ?>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="p-search-box__item">
+                  <span class="p-search-box__item-name">表示順</span>
+                  <div class="cp_ipselect cp_sl01 w-100">
+                    <select name="sort">
+                      <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
+                      <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                      <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="c-button c-button--blue c-button--width100" type="submit">クチコミを検索する</button>
               </form>
             </div>
           </section>
-    
-          <section class="top-widget natural-shadow">
-            <h2>ヤクカイ - 薬剤師のためのキャリア会議</h2>
-            <div class="content">
-              <p>ヤクカイは、薬剤師同士が会社クチコミ・仕事経験を共有することで就職・転職時のより良い選択を応援します。</p>
-            </div>
+
+          <section class="p-top-section">
+            <h2 class="p-top-section__title">ユーザー登録で全てのクチコミが閲覧可能になります</h2>
+            <a href="signup.php" class="c-button c-button--green c-button--radius100">ユーザー登録する（無料）</a>
+            <a href="login.php" class="p-top-section__login-link">ログインする</a>
+            
           </section>
   
-          <section class="signup-wrap">
-            <div class="buttons">
-              <button class="signup" onclick="location.href='signup.php'">
-                ユーザー登録する（無料）
-              </button>
-              <button class="login" onclick="location.href='login.php'">
-                ログインする
-              </button>
-            </div>
-          </section>
         </div>
       </div>
     </main>
