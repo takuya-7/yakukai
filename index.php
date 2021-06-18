@@ -90,9 +90,7 @@ require('head.php');
             <h2 class="p-top-section__title">幸福度の高い企業</h2>
             <div class="p-card-slider-wrapper">
               <ul class="p-card-slider">
-
                 <?php foreach($dbCompanyData['rating'] as $key => $val){ ?>
-
                   <li class="p-card-slider__item">
                       <a href="">
                         <h3 class="p-card-slider__item-name"><?php echo $val['name']; ?></h3>
@@ -101,19 +99,7 @@ require('head.php');
                         <span class="p-card-slider__param">クチコミ数：<?php echo $val['COUNT(answers.answer)']; ?>件</span>
                       </a>
                   </li>
-                
-                <?php } ?>
-
-                <li class="p-card-slider__item">
-                    <a href="">
-                      <h3 class="p-card-slider__item-name">ウエルシア薬局株式会社</h3>
-                      <span class="heart5_rating p-card-slider__heart" data-rate="4.0"></span>
-                      <span class="">4.0</span>
-                      <span class="p-card-slider__param">クチコミ数：23件</span>
-                    </a>
-                </li>
-
-                
+                <?php } ?>                
               </ul>
             </div>
           </section>
