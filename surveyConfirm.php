@@ -101,7 +101,6 @@ if(!empty($_POST)){
   }
   
 }
-
 ?>
 
 <?php
@@ -113,11 +112,6 @@ require('head.php');
   <?php
     require('header.php');
   ?>
-
-  <!-- セッション変数内のメッセージを表示 -->
-  <p id="js-show-msg" style="display:none;" class="msg-slide">
-    <?php echo getSessionFlash('msg_success'); ?>
-  </p>
 
   <main>
     <div class="l-content-wrapper">
@@ -132,7 +126,6 @@ require('head.php');
               <p class="c-box__note">入力内容を確認して投稿を完了させてください。</p>
             </div>
             
-  
             <!-- 会社確認 -->
             <div class="c-box01">
               <span class="u-fw-bold u-mb-3">
@@ -146,7 +139,7 @@ require('head.php');
         
         <div class="l-content u-mb-5">
           <div class="l-inner-container">
-            <!-- STEP2 -->
+            <h2 class="u-text-center">STEP2</h2>
             <div class="">
               <?php foreach($dbQuestionsAndRatings as $key => $val){ ?>
                 <div class="u-mb-4">
@@ -204,10 +197,9 @@ require('head.php');
           </div>
         </div>
         
-    
         <div class="l-content  u-mb-5">
           <div class="l-inner-container">
-            <!-- STEP3 -->
+            <h2 class="u-text-center">STEP3</h2>
             <?php foreach($dbQuestionsAndAnswers as $key => $val){ ?>
               <div class="u-mb-4">
                 <div class="u-mb-3">
@@ -230,7 +222,7 @@ require('head.php');
           <input type="hidden" name="post_flg" value="1">
           <button type="submit" class="c-button c-button--blue c-button--width100">この内容で投稿する</button>
         </form>
-          
+        
       </div>
     </div>
   </main>
