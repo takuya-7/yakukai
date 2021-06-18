@@ -71,8 +71,8 @@ require('head.php');
             <div class="head-rating u-mb-4">
               <span class="level-of-well-being">幸福度</span>
               <br>
-              <span class="heart5_rating" data-rate="<?php echo round($dbCompanyRatings[0]['AVG(rating)'], 1); ?>"></span>
-              <span class="rating-val"><?php echo round($dbCompanyRatings[0]['AVG(rating)'], 1); ?></span>
+              <span class="heart5_rating" data-rate="<?php echo number_format($dbCompanyRatings[0]['AVG(rating)'], 1); ?>"></span>
+              <span class="rating-val"><?php echo number_format($dbCompanyRatings[0]['AVG(rating)'], 1); ?></span>
               <span class="answer-count">（回答：<?php echo $dbCompanyRatings['rating_count']['COUNT(rating)']; ?>件）</span>
             </div>
 
@@ -201,7 +201,7 @@ require('head.php');
   
                     <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
                     <span class="fs-3 ms-1">
-                      <?php echo round($val['rating'], 1); ?>
+                      <?php echo number_format($val['rating'], 1); ?>
                     </span>
                     <p></p>
                   </div>
@@ -288,25 +288,25 @@ require('head.php');
           var ctx = document.getElementById("header-chart");
           var myRadarChart = new Chart(ctx, {
             type: 'radar', 
-            data: { 
+            data: {
               labels: [
-                "<?php echo $dbCompanyRatings[1]['name']; ?>：<?php echo round($dbCompanyRatings[1]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[2]['name']; ?>：<?php echo round($dbCompanyRatings[2]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[3]['name']; ?>：<?php echo round($dbCompanyRatings[3]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[4]['name']; ?>：<?php echo round($dbCompanyRatings[4]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[5]['name']; ?>：<?php echo round($dbCompanyRatings[5]['AVG(rating)'], 1); ?>",
-                "<?php echo $dbCompanyRatings[6]['name']; ?>：<?php echo round($dbCompanyRatings[6]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[1]['name']; ?>：<?php echo number_format($dbCompanyRatings[1]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[2]['name']; ?>：<?php echo number_format($dbCompanyRatings[2]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[3]['name']; ?>：<?php echo number_format($dbCompanyRatings[3]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[4]['name']; ?>：<?php echo number_format($dbCompanyRatings[4]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[5]['name']; ?>：<?php echo number_format($dbCompanyRatings[5]['AVG(rating)'], 1); ?>",
+                "<?php echo $dbCompanyRatings[6]['name']; ?>：<?php echo number_format($dbCompanyRatings[6]['AVG(rating)'], 1); ?>",
               ],
 
               datasets: [{
                 label: '<?php echo $dbCompanyData['info']['name']; ?>の評価値',
                 data: [
-                  <?php echo round($dbCompanyRatings[1]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[2]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[3]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[4]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[5]['AVG(rating)'], 1); ?>,
-                  <?php echo round($dbCompanyRatings[6]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[1]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[2]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[3]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[4]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[5]['AVG(rating)'], 1); ?>,
+                  <?php echo number_format($dbCompanyRatings[6]['AVG(rating)'], 1); ?>,
                 ],
                 backgroundColor: 'RGBA(225,95,150, 0.2)',
                 // backgroundColor: '#f88dc8',
