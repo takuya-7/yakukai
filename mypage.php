@@ -17,21 +17,9 @@ require('auth.php');
 // 画面表示用データ取得
 //================================
 $u_id = $_SESSION['user_id'];
-
-// DBから自分の商品データを取得
-// $productData = getMyProducts($u_id);
-
-// DBから連絡掲示板データを取得
-// $boardData = getMyMsgsAndBoard($u_id);
-
-// DBからお気に入りデータを取得
-// $likeData = getMyLike($u_id);
-
 $dbUserData = getUser($u_id);
 
 debug('取得したユーザー情報：' . print_r($dbUserData, true));
-
-
 ?>
 
 <?php
@@ -54,7 +42,7 @@ require('head.php');
     <div class="l-content-wrapper">
       <div class="l-container">
         <div class="row">
-          <h1>マイページ</h1>
+          <h1 class="c-page-title">マイページ</h1>
 
           <!-- <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -70,40 +58,40 @@ require('head.php');
                 
                 <h2>あなたのプロフィール</h2>
                 <a href="profRegist.php" class="edit-btn">編集する</a>
-                <div class="tile bg-white">
+                <div class="p-profile">
                   <div>
-                    <div class="profile-block">
+                    <div class="p-profile__field">
                       <span>性別</span>
                       <p><?php echo SEX[$dbUserData['sex']]; ?></p>
                     </div>
     
-                    <div class="profile-block">
+                    <div class="p-profile__field">
                       <span>現住所</span>
                       <p><?php echo PREF[$dbUserData['addr']]; ?></p>
                     </div>
     
-                    <div class="profile-block">
+                    <div class="p-profile__field">
                       <span>生まれ年</span>
                       <p><?php echo $dbUserData['birth_year'].'年'; ?></p>
                     </div>
   
-                    <div class="profile-block">
+                    <div class="p-profile__field">
                       <span>薬剤師免許</span>
                       <p><?php echo ($dbUserData['ph_license']) ? '保有' : '無し'; ?></p>
                     </div>
     
-                    <div class="profile-block">
+                    <div class="p-profile__field">
                       <span>キャリア状況</span>
                       <p><?php echo CARRI_TYPE[$dbUserData['carrier_type']]; ?></p>
                     </div>
     
                     <div class="<?php if(!$dbUserData['carrier_type']) echo 'student-hidden'; ?>">
-                      <div class="profile-block">
+                      <div class="p-profile__field">
                         <span>ご経験</span>
                         <p><?php if(!empty($dbUserData['i_name'])) echo $dbUserData['i_name'].'を'.$dbUserData['ex_year'].'年経験'; ?></p>
                       </div>
       
-                      <div class="profile-block">
+                      <div class="p-profile__field">
                         <span>雇用状況</span>
                         <p><?php if(!empty($dbUserData['e_name'])) echo $dbUserData['e_name']; ?></p>
                       </div>
@@ -115,12 +103,12 @@ require('head.php');
             <!-- <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"> -->
               <div class="menus-container col-md-4">
                 <h2>個人設定</h2>
-                <ul class="bg-white">
+                <ul class="u-bg-white">
                   <li><a href="">メールアドレス変更</a></li>
                   <li><a href="passEdit.php">パスワード変更</a></li>
                 </ul>
                 <h2>ユーザー情報</h2>
-                <ul class="bg-white">
+                <ul class="u-bg-white">
                   <li><a href="logout.php">ログアウト</a></li>
                   <li><a href="">退会</a></li>
                 </ul>
