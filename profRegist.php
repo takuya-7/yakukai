@@ -13,8 +13,9 @@ require('auth.php');
 //================================
 // 画面処理
 //================================
+$user_id = $_SESSION['user_id'];
 // ユーザー情報取得
-$dbFormData = getUser($_SESSION['user_id']);
+$dbFormData = getUser($user_id);
 // DBから都道府県データを取得
 $dbPrefectureData = getPrefecture();
 // DBから業種データを取得
@@ -56,7 +57,7 @@ if(!empty($_POST)){
 
       $sql = 'UPDATE users SET sex = :sex, birth_year = :birth_year, addr = :addr, ph_license = :ph_license, carrier_type = :carrier_type, ex_phtype = :ex_phtype, ex_year = :ex_year, emp_type = :emp_type WHERE id = :u_id';
 
-      $data = array(':sex' => $sex, ':birth_year' => $birthYear, ':addr' => $addr, ':ph_license' => $phLicense, ':carrier_type' => $carrierType, ':ex_phtype' => $exPhType, ':ex_year' => $exYear, ':emp_type' => $empType, ':u_id' => $dbFormData['id']);
+      $data = array(':sex' => $sex, ':birth_year' => $birthYear, ':addr' => $addr, ':ph_license' => $phLicense, ':carrier_type' => $carrierType, ':ex_phtype' => $exPhType, ':ex_year' => $exYear, ':emp_type' => $empType, ':u_id' => $user_id);
 
       $stmt = queryPost($dbh, $sql, $data);
 
