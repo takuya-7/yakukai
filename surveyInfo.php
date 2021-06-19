@@ -13,10 +13,10 @@ require('auth.php');
 //================================
 // 画面処理
 //================================
-$u_id = $_SESSION['user_id'];
-$dbPostData = getPost($u_id);
-$dbRatingData = getRatingByUserId($_SESSION['user_id']);
-$dbAnswerData = getAnswer($_SESSION['user_id']);
+$user_id = $_SESSION['user_id'];
+$dbPostData = getPost($user_id);
+$dbRatingData = getRatingByUserId($user_id);
+$dbAnswerData = getAnswer($user_id);
 
 // 画面遷移処理
 // if(empty($dbPostData[0]['company_id'])){
@@ -54,16 +54,46 @@ if(!empty($_GET)){
 if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：' . print_r($_POST, true));
-  // ユーザーがクチコミレコード作成しており、company_idにデータがなければレコードを削除
-  if(empty($dbPostData[0]['company_id'])){
-    debug('クチコミが完成していないレコードを削除します。');
+  // ユーザーがpostsテーブルのレコード作成しており、post_flg=0のものは全てレコードを削除
+  if(empty($dbPostData[0]['post_flg'])){
+    debug('クチコミ投稿が完了していないpostsテーブルのレコードを削除します。');
     try{
       $dbh = dbConnect();
-      $sql = 'DELETE FROM posts WHERE user_id = :user_id AND company_id IS NULL LIMIT 1';
-      $data = array(':user_id' => $u_id);
+      $sql = 'DELETE FROM posts WHERE user_id = :user_id AND post_flg = 0';
+      $data = array(':user_id' => $user_id);
       $stmt = queryPost($dbh, $sql, $data);
       if($stmt){
-        debug('不要のクチコミレコードが１件削除されました。');
+        debug('postsの不要なレコードが全て削除されました。');
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+  }
+  // ユーザーがratingsテーブルのレコードを作成しており、post_flg=0のものは全てレコードを削除
+  if(empty($dbRatingData[0]['post_flg'])){
+    debug('クチコミ投稿が完了していないratingsテーブルのレコードを削除します。');
+    try{
+      $dbh = dbConnect();
+      $sql = 'DELETE FROM ratings WHERE user_id = :user_id AND post_flg = 0';
+      $data = array(':user_id' => $user_id);
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('ratingsの不要なレコードが全て削除されました。');
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+  }
+  // ユーザーがanswersテーブルのレコードを作成しており、post_flg=0のものは全てレコードを削除
+  if(empty($dbAnswerData[0]['post_flg'])){
+    debug('クチコミ投稿が完了していないanswersテーブルのレコードを削除します。');
+    try{
+      $dbh = dbConnect();
+      $sql = 'DELETE FROM answers WHERE user_id = :user_id AND post_flg = 0';
+      $data = array(':user_id' => $user_id);
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('answersの不要なレコードが全て削除されました。');
       }
     } catch (Exeption $e) {
       error_log('エラー発生：' . $e->getMessage());
@@ -77,7 +107,7 @@ if(!empty($_POST)){
     $sql = 'INSERT INTO posts (company_id, user_id, create_date) VALUES (:company_id, :user_id, :create_date)';
     $data = array(
       ':company_id' => $c_id,
-      ':user_id' => $u_id,
+      ':user_id' => $user_id,
       ':create_date' => date('Y-m-d H:i:s'),
     );
     $stmt = queryPost($dbh, $sql, $data);
@@ -114,6 +144,7 @@ require('head.php');
       <div class="l-container">
         <div class="l-content">
           <div class="l-inner-container">
+
             <h1 class="c-page-title">クチコミ投稿について</h1>
       
             <p class="u-mb-4">クチコミを投稿していただくと、半年間クチコミを読み放題になります。</p>
