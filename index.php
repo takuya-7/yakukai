@@ -30,9 +30,6 @@ require('head.php');
 
   <body>
     <main>
-
-      <?php var_dump($dbCompanyData); ?>
-
       <div class="top-wrap">
         <header class="l-header">
           <div class="l-container">
@@ -92,7 +89,7 @@ require('head.php');
               <ul class="p-card-slider">
                 <?php foreach($dbCompanyData['rating'] as $key => $val){ ?>
                   <li class="p-card-slider__item">
-                      <a href="">
+                      <a href="company.php?c_id=<?php echo $val['id']; ?>">
                         <h3 class="p-card-slider__item-name"><?php echo $val['name']; ?></h3>
                         <span class="heart5_rating p-card-slider__heart" data-rate="<?php echo number_format($val['AVG(ratings.rating)'], 1); ?>"></span>
                         <span class=""><?php echo number_format($val['AVG(ratings.rating)'], 1); ?></span>
@@ -111,7 +108,7 @@ require('head.php');
 
                 <?php foreach($dbCompanyData['answer'] as $key => $val){ ?>
                   <li class="p-card-slider__item">
-                      <a href="">
+                      <a href="company.php?c_id=<?php echo $val['id']; ?>">
                         <h3 class="p-card-slider__item-name"><?php echo $val['name']; ?></h3>
                         <span class="heart5_rating p-card-slider__heart" data-rate="<?php echo number_format($val['AVG(ratings.rating)'], 1); ?>"></span>
                         <span class=""><?php echo number_format($val['AVG(ratings.rating)'], 1); ?></span>
