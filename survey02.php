@@ -195,7 +195,6 @@ if(!empty($_POST)){
     }
   }
 }
-
 ?>
 
 <?php
@@ -221,6 +220,8 @@ require('head.php');
             <h1 class="c-page-title">
               <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（2/3）
             </h1>
+
+            <p class="u-mb-4 u-text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
     
             <?php if(!empty($err_msg)){ ?>
               <div class="u-mb-4 u-text-center">
@@ -247,7 +248,7 @@ require('head.php');
                     <?php echo $val['question']; ?>
                   </div>
       
-                  <div class="survey-list mb-5">
+                  <div class="survey-list u-mb-5">
                     <ul class="">
                       <li>
                         <label class="<?php
@@ -362,13 +363,13 @@ require('head.php');
                   あなたのこの会社での残業時間（月間）はどの程度か教えてください。
                 </div>
       
-                <div class="d-block mb-2">
+                <div class="d-block u-mb-2">
                   <span class="u-text-red fw-bold">
                     <?php if(!empty($err_msg['over_time'])) echo $err_msg['over_time']; ?>
                   </span>
                 </div>
       
-                <div class="ms-3 mb-5">
+                <div class="ms-3 u-mb-5">
                   <div class="cp_ipselect cp_sl01">
                     <select name="over_time" class="<?php if(!empty($err_msg['over_time'])) echo 'u-bg-red'; ?>">
                       <option value="">残業時間</option>
@@ -387,7 +388,6 @@ require('head.php');
                   </div>
                 </div>
               </div>
-    
     
               <div class="c-form__field">
                 <div class="c-form__field__name">
@@ -503,13 +503,10 @@ require('head.php');
                   </div>
                 </div>
               </div>
-    
               <button type="submit" class="c-button c-button--blue c-button--width100">次へ</button>
             </form>
           </div>
         </div>
-        
-        
       </div>
     </div>
   </main>

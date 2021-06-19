@@ -151,7 +151,6 @@ if(!empty($_POST)){
     }
   }
 }
-
 ?>
 
 <?php
@@ -177,13 +176,15 @@ require('head.php');
             <h1 class="c-page-title">
               <?php echo $dbCompanyData['info']['name']; ?>について教えてください。（3/3）
             </h1>
+
+            <p class="u-mb-4 u-text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
     
             <div class="c-box">
               <p class="c-box__caution">合計500文字以上になるようにご回答下さい。</p>
             </div>
     
             <?php if(!empty($err_msg['total_count'])){ ?>
-              <div class="mb-4 u-text-center">
+              <div class="u-mb-4 u-text-center">
                 <span class="fw-bold u-text-red">
                   <?php echo $err_msg['total_count']; ?>
                 </span>
@@ -222,9 +223,7 @@ require('head.php');
                     </span>
                   </div>
                 </div>
-                
               <?php } ?>
-    
               <button type="submit" class="c-button c-button--blue c-button--width100 js-disabled-submit">次へ</button>
             </form>
           </div>

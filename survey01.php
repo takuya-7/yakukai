@@ -17,11 +17,11 @@ require('auth.php');
 // 画面表示用データ取得
 //================================
 // ユーザーID取得
-$u_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 // 雇用形態取得
 $dbEmploymentType = getEmploymentType();
 // ユーザーのクチコミレコード取得
-$dbPostData = getPost($u_id);
+$dbPostData = getPost($user_id);
 // ユーザーのクチコミレコードから企業ID取得
 $c_id = $dbPostData[0]['company_id'];
 if(!empty($c_id)){
@@ -69,7 +69,7 @@ if(!empty($_POST)){
         ':entry_date' => $user_entry_year.'-'.$user_entry_month.'-01',
         ':department' => $user_department,
         ':position' => $user_position,
-        ':user_id' => $u_id,
+        ':user_id' => $user_id,
         ':company_id' => $c_id,
       );
       $stmt = queryPost($dbh, $sql, $data);
@@ -111,7 +111,7 @@ require('head.php');
               <h1 class="c-page-title">
                 <?php echo $dbCompanyData['info']['name']; ?>の就業状況について教えてください。（1/3）
               </h1>
-              <p class="mb-4 u-text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
+              <p class="u-mb-4 u-text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
     
               <fieldset class="c-form__field">
                 <label class="c-form__field__name">
