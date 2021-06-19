@@ -95,11 +95,47 @@ if(!empty($_POST)){
 
   if($stmt_post && $stmt_rating && $stmt_answer){
     debug('postsテーブル、ratingsテーブル、answersテーブル全てでpost_flg = 1を設定できました！');
+    // 企業の平均評価値、クチコミ総数集計、取得
+    debug('クチコミ投稿された企業の平均評価値、クチコミ数を取得します。');
+    try{
+      $dbh = dbConnect();
+      $sql = 'SELECT AVG(ratings.rating), COUNT(answers.answer)
+              FROM ratings
+              LEFT JOIN company ON ratings.company_id = company.id
+              LEFT JOIN answers ON ratings.company_id = answers.company_id
+              WHERE ratings.company_id = :company_id AND ratings.rating_item_id = 1 AND ratings.delete_flg = 0 AND ratings.post_flg = 1 AND answers.delete_flg = 0 AND answers.post_flg = 1';
+      $data = array(
+        ':company_id' => $company_id
+      );
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('クチコミ投稿された企業の平均評価値、クチコミ数の取得に成功しました！');
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
+    // companyテーブル上で、最新の平均評価値、クチコミ数を更新
+    debug('最新の平均評価値、クチコミ数を更新します。');
+    try{
+      $dbh = dbConnect();
+      $sql = 'UPDATE company SET rating = :rating, posts_count = :posts_count WHERE id = :company_id';
+      $data = array(
+        ':company_id' => $company_id,
+        ':rating' => $result['AVG(ratings.rating)'],
+        ':posts_count' => $result['COUNT(answers.answer)']
+      );
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        debug('最新の平均評価値、クチコミ数に更新しました！');
+      }
+    } catch (Exeption $e) {
+      error_log('エラー発生：' . $e->getMessage());
+    }
     debug('マイページへ遷移します！');
     header('Location:mypage.php');
     exit();
   }
-  
 }
 ?>
 
@@ -125,6 +161,8 @@ require('head.php');
             <div class="c-box">
               <p class="c-box__note">入力内容を確認して投稿を完了させてください。</p>
             </div>
+
+            <p class="u-mb-4 u-text-center">企業を選び直す場合は<a href="surveyInfo.php">こちら</a></p>
             
             <!-- 会社確認 -->
             <div class="c-box01">
