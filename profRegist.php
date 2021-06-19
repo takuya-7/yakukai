@@ -49,7 +49,6 @@ if(!empty($_POST)){
     validRequired($empType, 'user_employment_type');
   }
 
-
   if(empty($err_msg)){
     try{
       // データベースアクセス、情報更新
@@ -62,14 +61,9 @@ if(!empty($_POST)){
       $stmt = queryPost($dbh, $sql, $data);
 
       if($stmt){
-        // debug('クエリ成功！');
-        // $_SESSION['msg_success'] = SUC02;
         debug('クチコミ投稿ページに遷移します。');
         header('Location:surveyInfo.php');
         exit();
-      // }else{
-      //     debug('クエリに失敗しました。');
-      //     $err_msg['common'] = MSG13;
       }
     } catch (Exeption $e) {
       error_log('エラー発生：' . $e->getMessage());
@@ -233,8 +227,8 @@ require('head.php');
                     <div class="c-radio__item">
                       <input type="radio" name="user_phlicense" value="0" id="user_phlicense_0"<?php
                         if(isset($_POST['user_phlicense'])){
-                          if($_POST['user_phlicense'] == 0) echo ' checked';
-                        }elseif($dbFormData['ph_license'] == 0){
+                          if($_POST['user_phlicense'] === 0) echo ' checked';
+                        }elseif($dbFormData['ph_license'] === 0){
                           echo ' checked';
                         }
                       ?>>
@@ -270,8 +264,8 @@ require('head.php');
                     <div class="c-radio__item">
                       <input type="radio" name="user_carrier_type" value="0" id="user_carrier_type_0"<?php
                         if(isset($_POST['user_carrier_type'])){
-                          if($_POST['user_carrier_type'] == 0) echo ' checked';
-                        }elseif($dbFormData['carrier_type'] == 0){
+                          if($_POST['user_carrier_type'] === 0) echo ' checked';
+                        }elseif($dbFormData['carrier_type'] === 0){
                           echo ' checked';
                         }
                       ?>>
