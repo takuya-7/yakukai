@@ -279,7 +279,7 @@ function getUser($u_id){
   debug('ユーザー情報を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT email, sex, birth_year, addr, ph_license, carrier_type, ex_phtype, ex_year, industry.name AS i_name, employment_type.name AS e_name FROM users
+    $sql = 'SELECT email, sex, birth_year, addr, ph_license, carrier_type, ex_phtype, ex_year, emp_type, industry.name AS i_name, employment_type.name AS e_name FROM users
       LEFT JOIN industry ON users.ex_phtype = industry.id
       LEFT JOIN employment_type ON users.emp_type = employment_type.id
       WHERE users.id = :u_id AND users.delete_flg = 0';
@@ -1070,7 +1070,54 @@ function getIndustry(){
 // ======================
 // 企業情報
 // ======================
-
+// トップページ。幸福度の高い企業、投稿数の多い企業を取得（6つ）
+function getCompanyRanking(){
+  debug('幸福度の高い企業、投稿数の多い企業の情報を取得します。');
+  $result = array();
+  debug('幸福度の高い企業を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT company.id, company.name, AVG(ratings.rating), COUNT(answers.answer)
+              FROM ratings
+              LEFT JOIN company ON ratings.company_id = company.id
+              LEFT JOIN answers ON ratings.company_id = answers.company_id
+              WHERE ratings.rating_item_id = 1 AND ratings.delete_flg = 0 AND ratings.post_flg = 1 AND answers.delete_flg = 0 AND answers.post_flg = 1
+              GROUP BY ratings.company_id
+              ORDER BY AVG(ratings.rating) DESC
+              LIMIT 6';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['rating'] =  $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：'.$e->getMessage());
+  }
+  debug('クチコミ数の多い企業を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT company.id, company.name, AVG(ratings.rating), COUNT(answers.answer)
+              FROM ratings
+              LEFT JOIN company ON ratings.company_id = company.id
+              LEFT JOIN answers ON ratings.company_id = answers.company_id
+              WHERE ratings.rating_item_id = 1 AND ratings.delete_flg = 0 AND ratings.post_flg = 1 AND answers.delete_flg = 0 AND answers.post_flg = 1
+              GROUP BY ratings.company_id
+              ORDER BY COUNT(answers.answer) DESC
+              LIMIT 6';
+    $data = array();
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      $result['answer'] =  $stmt->fetchAll();
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：'.$e->getMessage());
+  }
+  return $result;
+}
 // company_idから企業カラム取得
 function getCompanyOne($c_id){
   debug('c_idに合致する企業情報（companyテーブルの情報、industryテーブルの業種名）を取得します。');
@@ -1111,7 +1158,7 @@ function getCompanyOne($c_id){
 
   return $result;
 }
-function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry, $sort, $span = 20){
+function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry, $sort = 1, $span = 20){
   debug('getCompanyListを実行します。');
 
   try{
@@ -1169,8 +1216,9 @@ function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry
       return false;
     }
 
-    debug('法人番号が存在する、表示する企業データを取得します。');
-    $sql = 'SELECT * FROM company WHERE corporate_number IS NOT NULL';
+    debug('検索条件をもとに対象の企業データ（企業名、本社所在地）を取得します。');
+    // SQL構築処理
+    $sql = 'SELECT id, name, prefecture_name, city_name, rating, posts_count FROM company WHERE corporate_number IS NOT NULL';
     // 企業名・都道府県・業種で抽出する条件文処理
     if(!empty($companyName)){
       $sql .= ' AND name LIKE "%'.$companyName.'%"';
