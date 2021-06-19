@@ -73,10 +73,15 @@ if(!empty($_POST)){
                 debug('セッション変数の中身：' . print_r($_SESSION, true));
 
                 // 画面遷移処理
+                $dbUserData = getUser($u_id);
                 $dbPostData = getPost($result['id']);
                 $dbRatingData = getRatingByUserId($result['id']);
                 $dbAnswerData = getAnswer($result['id']);
-                if(empty($dbPostData[0]['company_id'])){
+
+                if(empty($dbUserData['sex'])){
+                  debug('プロフィール登録がありません。プロフィール入力へ遷移します。');
+                  header('Location:profRegist.php');
+                }elseif(empty($dbPostData[0]['company_id'])){
                   debug('会社登録がありません。クチコミ投稿ページへ遷移します。');
                   header('Location:surveyInfo.php');
                   exit();
