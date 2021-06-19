@@ -25,7 +25,7 @@ $prefecture = (!empty($_GET['pref'])) ? $_GET['pref'] : '';
 // 業種
 $industry = (!empty($_GET['i'])) ? $_GET['i'] : '';
 // ソート順
-$sort = (!empty($_GET['sort'])) ? $_GET['sort'] : '';
+$sort = (!empty($_GET['sort'])) ? $_GET['sort'] : 1;
 // パラメータに不正な値が入っているかチェック
 if(!is_int((int)$currentPageNum)){
   error_log('エラー発生:指定ページに不正な値が入りました');
@@ -51,7 +51,6 @@ $dbIndustryData = getIndustry();
 debug('現在のページ：' . $currentPageNum);
 // debug('フォーム用DBデータ：'.print_r($dbFormData,true));
 // debug('カテゴリデータ：'.print_r($dbIndustryData,true));
-
 ?>
 
 <?php
@@ -69,7 +68,6 @@ require('head.php');
     <?php echo getSessionFlash('msg_success'); ?>
   </p>
 
-    
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
@@ -121,7 +119,7 @@ require('head.php');
                 <div class="cp_ipselect cp_sl01 w-100">
                   <select name="sort">
                     <option value="0" <?php if(getFormData('sort', true) == 0) echo 'selected'; ?>>表示順</option>
-                    <option value="1" <?php if(getFormData('sort', true) == 1) echo 'selected'; ?>>クチコミ数</option>
+                    <option value="1" <?php if(getFormData('sort', true) == 1 || $sort == 1) echo 'selected'; ?>>クチコミ数</option>
                     <option value="2" <?php if(getFormData('sort', true) == 2) echo 'selected'; ?>>幸福度</option>
                   </select>
                 </div>
@@ -130,8 +128,7 @@ require('head.php');
               <button class="c-button c-button--blue c-button--width100" type="submit">クチコミを検索する</button>
             </form>
           </div>
-          
-    
+
           <div class="result-form">
             <div class="result-heading">
               <div class="result-num">
@@ -145,7 +142,7 @@ require('head.php');
                 </p>
               </div>
             </div>
-  
+
             <ul>
               <?php
                 foreach($dbCompanyData['data'] as $key => $val):
@@ -172,8 +169,7 @@ require('head.php');
                 endforeach;
               ?>
             </ul>
-  
-  
+
             <div class="pagination-heading">
               <p>
                 <span><?php echo sanitize($dbCompanyData['total']); ?></span>
@@ -185,13 +181,11 @@ require('head.php');
               </p>
             </div>
             <?php pagination($currentPageNum, $dbCompanyData['total_page']); ?>
-  
           </div>
         </div>
       </div>
     </div>
   </main>
-    
 
   <?php
     require('footer.php');
