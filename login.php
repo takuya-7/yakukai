@@ -112,7 +112,7 @@ debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $siteTitle = 'ログイン';
 require('head.php');
 ?>
-  <body class="page-login">
+  <body>
     <?php
       require('header.php');
     ?>
