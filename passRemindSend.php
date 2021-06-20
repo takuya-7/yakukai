@@ -1,13 +1,10 @@
 <?php
-
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debug('「　パスワード再発行メール送信ページ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
-
-// ログイン認証はしない
 
 //================================
 // 画面処理
@@ -56,24 +53,24 @@ if(!empty($_POST)){
           $auth_key = makeRandKey();
 
           // 認証キーをメールに記載して送信
-          $from = 'info@market.com';
+          $from = 'info@yakukai.net';
           $to = $email;
           $subject = '【パスワード再発行認証】｜ヤクカイ';
           $comment = <<<EOM
 本メールアドレス宛にパスワード再発行のご依頼がありました。
 下記のURLにて認証キーをご入力頂くとパスワードが再発行されます。
 
-パスワード再発行認証キー入力ページ：http://localhost:8888/yakukai.com/passRemindRecieve.php
+パスワード再発行認証キー入力ページ：http://localhost:8888/yakukai.net/passRemindRecieve.php
 認証キー：{$auth_key}
 ※認証キーの有効期限は30分となります
 
 認証キーを再発行されたい場合は下記ページより再度再発行をお願い致します。
-http://localhost:8888/yakukai.com/passRemindSend.php
+http://localhost:8888/yakukai.net/passRemindSend.php
 
 ////////////////////////////////////////
 ヤクカイ運営
-URL  https://yakukai.com
-E-mail info@yakukai.com
+URL  https://yakukai.net
+E-mail info@yakukai.net
 ////////////////////////////////////////
 EOM;
           
@@ -111,9 +108,7 @@ $siteTitle = 'パスワード再発行メール送信';
 require('head.php');
 ?>
 
-  <body class="page-login page-1colum">
-
-    <!-- メニュー -->
+  <body>
     <?php
       require('header.php');
     ?>
@@ -121,8 +116,8 @@ require('head.php');
     <main>
       <div class="l-content-wrapper">
         <div class="l-container">
-          <h1>パスワード再発行</h1>
-          <form action="" method="post" class="c-form">
+          <form action="" method="post" class="c-form c-form--small">
+            <h1 class="c-form__title">パスワード再発行</h1>
             <p>ご指定のメールアドレス宛にパスワード再発行用のURLと認証キーをお送りします。</p>
       
             <fieldset class="c-form__field u-mb-5">
@@ -148,9 +143,6 @@ require('head.php');
         </div>
       </div>
     </main>
-
-    
-
 
     <!-- footer -->
     <?php
