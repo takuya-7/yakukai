@@ -1,12 +1,9 @@
 <?php
-
 require('function.php');
-
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debug('「　ログインページ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
-
 require('auth.php');
 
 if(!empty($_POST)){
@@ -38,26 +35,18 @@ if(!empty($_POST)){
             $dbh = dbConnect();
             $sql = 'SELECT password,id FROM users WHERE email = :email AND delete_flg = 0';
             $data = array(':email' => $email);
-
             $stmt = queryPost($dbh, $sql, $data);
-
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            //debugで$resultの中身をログに残す
             debug('クエリ結果の中身:' . print_r($result,true));
-            //debug($result);   はどうなるのか？？？？？？　配列をそのまま出力できない？
-
 
             //if文で取得したパスワードを照合（$resultが空ではない && $passをハッシュ化したものと$result内のハッシュ化されたパスワードの値が合致）
             if(!empty($result) && password_verify($pass, array_shift($result))){
-                //マッチした場合
-                //debugでマッチしたことをログに残す
                 debug('パスワードがマッチしました');
-                //時間に関する処理：ログイン時間・ログイン期限を設定
+                // 時間に関する処理：ログイン時間・ログイン期限を設定
                 //（最終ログイン日時を更新、ログイン保持にチェックがついていれば有効期限$_SESSION['login_limit']を30日にする）
                 $sesLimit = 60*60;
                 $_SESSION['login_date'] = time();
-
                 if($pass_save){
                     debug('ログイン保持にチェックがあります。');
                     $_SESSION['login_limit'] = $sesLimit * 24 * 30;
@@ -65,11 +54,9 @@ if(!empty($_POST)){
                     debug('ログイン保持にチェックはありません。');
                     $_SESSION['login_limit'] = $sesLimit;
                 }
-                
-                //DBから取得したユーザーIDを$_SESSIONに格納
+                // DBから取得したユーザーIDを$_SESSIONに格納
                 $_SESSION['user_id'] = $result['id'];
 
-                //$_SESSIONの中身をログに残す
                 debug('セッション変数の中身：' . print_r($_SESSION, true));
 
                 // 画面遷移処理
@@ -110,7 +97,6 @@ if(!empty($_POST)){
                 //MSG09を格納
                 $err_msg['common'] = MSG09;
             }
-            
         }catch ( Exception $e){
             //debugでエラー内容を出力
             debug('エラー発生：' . $e->getMessage());
@@ -126,10 +112,7 @@ debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $siteTitle = 'ログイン';
 require('head.php');
 ?>
-
   <body class="page-login">
-
-    <!-- メニュー -->
     <?php
       require('header.php');
     ?>
@@ -137,12 +120,10 @@ require('head.php');
     <p id="js-show-msg" style="display:none;" class="msg-slide">
       <?php echo getSessionFlash('msg_success'); ?>
     </p>
-
     
     <main>
       <div class="l-content-wrapper">
         <div class="l-container">
-          
           <form action="" method="post" class="c-form c-form--small">
             <h2 class="c-form__title">ログイン</h2>
             
@@ -189,7 +170,7 @@ require('head.php');
             </div>
 
             <div>
-              会員登録がまだの方は<a href="signup.php">コチラ</a>からご登録ください。
+              ユーザー登録がまだの方は<a href="signup.php">コチラ</a>
             </div>
           </form>
         </div>
