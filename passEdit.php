@@ -1,5 +1,4 @@
 <?php
-
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
@@ -8,7 +7,6 @@ debug('「「「「「「「「「「「「「「「「「「「「「「「「�
 debugLogStart();
 
 require('auth.php');
-
 
 $userData = getUser($_SESSION['user_id']);
 debug('取得したユーザー情報：' . print_r($userData, true));
@@ -93,16 +91,9 @@ EOM;
             }
         }
     }
-
-
 }
-
-
-
-
 debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
 ?>
-
 
 <?php
 $siteTitle = 'パスワード変更';
@@ -116,50 +107,50 @@ require('head.php');
     ?>
 
     <main>
-        <div class="l-content-wrapper py-5">
+        <div class="l-content-wrapper">
             <div class="l-container">
-            
-                <div class="bg-white py-3">
-                    <h1 class="">パスワード変更</h1>
-                    
-                    <form action="" method="post" class="form py-0">
+                <form action="" method="post" class="c-form c-form--small">
+                    <h1  class="c-page-title">パスワード変更</h1>
 
-                        <?php if(getErrMsg('common')){ ?>
-                            <div class="c-form__message">
-                                <?php echo getErrMsg('common'); ?>
-                            </div>
-                        <?php } ?>
-        
-                        <label class="<?php if(!empty($err_msg['pass_old'])) echo'err'; ?>">
+                    <?php if(getErrMsg('common')){ ?>
+                        <div class="c-form__message">
+                            <?php echo getErrMsg('common'); ?>
+                        </div>
+                    <?php } ?>
+
+                    <fieldset class="c-form__field">
+                        <label class="<?php if(!empty($err_msg['pass_old'])) echo 'err'; ?>">
                             現在のパスワード
                             <input type="password" name="pass_old" value="<?php echo getFormData('pass_old'); ?>">
                         </label>
                         <div class="c-form__message">
                             <?php echo getErrMsg('pass_old'); ?>
                         </div>
-        
-                        <label class="<?php if(!empty($err_msg['pass_new'])) echo'err'; ?>">
+                    </fieldset>
+                    
+                    <fieldset class="c-form__field">
+                        <label class="<?php if(!empty($err_msg['pass_new'])) echo 'err'; ?>">
                             新しいパスワード
                             <input type="password" name="pass_new" value="<?php echo getFormData('pass_new'); ?>">
                         </label>
                         <div class="c-form__message">
                             <?php echo getErrMsg('pass_new'); ?>
                         </div>
-        
-                        <label class="<?php if(!empty($err_msg['pass_new_re'])) echo'err'; ?>">
+                    </fieldset>
+                    
+                    <fieldset class="c-form__field">
+                        <label class="<?php if(!empty($err_msg['pass_new_re'])) echo 'err'; ?>">
                             新しいパスワード（再入力）
                             <input type="password" name="pass_new_re" value="<?php echo getFormData('pass_new_re'); ?>">
                         </label>
                         <div class="c-form__message">
                             <?php echo getErrMsg('pass_new_re'); ?>
                         </div>
-        
-                        <div class="mb-3">
-                            <button type="submit" class="c-button c-button--blue c-button--width100">変更する</button>
-                        </div>
-        
-                    </form>
-                </div>
+                    </fieldset>
+                    <div class="u-mb-3">
+                        <button type="submit" class="c-button c-button--blue c-button--width100">変更する</button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
