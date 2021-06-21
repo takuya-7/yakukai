@@ -36,7 +36,6 @@ require('head.php');
   <p id="js-show-msg" style="display:none;" class="msg-slide">
     <?php echo getSessionFlash('msg_success'); ?>
   </p>
-
     
   <main>
     <div class="l-content-wrapper">
@@ -104,13 +103,13 @@ require('head.php');
               <div class="menus-container col-md-4">
                 <h2>個人設定</h2>
                 <ul class="u-bg-white">
-                  <li><a href="">メールアドレス変更</a></li>
+                  <li><a href="emailEdit.php">メールアドレス変更</a></li>
                   <li><a href="passEdit.php">パスワード変更</a></li>
                 </ul>
                 <h2>ユーザー情報</h2>
                 <ul class="u-bg-white">
                   <li><a href="logout.php">ログアウト</a></li>
-                  <li><a href="">退会</a></li>
+                  <li><a href="withdraw.php">退会</a></li>
                 </ul>
               </div>
             <!-- </div> -->
