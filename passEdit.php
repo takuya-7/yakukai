@@ -20,11 +20,25 @@ if(!empty($_POST)){
     $pass_new = $_POST['pass_new'];
     $pass_new_re = $_POST['pass_new_re'];
 
-    // 未入力チェック
+    // バリデーション
     validRequired($pass_old, 'pass_old');
     validRequired($pass_new, 'pass_new');
     validRequired($pass_new_re, 'pass_new_re');
 
+    // DBに保存されているハッシュ化されているパスワードを取得
+    try{
+        $dbh = dbConnect();
+        $sql = 'SELECT password, id FROM users WHERE id = :id AND email = :email AND delete_flg = 0';
+        $data = array(
+            ':id' => $_SESSION['user_id'],
+            ':email' => $userData['email']
+        );
+        $stmt = queryPost($dbh, $sql, $data);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    }catch ( Exception $e){
+        debug('エラー発生：' . $e->getMessage());
+        $err_msg['common'] = MSG07;
+    }
 
     if(empty($err_msg)){
         debug('未入力チェックOK。');
@@ -35,7 +49,7 @@ if(!empty($_POST)){
         validPass($pass_new, 'pass_new');
 
         // 入力された現在のパスワードとDBのパスワードを照合。違っていればエラーメッセージを代入
-        if(!password_verify($pass_old, $userData['password'])){
+        if(!password_verify($pass_old, $result['password'])){
             $err_msg['common'] = MSG14;
         }
 
@@ -58,27 +72,26 @@ if(!empty($_POST)){
                 $stmt = queryPost($dbh, $sql, $data);
 
                 if($stmt){
-                    // debug('クエリが成功しました');
+                    debug('パスワードの変更に成功しました！');
                     $_SESSION['msg_success'] = SUC01;
 
-                    // メール送信
-                    $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
-                    $from = 'info@gmail.com';
-                    $to = $userData['email'];
-                    $subject = 'メール変更完了　｜　ヤクカイ';
-                    $comment = <<<EOM
-{ $username }様
+//                     // メール送信
+//                     $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
+//                     $from = 'info@gmail.com';
+//                     $to = $userData['email'];
+//                     $subject = 'メール変更完了　｜　ヤクカイ';
+//                     $comment = <<<EOM
+// { $username }様
 
-パスワードが変更されました。
+// パスワードが変更されました。
                       
-////////////////////////////////////////
-ヤクカイ
-URL  https://yakukai.com/
-E-mail info@yakukai.com
-////////////////////////////////////////
-EOM;
-                    sendMail($from, $to, $subject, $comment);
-
+// ////////////////////////////////////////
+// ヤクカイ
+// URL  https://yakukai.com/
+// E-mail info@yakukai.com
+// ////////////////////////////////////////
+// EOM;
+//                     sendMail($from, $to, $subject, $comment);
                     header('Location:mypage.php');
                 // }else{
                 //     debug('クエリに失敗しました。');
