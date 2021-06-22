@@ -82,9 +82,10 @@ h1{
 }
 h2{
   font-size: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   @include mq(){
     font-size: 1.3rem;
+    margin-bottom: .5rem;
   }
 }
 h3{
@@ -234,7 +235,7 @@ input[type="number"] {
   background: #edf1f5;
   padding-top: 1rem;
   padding-bottom: 2rem;
-  height: 100%;
+  min-height: 100%;
 }
 .l-content{
   background: #fff;
@@ -248,6 +249,42 @@ input[type="number"] {
   margin-right: auto;
   max-width: 700px;
 }
+.l-company-head{
+  display: flex;
+  align-items: center;
+  @include mq(md){
+    display: block;
+  }
+}
+.l-company-head__chart{
+  width: 60%;
+  padding-right: 2rem;
+  @include mq(md){
+    width: 100%;
+  }
+}
+.l-company-head__info{
+  width: 40%;
+  @include mq(md){
+    width: 100%;
+  }
+}
+// .l-company-main{
+//   width: 70%;
+//   @include mq(md){
+//     width: 100%;
+//   }
+// }
+
+// l-sidebar.scss
+// ---------------------------
+// .l-company-sub{
+//   width: 30%;
+//   @include mq(md){
+//     width: 100%;
+//   }
+// }
+
 // l-footer.scss
 // ---------------------------
 .l-footer {
@@ -433,6 +470,66 @@ button a{
   padding-left: 1rem;
 }
 
+// c-card.scss
+// ---------------------------
+.c-card{
+  display: block;
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  @include mq(){
+    padding: .5rem;
+  }
+}
+.c-card--link{
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: $font-color_default;
+}
+.c-card--shadow{
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
+  border-radius: 0.3rem;
+}
+.c-card__header{
+  margin-bottom: 1rem;
+}
+.c-card__header__item{
+  display: block;
+  margin-bottom: .5rem;
+  margin-left: 1rem;
+  @include mq(){
+    margin-left: .5rem;
+  }
+}
+.c-card__title{
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+.c-card__pickup{
+  font-size: .8rem;
+  color: $gray_color;
+}
+.c-card__content{
+  // margin-left: 1rem;
+  border: 1px solid #cacaca;
+  border-radius: 0.3rem;
+  padding: 1rem;
+  @include mq(){
+    // margin-left: .5rem;
+  }
+}
+.c-card__content__title{
+  font-size: 1rem;
+  margin-bottom: .5rem;
+  font-weight: bold;
+}
+.c-card__content__subtitle{
+  font-size: 1rem;
+}
+.c-card__content__p{
+  margin-bottom: 0;
+}
 // c-form.scss
 // ---------------------------
 .c-form{
@@ -458,6 +555,7 @@ button a{
 .c-form__title{
   text-align: center;
   font-size: 1.5rem;
+  margin-bottom: 1.5rem;
   @include mq() {
     font-size: 1.2rem;
   }
@@ -691,7 +789,7 @@ button a{
   padding: .25rem .3rem;
   border-radius: .2rem;
   display: inline-block;
-  margin-bottom: .3rem;
+  // margin-bottom: .3rem;
   line-height: 1rem;
 }
 .heart5_rating{
@@ -932,7 +1030,32 @@ button a{
 .bar_rating[data-rate="1"]:after{ width: 1%; }
 .bar_rating[data-rate="0"]:after{ width: 0%; }
 
-
+// c-icon.scss
+// ---------------------------
+.c-good{
+  margin-right: 1rem;
+}
+.c-good__comment{
+  font-size: .8rem;
+}
+.c-good__icon{
+  color: rgb(211, 211, 211);
+}
+// .c-good__icon:hover{
+//   cursor: pointer;
+// }
+.js-click-good:hover{
+  cursor: pointer;
+}
+.is-good-active{
+  color: $blue_color;
+}
+.c-good__count{
+  font-size: .8rem;
+}
+.is-good-count-active{
+  color: $blue_color;
+}
 
 // ======================================
 // Project
@@ -950,7 +1073,14 @@ button a{
   }
 }
 
-
+.p-company-head{
+  padding-bottom: .5rem;
+  margin-bottom: 1.5rem;
+}
+.p-post-head{
+  padding-bottom: .5rem;
+  margin-bottom: 1.5rem;
+}
 
 
 .top-wrap{
@@ -1102,7 +1232,7 @@ button a{
   display: block;
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: .9rem;
   text-decoration: none;
   color: $font-color_default;
 }
@@ -1111,6 +1241,8 @@ button a{
 }
 .p-card-slider__item-name{
   font-size: 1rem;
+  height: 48px;
+  overflow: hidden;
 }
 .p-card-slider__heart{
   margin-bottom: 1rem;
@@ -1142,25 +1274,15 @@ button a{
   padding: 20px;
 }
 
-
+.p-search-title{
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
 
 
 // p-card.scss
 // ---------------------------
-.company-card{
-  background: #fff;
-  margin-bottom: 1rem;
-  padding: 1rem .5rem;
-}
-.company-card .company-header{
-  margin-bottom: 1rem;
-}
-.company-card h2{
-  font-size: 1.2rem;
-}
-.company-card .post-content{
-  margin-bottom: 1rem;
-}
+
 
 // p-form.scss
 // ---------------------------
@@ -1222,6 +1344,27 @@ input[type="submit"]:hover {
   display: none;
 }
 
+.p-category-list{
+  list-style: none;
+  padding: 0;
+}
+.p-category-list__item{
+  margin-bottom: .7rem;
+  text-decoration: none;
+  color: $blue_color;
+  display: inline-block;
+  border: .11rem solid $blue_color;
+  width: 100%;
+  padding: .6rem 1rem;
+  margin: 0;
+}
+
+.p-user-list{
+  margin-bottom: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
 .kutikomi-category-list ul{
   list-style: none;
   margin: 0;
@@ -1246,17 +1389,18 @@ input[type="submit"]:hover {
 // 個別企業画面 category.php company.php
 // p-company.scss
 // ---------------------------
-.company-wrapper section{
+.p-company-section{
   background: #fff;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-.company-wrapper section h2{
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  @include mq(){
+    padding: 0.5rem;
+  }
 }
 .company-title-append{
   font-size: .9rem;
 }
+
 
 // p-profile.scss
 // ---------------------------
@@ -1456,6 +1600,55 @@ input[type="submit"]:hover {
 }
 // p-post.scss
 // ---------------------------
+.p-user-info{
+  margin-bottom: .3rem;
+  color: $gray_color;
+  font-size: .9rem;
+}
+.p-post{
+  background: #fff;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  @include mq(){
+    padding: 0.5rem;
+  }
+}
+.p-post__header{
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.p-post__header__title{
+  margin-left: 4rem;
+  margin-bottom: 1rem;
+}
+.p-post__header__company{
+  color: #666666;
+  font-size: .8rem;
+}
+.p-post__header__user-info{
+  margin-bottom: .5rem;
+}
+.p-post__item-name{
+  font-weight: bold;
+  font-size: 1rem;
+}
+.p-post__bottom{
+  text-align: right;
+  margin-bottom: .5rem;
+  @include mq(){
+    margin-bottom: .2rem;
+  }
+}
+.p-post__date{
+  display: inline-block;
+  color: $gray_color;
+  font-size: .8rem;
+  text-align: right;
+}
+.p-post-total-rating{
+  margin-bottom: .5rem;
+}
+
 .kutikomi-header{
   margin-bottom: 1rem;
   overflow: hidden;
@@ -1529,18 +1722,23 @@ input[type="submit"]:hover {
 .msg-slide{
   position: fixed;
   top: 0;
-  width:100%;
-  height:40px;
-  background: rgba(122,206,230,0.6);
+  width: 100%;
+  height: 4rem;
+  background: rgba(42, 226, 192, .8);
   text-align: center;
-  font-size:16px;
-  line-height: 40px;
+  font-size: 1rem;
+  line-height: 4rem;
+  font-weight: bold;
+  color: #fff;
 }
 // ======================================
 // Utility
 // ======================================
 // u-utility.scss
 // ---------------------------
+.u-vertical-middle{
+  vertical-align: middle;
+}
 .u-natural-shadow{
   /* box-shadow: 4px 4px 8px #cad4e2, -4px -4px 8px #fff; */
   box-shadow: 4px 4px 8px #cad4e2;
