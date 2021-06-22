@@ -1325,8 +1325,31 @@ function getCompanyRatings($company_id){
   }
   return $result;
 }
-function getTopAnswer(){
-
+function getTopAnswer($company_id){
+  debug('グッドが多い回答を１件取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT answers.answer, answer_items.name AS answer_item, category.name AS category
+            FROM answers
+            LEFT JOIN good ON answers.id = good.answer_id
+            LEFT JOIN answer_items ON answers.answer_item_id = answer_items.id
+            LEFT JOIN category ON answers.category_id = category.id
+            WHERE answers.company_id = :company_id AND answers.post_flg = 1 AND answers.delete_flg = 0
+            GROUP BY answers.id
+            ORDER BY COUNT(good.update_date) DESC
+            LIMIT 1';
+    $data = array(
+      ':company_id' => $company_id,
+    );
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt){
+      return $stmt->fetch(PDO::FETCH_ASSOC);
+    }else{
+      return false;
+    }
+  } catch (Exception $e){
+    error_log('エラー発生：' . $e->getMessage());
+  }
 }
 function getPickUpPosts($company_id, $category_id){
   debug('各企業ページで表示するPick Upクチコミ（post, answer）を取得します。');

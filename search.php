@@ -160,9 +160,17 @@ require('head.php');
                       <span class="c-card__header__item">クチコミ数：<?php echo sanitize($val['posts_count']); ?></span>
                       <span class="c-card__header__item">本社所在地：<?php echo sanitize($val['prefecture_name'].$val['city_name']); ?></span>
                     </div>
-                    <div class="c-card__content">
-                      <p>口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。口コミ情報をここに入れます。</p>
-                    </div>
+                    <?php if($dbTopAnswer = getTopAnswer($val['id'])){ ?>
+                      <span class="c-card__pickup">ピックアップ回答</span>
+                      <div class="c-card__content">
+                        <h3 class="c-card__content__title">
+                          <?php echo $dbTopAnswer['category']; ?>
+                        </h3>
+                        <p class="c-card__content__p"><?php echo $dbTopAnswer['answer']; ?></p>
+                      </div>
+                    <?php }else{ ?>
+                      <p>まだ投稿がありません。</p>
+                    <?php } ?>
                   </a>
                 </li>
               <?php
