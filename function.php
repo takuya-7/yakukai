@@ -736,7 +736,10 @@ function getCategory($company_id = NULL){
     foreach($result as $key => $val){
       try{
         $dbh = dbConnect();
-        $sql = 'SELECT COUNT(answers.id) FROM category LEFT JOIN answers ON category.id = answers.category_id WHERE answers.company_id = :company_id AND answers.category_id = :category_id AND answers.post_flg = 1 AND answers.delete_flg = 0';
+        $sql = 'SELECT COUNT(answers.id)
+                FROM category 
+                LEFT JOIN answers ON category.id = answers.category_id
+                WHERE answers.company_id = :company_id AND answers.category_id = :category_id AND answers.answer IS NOT NULL AND answers.post_flg = 1 AND answers.delete_flg = 0';
         $data = array(
           ':company_id' => $company_id,
           ':category_id' => $val['id'],
@@ -1372,6 +1375,7 @@ function getPickUpPosts($company_id, $category_id){
         posts.company_id = :company_id AND
         answers.company_id = :company_id AND
         answers.category_id = :category_id AND
+        answers.answer IS NOT NULL AND
         ratings.rating_item_id = 1 AND
         posts.post_flg = 1 AND
         answers.post_flg = 1 AND
