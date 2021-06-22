@@ -3,10 +3,9 @@
       <div class="l-container">
         <ul class="">
           <li><a href="index.php">HOME</a></li>
-          <li><a href="">ご利用案内</a></li>
-          <li><a href="">プライバシーポリシー</a></li>
-          <li><a href="">サイトマップ</a></li>
-          <li><a href="">お問い合わせ</a></li>
+          <li><a href="privacy.php">プライバシーポリシー</a></li>
+          <li><a href="sitemap.php">サイトマップ</a></li>
+          <li><a href="contact.php">お問い合わせ</a></li>
         </ul>
       </div>
 
@@ -18,7 +17,7 @@
     <!-- jQuery読み込み -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Propper.js読み込み -->
-    <script src="node_modules/popper.js/dist/popper.min.js"></script>
+    <!-- <script src="node_modules/popper.js/dist/popper.min.js"></script> -->
     <!-- Bootstrapのjs読み込み -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Chart.js読み込み -->
@@ -66,11 +65,11 @@
             totalCount += $count.val().length;
           }
           if(totalCount >= 500){
-            $countView.addClass('text-green');
+            $countView.addClass('u-text-green');
             // 送信ボタンの有効化
             $('.js-disabled-submit').prop('disabled', false);
           }else{
-            $countView.removeClass('text-green');
+            $countView.removeClass('u-text-green');
             // 送信ボタンの無効化
             $('.js-disabled-submit').prop('disabled', true);
           }
@@ -85,34 +84,6 @@
         $switchImgSubs.on('click', function(e){
           $switchImgMain.attr('src', $(this).attr('src'));
         });
-
-        // ------------------------------------------------------
-        // お気に入り登録・削除
-        var $like,
-            likeProductId;
-
-        // DOMが取れないと$likeは自動的にundefinedとなるため、DOMが取れない時はnullを入れておく
-        $like = $('.js-click-like') || null;
-        likeProductId = $like.data('productid') || null;
-
-        if(likeProductId !== undefined && likeProductId !== null){
-
-          $like.on('click',function(){
-            var $this = $(this);
-
-            // ajax処理？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
-            $.ajax({
-              type: "POST",
-              url: "ajaxFavorite.php",
-              data: {productId : likeProductId}
-            }).done(function( data ){
-              console.log('Ajax Success');
-              $this.toggleClass('active');
-            }).fail(function( msg ){
-              console.log('Ajax Error');
-            });
-          });
-        }
 
         // プロフィール登録、社会人用フォーム表示、非表示処理
         $('[name="user_carrier_type"]:radio').change(function(){
