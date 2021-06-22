@@ -165,66 +165,65 @@ require('head.php');
               <?php $dbPickUpPosts = getPickUpPosts($company_id, $category['id']); ?>
               <?php if(!empty($dbPickUpPosts)){ ?>
                 <section class="p-post">
-
                   <?php foreach($dbPickUpPosts as $key => $val){ ?>
-                    <div class="p-post__header">
-                      <div class="user-icon">
-                        <i class="gg-profile"></i>
+                    <?php if(!empty($val['answer'])){ ?>
+                      <div class="p-post__header">
+                        <div class="user-icon">
+                          <i class="gg-profile"></i>
+                        </div>
+      
+                        <h3 class="p-post__header__title">
+                          <span class="p-post__header__company"><?php echo $dbCompanyData['info']['name']; ?></span><br>
+                          <?php echo $val['category']; ?>
+                        </h3>
+                        
+                        <div class="p-post__header__user-info">
+                          回答者：
+                          <a href="post.php<?php echo '?c_id='.$company_id.'&p_id='.$val['post_id']; ?>">
+                            <?php echo SEX[$val['sex']]; ?>
+                            <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
+                            <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
+                            <?php echo '、在籍'.getYearDiff($val['a_update_date'], $val['entry_date']).'年'; ?>
+                          </a>
+                        </div>
+  
+                        <div class="px-3">
+                          <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
+                          <span class="fs-3 ms-1">
+                            <?php echo number_format($val['rating'], 1); ?>
+                          </span>
+                        </div>
+                        
                       </div>
-    
-                      <h3 class="p-post__header__title">
-                        <span class="p-post__header__company"><?php echo $dbCompanyData['info']['name']; ?></span><br>
-                        <?php echo $val['category']; ?>
-                      </h3>
-    
-                      
-                      <div class="p-post__header__user-info">
-                        回答者：
-                        <a href="post.php<?php echo '?c_id='.$company_id.'&p_id='.$val['post_id']; ?>">
-                          <?php echo SEX[$val['sex']]; ?>
-                          <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
-                          <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
-                          <?php echo '、在籍'.getYearDiff($val['a_update_date'], $val['entry_date']).'年'; ?>
-                        </a>
-                      </div>
-
-                      <div class="px-3">
-                        <span class="heart5_rating" data-rate="<?php echo $val['rating']; ?>"></span>
-                        <span class="fs-3 ms-1">
-                          <?php echo number_format($val['rating'], 1); ?>
+  
+                      <h4 class="p-post__item-name"><?php echo $val['answer_item']; ?>：</h4>
+                      <p><?php echo $val['answer']; ?></p>
+      
+                      <div class="p-answer-bottom">
+                        <span class="c-good">
+                          <span class="c-good__comment">参考になった！</span>
+                          <i class="fa fa-thumbs-up c-good__icon
+                          <?php
+                            if(isset($_SESSION['user_id'])){
+                              echo ' js-click-good';
+                              if(isGood($_SESSION['user_id'], $val['answer_id'])) echo ' is-good-active';
+                            }
+                          ?>" aria-hidden="true" data-answer_id="<?php echo sanitize($val['answer_id']);?>" ></i>
+                          <span class="c-good__count js-good-count"><?php echo getGoodCount($val['answer_id']); ?></span>
                         </span>
+                        <span class="p-post__date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
                       </div>
-                      
-                    </div>
-
-                    <h4 class="p-post__item-name"><?php echo $val['answer_item']; ?>：</h4>
-                    <p><?php echo $val['answer']; ?></p>
-    
-                    <div class="p-answer-bottom">
-                      <span class="c-good">
-                        <span class="c-good__comment">参考になった！</span>
-                        <i class="fa fa-thumbs-up c-good__icon
-                        <?php
-                          if(isset($_SESSION['user_id'])){
-                            echo ' js-click-good';
-                            if(isGood($_SESSION['user_id'], $val['answer_id'])) echo ' is-good-active';
-                          }
-                        ?>" aria-hidden="true" data-answer_id="<?php echo sanitize($val['answer_id']);?>" ></i>
-                        <span class="c-good__count js-good-count"><?php echo getGoodCount($val['answer_id']); ?></span>
-                      </span>
-                      <span class="p-post__date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
-                    </div>
-    
-                    <div class="border-bottom u-mb-3"></div>
-    
+      
+                      <div class="border-bottom u-mb-3"></div>
+                    <?php } ?>
                   <?php } ?>
 
-                    <div class="category-btn">
-                      <a href="category.php?co=<?php echo $company_id.'&ca='.$category['id']; ?>"><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="u-fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
-                    </div>
+                  <div class="category-btn">
+                    <a href="category.php?co=<?php echo $company_id.'&ca='.$category['id']; ?>"><span class="fw-bold">「<?php echo $category['name']; ?>」</span> <br><span class="u-fs-08 category-append">のクチコミをもっと見る（<?php echo $category['count']['COUNT(answers.id)']; ?>件）</span></a>
+                  </div>
                     
-                  </section>
-                <?php } ?>
+                </section>
+              <?php } ?>
             <?php } ?>            
 
             <section class="p-company-section">
