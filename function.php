@@ -357,11 +357,12 @@ function getPostList($company_id){
   // 必要なテーブル：posts, users, ratings
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT users.sex, posts.employment_type, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, posts.create_date, rating_item_id, ratings.rating FROM posts
-      LEFT JOIN users ON posts.user_id = users.id
-      LEFT JOIN employment_type ON posts.employment_type = employment_type.id
-      LEFT JOIN ratings ON posts.user_id = ratings.user_id
-      WHERE posts.company_id = :company_id AND ratings.rating_item_id = 1 AND posts.post_flg = 1 AND posts.delete_flg = 0 AND users.delete_flg = 0';
+    $sql = 'SELECT users.sex, posts.id, posts.employment_type, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, posts.create_date, rating_item_id, ratings.rating
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            LEFT JOIN employment_type ON posts.employment_type = employment_type.id
+            LEFT JOIN ratings ON posts.user_id = ratings.user_id
+            WHERE posts.company_id = :company_id AND ratings.rating_item_id = 1 AND posts.post_flg = 1 AND posts.delete_flg = 0 AND users.delete_flg = 0';
     $data = array(':company_id' => $company_id);
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
