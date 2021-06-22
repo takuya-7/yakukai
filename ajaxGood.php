@@ -26,6 +26,7 @@ if(isset($_POST['answer_id']) && isset($_SESSION['user_id']) && isLogin()){
     debug('グッド件数：'.$resultCount);
 
     if(!empty($resultCount)){
+      debug('グッドボタンが押されていたので削除します。');
       $sql = 'DELETE FROM good WHERE answer_id = :answer_id AND user_id = :user_id';
       $data = array(':answer_id' => $answer_id, ':user_id' => $_SESSION['user_id']);
       $stmt = queryPost($dbh, $sql, $data);
@@ -33,6 +34,7 @@ if(isset($_POST['answer_id']) && isset($_SESSION['user_id']) && isLogin()){
           debug('グッドを削除しました。');
       }
     }else{
+      debug('グッド登録します。');
       $sql = 'INSERT INTO good (answer_id, user_id, create_date) VALUES (:answer_id, :user_id, :create_date)';
       $data = array('answer_id' => $answer_id, ':user_id' => $_SESSION['user_id'], ':create_date' => date('Y-m-d H:i:s'));
       $stmt = queryPost($dbh, $sql, $data);

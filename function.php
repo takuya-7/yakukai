@@ -78,6 +78,7 @@ define('SUC02', 'プロフィールを変更しました');
 define('SUC03', 'メールを送信しました');
 define('SUC04', '登録しました');
 define('SUC05', '購入しました！相手と連絡を取りましょう！');
+define('SUC06', 'メールアドレスの変更が完了しました');
 
 
 //================================
@@ -1218,7 +1219,9 @@ function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry
 
     debug('検索条件をもとに対象の企業データ（企業名、本社所在地）を取得します。');
     // SQL構築処理
-    $sql = 'SELECT id, name, prefecture_name, city_name, rating, posts_count FROM company WHERE corporate_number IS NOT NULL';
+    $sql = 'SELECT id, name, prefecture_name, city_name, rating, posts_count
+            FROM company
+            WHERE corporate_number IS NOT NULL';
     // 企業名・都道府県・業種で抽出する条件文処理
     if(!empty($companyName)){
       $sql .= ' AND name LIKE "%'.$companyName.'%"';
@@ -1322,7 +1325,9 @@ function getCompanyRatings($company_id){
   }
   return $result;
 }
+function getTopAnswer(){
 
+}
 function getPickUpPosts($company_id, $category_id){
   debug('各企業ページで表示するPick Upクチコミ（post, answer）を取得します。');
   $result = array();
@@ -1332,7 +1337,7 @@ function getPickUpPosts($company_id, $category_id){
   // 対象テーブル：posts, category, employment_type, users, answer_items, answers, ratings
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.id, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
+    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.id AS post_id, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.id AS answer_id, answers.answer, answers.update_date AS a_update_date, ratings.rating
       FROM posts
       LEFT JOIN users ON posts.user_id = users.id
       LEFT JOIN employment_type ON posts.employment_type = employment_type.id
@@ -1392,7 +1397,7 @@ function getPostByCategory($company_id, $category_id){
   // 対象テーブル：posts, category, employment_type, users, answer_items, answers, ratings
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.answer, answers.update_date AS a_update_date, ratings.rating
+    $sql = 'SELECT category.name AS category, users.sex, employment_type.name AS employment_type_name, posts.registration, posts.entry_type, posts.entry_date, posts.department, posts.position, answer_items.name AS answer_item, answers.id AS answer_id, answers.answer, answers.update_date AS a_update_date, ratings.rating
       FROM posts
       LEFT JOIN users ON posts.user_id = users.id
       LEFT JOIN employment_type ON posts.employment_type = employment_type.id
@@ -1440,7 +1445,46 @@ function getPrefecture(){
     error_log('エラー発生：' . $e->getMessage());
   }
 }
+// グッドボタンを押しているかどうかを返す関数
+function isGood($user_id, $answer_id){
+  debug('グッド情報があるか確認します。');
+  debug('ユーザーID：'.$user_id);
+  debug('回答ID：'.$answer_id);
 
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT * FROM good WHERE answer_id = :answer_id AND user_id = :user_id';
+    $data = array(':answer_id' => $answer_id, ':user_id' => $user_id);
+    $stmt = queryPost($dbh, $sql, $data);
+
+    if($stmt->rowCount()){
+      debug('グッドボタンを押しています');
+      return true;
+    }else{
+      debug('グッドボタンを押していません');
+      return false;
+    }
+  }catch (Exception $e){
+    error_log('エラー発生：'.$e->getMessage());
+  }
+}
+function getGoodCount($answer_id){
+  debug('グッドの数を取得します。');
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT update_date FROM good WHERE answer_id = :answer_id AND delete_flg = 0';
+    $data = array(':answer_id' => $answer_id);
+    $stmt = queryPost($dbh, $sql, $data);
+
+    if($stmt){
+      return $stmt->rowCount();
+    }else{
+      return false;
+    }
+  }catch (Exception $e){
+    error_log('エラー発生：'.$e->getMessage());
+  }
+}
 // ===============================================
 // 時間・日付処理
 // ===============================================

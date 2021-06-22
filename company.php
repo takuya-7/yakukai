@@ -19,7 +19,6 @@ debugLogStart();
 //----------------------------
 // 企業IDのGETパラメータを取得
 $company_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
-
 // DBから企業データを取得
 $dbCompanyData = getCompanyOne($company_id);
 // DBから企業の平均評価値を取得
@@ -181,7 +180,7 @@ require('head.php');
                       
                       <div class="p-post__header__user-info">
                         回答者：
-                        <a href="post.php<?php echo '?c_id='.$company_id.'&p_id='.$val['id']; ?>">
+                        <a href="post.php<?php echo '?c_id='.$company_id.'&p_id='.$val['post_id']; ?>">
                           <?php echo SEX[$val['sex']]; ?>
                           <?php echo '、'.ENTRY_TYPE[$val['entry_type']]; ?>
                           <?php echo '、'.REGISTRATION[$val['registration']].'（回答時）'; ?>
@@ -201,7 +200,20 @@ require('head.php');
                     <h4 class="p-post__item-name"><?php echo $val['answer_item']; ?>：</h4>
                     <p><?php echo $val['answer']; ?></p>
     
-                    <span class="p-post__date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
+                    <div class="p-answer-bottom">
+                      <span class="c-good">
+                        <span class="c-good__comment">参考になった！</span>
+                        <i class="fa fa-thumbs-up c-good__icon
+                        <?php
+                          if(isset($_SESSION['user_id'])){
+                            echo ' js-click-good';
+                            if(isGood($_SESSION['user_id'], $val['answer_id'])) echo ' is-good-active';
+                          }
+                        ?>" aria-hidden="true" data-answer_id="<?php echo sanitize($val['answer_id']);?>" ></i>
+                        <span class="c-good__count js-good-count"><?php echo getGoodCount($val['answer_id']); ?></span>
+                      </span>
+                      <span class="p-post__date">クチコミ投稿：<?php echo date('Y年m月', strtotime($val['a_update_date'])); ?></span>
+                    </div>
     
                     <div class="border-bottom u-mb-3"></div>
     
@@ -251,10 +263,9 @@ require('head.php');
       <div class="l-container">
         <ul class="">
           <li><a href="index.php">HOME</a></li>
-          <li><a href="">ご利用案内</a></li>
-          <li><a href="">プライバシーポリシー</a></li>
-          <li><a href="">サイトマップ</a></li>
-          <li><a href="">お問い合わせ</a></li>
+          <li><a href="privacy.php">プライバシーポリシー</a></li>
+          <li><a href="sitemap.php">サイトマップ</a></li>
+          <li><a href="contact.php">お問い合わせ</a></li>
         </ul>
       </div>
 
@@ -337,6 +348,37 @@ require('head.php');
             }
           });
         }
+
+        // ------------------------------------------------------
+        // グッド登録・削除
+        var $good,
+            goodAnswerId;
+        $good = $('.js-click-good') || null;
+        $good.on('click',function(){
+          var $this = $(this);
+          var $goodCount = $this.next('.js-good-count');
+          var goodCount = Number($goodCount.html());
+          if($this.hasClass('is-good-active')){
+            $goodCount.html(goodCount-1);
+          }else{
+            $goodCount.html(goodCount+1);
+          }
+          goodAnswerId = $this.data('answer_id') || null;
+          // DOMが取れないと$goodは自動的にundefinedとなるため、DOMが取れない時はnullを入れておく
+          if(goodAnswerId !== undefined && goodAnswerId !== null){
+            // ajax処理
+            $.ajax({
+              type: "POST",
+              url: "ajaxGood.php",
+              data: {answer_id : goodAnswerId}
+            }).done(function( data ){
+              console.log('Ajax Success');
+              $this.toggleClass('is-good-active');
+            }).fail(function( msg ){
+              console.log('Ajax Error');
+            });
+          }
+        });
       });
     </script>
   </body>
