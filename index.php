@@ -1,6 +1,7 @@
 <?php
 
 //共通変数・関数ファイルを読込み
+require('config.php');
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
@@ -29,6 +30,10 @@ require('head.php');
 ?>
 
   <body>
+    <!-- セッション変数内のメッセージを表示 -->
+    <p id="js-show-msg" style="display:none;" class="msg-slide">
+      <?php echo getSessionFlash('msg_success'); ?>
+    </p>
     <main>
       <div class="top-wrap">
         <header class="l-header">
@@ -184,9 +189,7 @@ require('head.php');
             <h2 class="p-top-section__title">ユーザー登録で全てのクチコミが閲覧可能になります</h2>
             <a href="signup.php" class="c-button c-button--green c-button--radius100">ユーザー登録する（無料）</a>
             <a href="login.php" class="p-top-section__login-link">ログインする</a>
-            
           </section>
-  
         </div>
       </div>
     </main>
