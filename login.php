@@ -125,7 +125,7 @@ require('head.php');
       <div class="l-content-wrapper">
         <div class="l-container">
           <form action="" method="post" class="c-form c-form--small">
-            <h2 class="c-form__title">ログイン</h2>
+            <h1 class="c-form__title">ログイン</h1>
             
             <div class="c-form__message">
               <?php 
