@@ -56,7 +56,7 @@ require('head.php');
                 <a href="surveyInfo.php" class="c-button c-button--blue c-button--width100">クチコミを投稿する</a>
                 
                 <h2>あなたのプロフィール</h2>
-                <a href="profRegist.php" class="edit-btn">編集する</a>
+                <a href="profRegist.php" class="c-edit-button">編集する</a>
                 <div class="p-profile">
                   <div>
                     <div class="p-profile__field">
