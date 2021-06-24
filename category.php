@@ -108,39 +108,39 @@ require('head.php');
                     </div>
                   </div>
                 </div>
-                <div class="params">
-                  <div class="item">
-                    <div class="item-name">
+                <div class="p-satisfaction">
+                  <div>
+                    <div>
                       <?php echo $dbCompanyRatings[10]['name']; ?>
-                      <div class="param">
-                        <span class="value"><?php echo round($dbCompanyRatings[10]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
+                      <div class="p-satisfaction__item">
+                        <span class="p-satisfaction__item__value"><?php echo round($dbCompanyRatings[10]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
                       </div>
                     </div>
                     <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[10]['AVG(rating)'], 1)*20; ?>"></span>
                   </div>
                   <div>
-                    <div class="item-name">
+                    <div>
                       <?php echo $dbCompanyRatings[8]['name']; ?>
-                      <div class="param">
-                        <span class="value"><?php echo round($dbCompanyRatings[8]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
+                      <div class="p-satisfaction__item">
+                        <span class="p-satisfaction__item__value"><?php echo round($dbCompanyRatings[8]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
                       </div>
                     </div>
                     <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[8]['AVG(rating)'], 1)*20; ?>"></span>
                   </div>
                   <div>
-                    <div class="item-name">
+                    <div>
                       <?php echo $dbCompanyRatings[9]['name']; ?>
-                      <div class="param">
-                        <span class="value"><?php echo round($dbCompanyRatings[9]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
+                      <div class="p-satisfaction__item">
+                        <span class="p-satisfaction__item__value"><?php echo round($dbCompanyRatings[9]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
                       </div>
                     </div>
                     <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[9]['AVG(rating)'], 1)*20; ?>"></span>
                   </div>
                   <div>
-                    <div class="item-name">
+                    <div>
                       <?php echo $dbCompanyRatings[7]['name']; ?>
-                      <div class="param">
-                        <span class="value"><?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
+                      <div class="p-satisfaction__item">
+                        <span class="p-satisfaction__item__value"><?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?></span><span class="percent"> %</span>
                       </div>
                     </div>
                     <span class="bar_rating" data-rate="<?php echo round($dbCompanyRatings[7]['AVG(rating)'], 1)*20; ?>"></span>
