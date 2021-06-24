@@ -80,11 +80,9 @@ require('head.php');
             <div class="p-top-section__about">
               <h2 class="p-top-section__title">はじめよう、薬剤師のキャリア会議</h2>
               <img src="dist/img/4380.jpg" alt="" class="p-top-section__image">
-              <div class="p-top-section__content">
-                <span class="p-top-section__subtitle">ヤクカイ - 薬剤師のためのキャリア会議</span>
-                <p>ヤクカイは、「働く人の幸福度」という視点を取り入れた薬剤師に特化したクチコミ情報プラットフォームです。</p>
-                <p>薬剤師同士が会社クチコミ・仕事経験を共有する場を提供し、就職・転職時のより良い選択を応援します。</p>
-              </div>
+              <span class="p-top-section__subtitle">ヤクカイ - 薬剤師のためのキャリア会議</span>
+              <p>ヤクカイは、「働く人の幸福度」という視点を取り入れた薬剤師に特化したクチコミ情報プラットフォームです。</p>
+              <p>薬剤師同士が会社クチコミ・仕事経験を共有する場を提供し、就職・転職時のより良い選択を応援します。</p>
             </div>
           </section>
                     
