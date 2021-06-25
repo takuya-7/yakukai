@@ -27,6 +27,12 @@
 
     <script>
       $(function(){
+        // SPメニュー
+        $('.js-toggle-sp-menu').on('click', function () {
+          $(this).toggleClass('active');
+          $('.js-toggle-sp-menu-target').toggleClass('active');
+        });
+        
         // フッターを最下部に固定
         var $ftr = $('#js-footer');
         if( window.innerHeight > $ftr.offset().top + $ftr.outerHeight() ){
