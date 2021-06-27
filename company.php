@@ -52,10 +52,6 @@ require('head.php');
   <main>
     <div class="l-content-wrapper">
       <div class="l-container">
-        <?php
-          var_dump(basename(__FILE__));
-          var_dump(basename(__FILE__) ===  'company.php');
-        ?>
         <div class="u-mb-3">
           <a href="surveyInfo.php" class="c-button c-button--blue c-button--width100">クチコミを投稿する</a>
         </div>
