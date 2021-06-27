@@ -1,5 +1,4 @@
 <?php
-
 //共通変数・関数ファイルを読込み
 require('config.php');
 require('function.php');
@@ -12,7 +11,6 @@ debugLogStart();
 //================================
 // 画面処理
 //================================
-
 // 画面表示用データ取得
 //================================
 // DBから都道府県データを取得
@@ -21,7 +19,6 @@ $dbPrefectureData = getPrefecture();
 $dbIndustryData = getIndustry();
 // DBから企業情報を取得
 $dbCompanyData = getCompanyRanking();
-
 ?>
 
 <?php
@@ -194,6 +191,4 @@ require('head.php');
     </main>
 
     <!-- footer -->
-    <?php
-      require('footer.php'); 
-    ?>
+    <?php require('footer.php'); ?>
