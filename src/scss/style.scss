@@ -49,7 +49,7 @@ $breakpoints: (
     @content;
   }
 }
-// base.scss：タグ自体にスタイルを定義
+// base.scss
 // ---------------------------
 html, body {
   // height: 100%;
@@ -1105,8 +1105,6 @@ button a{
 // ======================================
 // p-home.scss
 // ---------------------------
-
-
 .p-home-visual{
   width: 100%;
   background-image: $theme_color;
@@ -1319,7 +1317,6 @@ button a{
   margin-top: 1rem;
 }
 
-
 // p-card.scss
 // ---------------------------
 
@@ -1449,7 +1446,6 @@ input[type="submit"]:hover {
 .company-title-append{
   font-size: .9rem;
 }
-
 
 // p-profile.scss
 // ---------------------------
