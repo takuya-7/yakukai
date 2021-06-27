@@ -241,11 +241,32 @@ function isLogin(){
 // データベース
 //================================
 //DB接続関数
+// ローカル用
+// function dbConnect(){
+//   //DBへの接続準備
+//   $dsn = 'mysql:dbname=yakukai;host=localhost;charset=utf8';
+//   $user = 'root';
+//   $password = 'root';
+//   $options = array(
+//     // SQL実行失敗時にはエラーコードのみ設定
+//     PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
+//     // デフォルトフェッチモードを連想配列形式に設定
+//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//     // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバー負荷を軽減)
+//     // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
+//     PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+//   );
+//   // PDOオブジェクト生成（DBへ接続）
+//   $dbh = new PDO($dsn, $user, $password, $options);
+//   return $dbh;
+// }
+
+// AWS用
 function dbConnect(){
   //DBへの接続準備
-  $dsn = 'mysql:dbname=yakukai;host=localhost;charset=utf8';
-  $user = 'root';
-  $password = 'root';
+  $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
+  $user = 'yakukai_admin';
+  $password = 'yakuyakudbb';
   $options = array(
     // SQL実行失敗時にはエラーコードのみ設定
     PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
