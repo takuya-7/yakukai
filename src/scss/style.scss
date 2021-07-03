@@ -241,7 +241,7 @@ input[type="number"] {
   @include mq() {
     display: inline-block;
   }
-  transition: all .4s;
+  // transition: all .4s;
   box-sizing: border-box;
   position: relative;
   width: 40px;
@@ -249,7 +249,7 @@ input[type="number"] {
   z-index: 3;
   span {
     display: inline-block;
-    transition: all .4s;
+    // transition: all .4s;
     box-sizing: border-box;
     position: absolute;
     left: 0;
