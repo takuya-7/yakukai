@@ -81,13 +81,11 @@ define('SUC05', '購入しました！相手と連絡を取りましょう！');
 define('SUC06', 'メールアドレスの変更が完了しました');
 define('SUC07', '退会が完了しました');
 
-
 //================================
 // バリデーション関数
 //================================
 // エラーメッセージ格納用の配列
 $err_msg = array();
-
 // 未入力チェック
 function validRequired($str, $key){
   if($str === '' || $str === NULL){   // 数値の0も入力OKにするためにemptyは使わない
@@ -102,21 +100,17 @@ function validEmail($str, $key){
     $err_msg[$key] = MSG02;
   }
 }
-//バリデーション関数（Email重複チェック）
+// Email重複チェック
 function validEmailDup($email){
   global $err_msg;
-  //例外処理
   try {
-    // DBへ接続
     $dbh = dbConnect();
-    // SQL文作成
-    $sql = 'SELECT count(*) FROM users WHERE email = :email AND delete_flg = 0';  //emailをユニークに設定すると、退会後に再設定できない。delete_flg=0を条件に追加すれば、退会したemailは検索に引っかからないので再度登録できる。
+    $sql = 'SELECT count(*) FROM users WHERE email = :email AND delete_flg = 0';
+    // emailをユニークに設定すると、退会後に再設定できない
+    // delete_flg=0を条件に追加すれば、退会したemailは検索に引っかからないので再度登録できる
     $data = array(':email' => $email);
-    // クエリ実行
     $stmt = queryPost($dbh, $sql, $data);
-    // クエリ結果の値を取得
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    //array_shift関数は配列の先頭を取り出す関数です。クエリ結果は配列形式で入っているので、array_shiftで1つ目だけ取り出して判定します
     if(!empty(array_shift($result))){
       $err_msg['email'] = MSG08;
     }
@@ -125,22 +119,21 @@ function validEmailDup($email){
     $err_msg['common'] = MSG07;
   }
 }
-//バリデーション関数（同値チェック）
+// 同値チェック
 function validMatch($str1, $str2, $key){
   if($str1 !== $str2){
     global $err_msg;
     $err_msg[$key] = MSG03;
   }
 }
-//バリデーション関数（最小文字数チェック）
+// 最小文字数チェック
 function validMinLen($str, $key, $min = 6){
   if(mb_strlen($str) < $min){
     global $err_msg;
     $err_msg[$key] = MSG05;
   }
 }
-
-//バリデーション関数（最大文字数チェック）
+// 最大文字数チェック
 function validMaxLen($str, $key, $max = 255){
   if(mb_strlen($str) > $max){
     global $err_msg;
@@ -151,44 +144,40 @@ function validMaxLen($str, $key, $max = 255){
     }
   }
 }
-
-//バリデーション関数（半角英数字チェック）
+// 半角英数字チェック
 function validHalf($str, $key){
   if(!preg_match("/^[a-zA-Z0-9]+$/", $str)){
     global $err_msg;
     $err_msg[$key] = MSG04;
   }
 }
-
+// 電話番号チェック
 function validTel($str, $key){
   if(!preg_match("/0\d{1,4}\d{1,4}\d{4}/", $str)){
     global $err_msg;
     $err_msg[$key] = MSG10;
   }
 }
-
+// 郵便番号チェック
 function validZip($str, $key){
   if(!preg_match("/^\d{7}$/", $str)){
     global $err_msg;
     $err_msg[$key] = MSG11;
   }
 }
-
-// 半角数字
+// 半角数字チェック
 function validNumber($str, $key){
   if(!preg_match("/^[0-9]+$/", $str)){
     global $err_msg;
     $err_msg[$key] = MSG12;
   }
 }
-
 // パスワードチェック
 function validPass($str, $key){
   validHalf($str, $key);
   validMinLen($str, $key);
   validMaxLen($str, $key);
 }
-
 // ８文字かどうかのチェック
 function validLen($str, $key, $len = 8){
   if(mb_strlen($str) !== $len){
@@ -196,7 +185,6 @@ function validLen($str, $key, $len = 8){
     $err_msg[$key] = $len . MSG16;
   }
 }
-
 // セレクトボックスチェック
 function validSelect($str, $key){
   if(!preg_match('/^[0-9]+$/', $str)){
@@ -204,7 +192,6 @@ function validSelect($str, $key){
     $err_msg[$key] = MSG17;
   }
 }
-
 // エラーメッセージ取得
 function getErrMsg($key){
   global $err_msg;
@@ -220,10 +207,8 @@ function isLogin(){
   // ログインしている場合
   if(!empty($_SESSION['login_date'])){
     debug('ログイン済みユーザーです。');
-
     if( ($_SESSION['login_date'] + $_SESSION['login_limit']) < time()){
       debug('ログイン有効期限オーバーです。');
-
       // セッションを削除（ログアウトする）
       session_destroy();
       return false;
@@ -241,12 +226,18 @@ function isLogin(){
 // データベース
 //================================
 //DB接続関数
-// ローカル用
 function dbConnect(){
-  //DBへの接続準備
+  // DBへの接続準備
+  // ローカル用設定
   $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
   $user = 'root';
   $password = 'root';
+
+  // AWS用設定
+  // $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
+  // $user = 'yakukai_admin';
+  // $password = 'yakuyakudbb';
+  
   $options = array(
     // SQL実行失敗時にはエラーコードのみ設定
     PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
@@ -260,40 +251,17 @@ function dbConnect(){
   $dbh = new PDO($dsn, $user, $password, $options);
   return $dbh;
 }
-
-// AWS用
-// function dbConnect(){
-//   //DBへの接続準備
-//   $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
-//   $user = 'yakukai_admin';
-//   $password = 'yakuyakudbb';
-//   $options = array(
-//     // SQL実行失敗時にはエラーコードのみ設定
-//     PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
-//     // デフォルトフェッチモードを連想配列形式に設定
-//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-//     // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバー負荷を軽減)
-//     // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
-//     PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-//   );
-//   // PDOオブジェクト生成（DBへ接続）
-//   $dbh = new PDO($dsn, $user, $password, $options);
-//   return $dbh;
-// }
-
-//SQL実行関数
+// SQL実行関数
 function queryPost($dbh, $sql, $data){
-  //クエリー作成
+  // クエリー作成
   $stmt = $dbh->prepare($sql);
-  
-  //プレースホルダに値をセットし、SQL文を実行
+  // プレースホルダに値をセットし、SQL文を実行
   if(!$stmt->execute($data)){     // true falseで返ってくる
     debug('クエリに失敗しました');
     debug('失敗したSQL：' . print_r($sql, true));
     $err_msg['common'] = MSG07;
     return 0;
   }
-
   debug('クエリ成功！');
   return $stmt;
 }
@@ -676,17 +644,13 @@ function getCompanyOne($c_id){
   return $result;
 }
 function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry, $sort = 1, $span = 20){
+  // 検索・表示処理：法人番号が登録されている企業のうち、口コミ数の多い順に検索ワードに合致した企業を取得
   debug('getCompanyListを実行します。');
-
   try{
-    // 検索・表示処理：法人番号が登録されている企業のうち、口コミ数の多い順に検索ワードに合致した企業を取得
-
-    debug('DBから法人番号が登録されている企業の総数を取得し、総ページ数を算出します。');
+    debug('DBから条件に合致する企業数を取得し、表示に必要な総ページ数を算出します');
     $dbh = dbConnect();
-
     // companyテーブルから、corporate_numberを持つカラム数を算出
     $sql = 'SELECT COUNT(corporate_number) AS num FROM company';
-
     // 企業名・都道府県・業種で抽出する条件文処理
     if(!empty($companyName)){
       $sql .= ' WHERE name LIKE "%'.$companyName.'%"';
@@ -708,28 +672,15 @@ function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry
         }
       }
     }
-
-    // // 表示順について指定されていて$sortが第４引数に渡されていたら、並び替えの条件を追加する
-    // if(!empty($sort)){
-    //   switch ($sort){
-    //     case 1:
-    //       $sql .= ' ORDER BY posts_count DESC';
-    //       break;
-    //     case 2:
-    //       $sql .= ' ORDER BY rating DESC';
-    //       break;
-    //   }
-    // }
-
     $data = array();
     $stmt = queryPost($dbh, $sql, $data);
-
-    $res = $stmt->fetch(PDO::FETCH_ASSOC);
-    $rst['total'] = $res['num'];
-    debug('法人番号をもつ企業総数：'.print_r($rst['total'],true));
-    $rst['total_page'] = ceil($rst['total']/$span); // 総ページ数を算出
-
-    if(!$stmt){
+    if($stmt){
+      $res = $stmt->fetch(PDO::FETCH_ASSOC);
+      $rst['total'] = $res['num'];
+      debug('法人番号をもつ企業総数：'.print_r($rst['total'],true));
+      // 総ページ数を算出
+      $rst['total_page'] = ceil($rst['total']/$span);
+    }else{
       return false;
     }
 
@@ -742,10 +693,12 @@ function getCompanyList($currentMinNum = 0, $companyName, $prefecture, $industry
     if(!empty($companyName)){
       $sql .= ' AND name LIKE "%'.$companyName.'%"';
       if(!empty($prefecture)){
-        $sql .= ' AND prefecture_code = '.$prefecture;   // 都道府県で抽出する条件文
+        // 都道府県で抽出する条件文追加
+        $sql .= ' AND prefecture_code = '.$prefecture;
       }
       if(!empty($industry)){
-        $sql .= ' AND industry_id = '.$industry;    // 業種で抽出する条件文
+        // 業種で抽出する条件文追加
+        $sql .= ' AND industry_id = '.$industry;
       }
     }else{
       if(!empty($prefecture)){
@@ -901,36 +854,13 @@ function getPickUpPosts($company_id, $category_id){
     );
     $stmt = queryPost($dbh, $sql, $data);
     if($stmt){
-      $result = $stmt->fetchAll();
+      return $result = $stmt->fetchAll();
     }else{
       return false;
     }
   } catch (Exception $e){
     error_log('エラー発生：' . $e->getMessage());
   }
-
-  // try{
-  //   $dbh = dbConnect();
-  //   $sql = 'SELECT *, answers.update_date AS a_update_date
-  //           FROM posts
-  //           LEFT JOIN answers ON posts.id = answers.post_id
-  //           LEFT JOIN category ON answers.category_id = category.id
-  //           WHERE posts.company_id = :company_id AND answers.company_id = :company_id AND posts.delete_flg = 0 AND answers.delete_flg = 0 AND posts.post_flg = 1 AND answers.post_flg = 1 AND category.delete_flg = 0
-  //           LIMIT 20';
-  //   $data = array(
-  //     ':company_id' => $company_id,
-  //   );
-  //   $stmt = queryPost($dbh, $sql, $data);
-  //   if($stmt){
-  //     $result = $stmt->fetchAll();
-  //   }else{
-  //     return false;
-  //   }
-  // } catch (Exception $e){
-  //   error_log('エラー発生：' . $e->getMessage());
-  // }
-
-  return $result;
 }
 function getPostByCategory($company_id, $category_id){
   debug('各企業における、カテゴリ内の投稿（post, answer）を取得します。');
@@ -1084,28 +1014,32 @@ function getFormData($str, $flg = false){
     $method = $_POST;
   }
   global $dbFormData;
-  // ↓の条件分岐は正しいのか？
-  if(!empty($dbFormData)){    // データベースに登録されているユーザーデータがある場合
-
-    if(!empty($err_msg[$str])){   // $strでのフォーム入力でエラーがある場合
-
-      if(isset($method[$str])){    // フォームに入力してPOSTされている場合
-        return sanitize($method[$str]);        // 入力していたものを返す
-      }else{                      // $_POST[$str]に何も入ってない場合（実際そんなことはない）
-        return sanitize($dbFormData[$str]);   // データベースに登録されていた情報を返す
-      }
-
-    }else{                    // $strでのフォーム入力でエラーがない場合（他の入力でエラーがある場合も含まれる）
-
-      if(isset($method[$str]) && $method[$str] !== $dbFormData[$str]){  //POSTにデータがあり、DBの情報と違い変更がある場合
+  // データベースに登録されているユーザーデータがある場合
+  if(!empty($dbFormData)){
+    // $strでのフォーム入力でエラーがある場合
+    if(!empty($err_msg[$str])){
+      // POSTされている場合
+      if(isset($method[$str])){
+        // 入力されていたものを返す
         return sanitize($method[$str]);
-      }else{    // POST送信がないとき
+      }else{
+        // $_POST[$str]に何も入ってない場合（実際そんなことはない）データベースに登録されていた情報を返す
+        return sanitize($dbFormData[$str]);
+      }
+    }else{
+      // $strでのフォーム入力でエラーがない場合（他の入力でエラーがある場合も含まれる）
+      if(isset($method[$str]) && $method[$str] !== $dbFormData[$str]){
+        //POSTにデータがあり、DBの情報と違う場合
+        return sanitize($method[$str]);
+      }else{
+        // POST送信がないとき
         return sanitize($dbFormData[$str]);
       }
     }
-
-  }else{    // $dbFormDataが空のとき
-    if(isset($method[$str])){    // 入力情報がある場合
+  }else{
+    // $dbFormDataが空のとき
+    if(isset($method[$str])){
+      // 入力情報がある場合
       return sanitize($method[$str]);
     }
   }
@@ -1127,7 +1061,6 @@ function makeRandKey($length = 8){
 // $link : 検索用GETパラメータリンク
 // $pageColNum : ページネーション表示数
 function pagination($currentPageNum, $totalPageNum, $link = '', $pageColNum = 5){
-
   // 総ページ数<表示項目数：ループの最小を１、ループの最大を総ページ数にする
   if($totalPageNum < $pageColNum){
     $minPageNum = 1;
@@ -1201,4 +1134,3 @@ function appendGetParam($arr_del_key = array()){
     return $str;
   }
 }
-
