@@ -1,11 +1,9 @@
 <?php
 // 単体テスト
-
 // フルパスでfunction.phpを取得
 require_once(dirname(__FILE__) . '/../function.php');
 
 class FunctionTest extends PHPUnit\Framework\TestCase{
-
   // =================================
   // Database
   // =================================
@@ -128,7 +126,93 @@ class FunctionTest extends PHPUnit\Framework\TestCase{
     $result = getCategory(1);
     $this->assertTrue(count($result) > 0);
   }
-
+  // getCompanyRanking()
+  public function testGetCompanyRankingReturnsDbData(){
+    $result = getCompanyRanking();
+    $this->assertTrue(count($result) > 0);
+  }
+  // getCompanyOne()
+  public function testGetCompanyOneReturnsDbData(){
+    $result = getCompanyOne(1);
+    $this->assertTrue(count($result) > 0);
+  }
+  public function testGetCompanyOneReturnsFalse(){
+    $result = getCompanyOne(0);
+    $this->assertEmpty($result['info']);
+  }
+  // getCompanyList()
+  public function testGetCompanyListReturnsDbData(){
+    $currentPageNum = 1;
+    $listSpan = 20;
+    $currentMinNum = ($currentPageNum - 1) * $listSpan;
+    $companyName = '日本';
+    $prefecture = '';
+    $industry = '';
+    $sort = 1;
+    $result = getCompanyList($currentMinNum, $companyName, $prefecture, $industry, $sort, $listSpan);
+    $this->assertTrue(count($result) > 0);
+  }
+  // getCompanyRatings()
+  public function testGetCompanyRatingsReturnsDbData(){
+    $result = getCompanyRatings(1);
+    $this->assertTrue(count($result) > 0);
+  }
+  // getTopAnswer()
+  public function testGetTopAnswerReturnsDbData(){
+    $result = getTopAnswer(1);
+    $this->assertTrue(count($result) > 0);
+  }
+  public function testGetTopAnswerReturnsFalse(){
+    $result = getTopAnswer(0);
+    $this->assertEmpty($result);
+  }
+  // getPickUpPosts()
+  public function testGetPickUpPostsReturnsDbData(){
+    $result = getPickUpPosts(1,1);
+    $this->assertTrue(count($result) > 0);
+  }
+  // getPostByCategory()
+  public function testGetPostByCategoryReturnsDbData(){
+    $result = getPostByCategory(1,1);
+    $this->assertTrue(count($result) > 0);
+  }
+  // getPrefecture()
+  public function testGetPrefectureReturnsDbData(){
+    $result = getPrefecture();
+    $this->assertTrue(count($result) > 0);
+  }
+  // isGood()
+  public function testIsGoodReturnsDbData(){
+    try{
+      $dbh = dbConnect();
+      $sql = 'SELECT * FROM good LIMIT 1';
+      $data = array();
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        $dbGoodData = $stmt->fetch(PDO::FETCH_ASSOC);
+      }
+    }catch (Exception $e){
+      error_log('エラー発生：'.$e->getMessage());
+    }
+    $result = isGood($dbGoodData['user_id'], $dbGoodData['answer_id']);
+    $this->assertTrue($result);
+  }
+  // getGoodCount()
+  public function testGetGoodCountReturnsDbData(){
+    try{
+      $dbh = dbConnect();
+      $sql = 'SELECT * FROM good LIMIT 1';
+      $data = array();
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        $dbGoodData = $stmt->fetch(PDO::FETCH_ASSOC);
+      }
+    }catch (Exception $e){
+      error_log('エラー発生：'.$e->getMessage());
+    }
+    $result = getGoodCount($dbGoodData['answer_id']);
+    $this->assertTrue($result > 0);
+  }
 
   // =================================
   // Validation
@@ -141,7 +225,6 @@ class FunctionTest extends PHPUnit\Framework\TestCase{
     $this->assertEquals($err_msg['number'], $result);
     $err_msg = array();
   }
-
   // validRequired()
   public function testValidRequiredTrue(){
     validRequired('abc', 'string');
@@ -158,7 +241,6 @@ class FunctionTest extends PHPUnit\Framework\TestCase{
     $result = getErrMsg('string');
     $this->assertEquals(MSG01, $result);
   }
-
   // validEmail()
   public function testvalidEmailTrue(){
     validEmail('abc@gmail.com', 'email');
@@ -180,7 +262,83 @@ class FunctionTest extends PHPUnit\Framework\TestCase{
     $result = getErrMsg('email');
     $this->assertEquals(MSG02, $result);
   }
-
+  // validEmailDup()
+  public function testValidEmailDupReturnsErr(){
+    global $err_msg;
+    $err_msg = array();
+    try{
+      $dbh = dbConnect();
+      $sql = 'SELECT email FROM users WHERE delete_flg = 0 LIMIT 1';
+      $data = array();
+      $stmt = queryPost($dbh, $sql, $data);
+      if($stmt){
+        $dbUserData = $stmt->fetch(PDO::FETCH_ASSOC);
+      }
+    }catch (Exception $e){
+      error_log('エラー発生：'.$e->getMessage());
+    }
+    validEmailDup($dbUserData['email']);
+    $result = getErrMsg('email');
+    $this->assertEquals(MSG08, $result);
+  }
+  public function testValidEmailDupReturnsNull(){
+    global $err_msg;
+    $err_msg = array();
+    validEmailDup('abcde@abcde.abcde');
+    $this->assertEquals(array(), $err_msg);
+  }
+  // validMatch()
+  public function testValidMatchTrue(){
+    global $err_msg;
+    $err_msg = array();
+    validMatch('abc', 'abc', 'password');
+    $this->assertEquals(array(), $err_msg);
+  }
+  public function testValidMatchFalse(){
+    global $err_msg;
+    $err_msg = array();
+    validMatch('abc', 'abcd', 'password');
+    $this->assertEquals(MSG03, $err_msg['password']);
+  }
+  // validMinLen()
+  public function testValidMinLenTrue(){
+    global $err_msg;
+    $err_msg = array();
+    validMinLen('password', '123456');
+    $this->assertEquals(array(), $err_msg);
+  }
+  public function testValidMinLenFalse(){
+    global $err_msg;
+    $err_msg = array();
+    validMinLen('12345', 'password');
+    $this->assertEquals(MSG05, $err_msg['password']);
+  }
+  // validMaxLen()
+  public function testValidMaxLenTrue(){
+    global $err_msg;
+    $err_msg = array();
+    validMaxLen('123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345', 'comment');
+    $this->assertEquals(array(), $err_msg);
+  }
+  public function testValidMaxLenFalse(){
+    global $err_msg;
+    $err_msg = array();
+    validMaxLen('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456', 'comment');
+    $this->assertEquals(MSG06, $err_msg['comment']);
+  }
+  // validHalf()
+  public function testValidHalfTrue(){
+    global $err_msg;
+    $err_msg = array();
+    validHalf('abc123', 'name');
+    $this->assertEquals(array(), $err_msg);
+  }
+  public function testValidHalfFalse(){
+    global $err_msg;
+    $err_msg = array();
+    validHalf('あいう１２３', 'name');
+    $this->assertEquals(MSG04, $err_msg['name']);
+  }
   // validNumber()
   public function testValidNumberTrue(){
     validNumber('111', 'number');
@@ -202,5 +360,104 @@ class FunctionTest extends PHPUnit\Framework\TestCase{
     $result = getErrMsg('number');
     $this->assertEquals(MSG12, $result);
   }
+  // validPass()
+  public function testValidPassTrue(){
+    global $err_msg;
+    $err_msg = array();
+    validPass('123456', 'password');
+    $this->assertEquals(array(), $err_msg);
+  }
+  public function testValidPassFalse1(){
+    global $err_msg;
+    $err_msg = array();
+    validPass('１２３４５６', 'password');
+    $this->assertEquals(MSG04, $err_msg['password']);
+  }
+  public function testValidPassFalse2(){
+    global $err_msg;
+    $err_msg = array();
+    validPass('12345', 'password');
+    $this->assertEquals(MSG05, $err_msg['password']);
+  }
+  public function testValidPassFalse3(){
+    global $err_msg;
+    $err_msg = array();
+    validPass('1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456', 'password');
+    $this->assertEquals(MSG06, $err_msg['password']);
+  }
 
+  //================================
+  // Session, Login
+  //================================
+  // getSessionFlash()
+  public function testGetSessionFlashTrue(){
+    $_SESSION['message'] = 'message';
+    $result = getSessionFlash('message');
+    $this->assertEquals('message', $result);
+  }
+  // isLogin()
+  public function testIsLoginTrue(){
+    $_SESSION['login_date'] = time();
+    $result = isLogin();
+    $this->assertTrue($result);
+  }
+  public function testIsLoginFalse(){
+    $_SESSION['login_date'] = time() - 60*61;
+    $_SESSION['login_limit'] = 60*60;
+    $result = isLogin();
+    $this->assertFalse($result);
+  }
+
+  //================================
+  // Date
+  //================================
+  // getYearDiff()
+  public function testGetYearDiffTrue(){
+    $result = getYearDiff('2021-7-6 15:55:00', '2020-7-6 15:55:00');
+    $this->assertEquals(1, $result);
+  }
+
+  //================================
+  // Other
+  //================================
+  // sanitize()
+  public function testSanitizeTrue(){
+    $result = sanitize('"abc');
+    $this->assertEquals('&quot;abc', $result);
+  }
+  // getFormData()
+  public function testGetFormDataReturnsErrPost(){
+    $_POST['name'] = '';
+    validRequired($_POST['name'], 'name');
+    $result = getFormData('name');
+    $this->assertEquals('', $result);
+    $err_msg = array();
+  }
+  public function testGetFormDataReturnsPost(){
+    $_POST['name'] = 'tarou';
+    validRequired($_POST['name'], 'name');
+    $result = getFormData('name');
+    $this->assertEquals('tarou', $result);
+    $_POST = null;
+  }
+  public function testGetFormDataReturnsDbData(){
+    $_POST['name'] = null;
+    global $dbFormData;
+    $dbFormData['name'] = 'ichiro';
+    $result = getFormData('name');
+    $this->assertEquals('ichiro', $result);
+  }
+  public function testGetFormDataReturnsPostOnNullDb(){
+    $_POST['name'] = 'tarou';
+    global $dbFormData;
+    $dbFormData['name'] = '';
+    $result = getFormData('name');
+    $this->assertEquals('tarou', $result);
+  }
+  // appendGetParam()
+  public function testAppendGetParamTrue(){
+    $_GET = array('a'=>1, 'b'=>2, 'c'=>3);
+    $result = appendGetParam(array('a', 'b'));
+    $this->assertEquals('?c=3', $result);
+  }
 }
