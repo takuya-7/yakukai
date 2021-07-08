@@ -7691,7 +7691,6 @@ input[type="number"] {
 
 .l-menu-trigger {
   display: none;
-  transition: all .4s;
   box-sizing: border-box;
   position: relative;
   width: 40px;
@@ -7702,7 +7701,6 @@ input[type="number"] {
       display: inline-block; } }
   .l-menu-trigger span {
     display: inline-block;
-    transition: all .4s;
     box-sizing: border-box;
     position: absolute;
     left: 0;
@@ -8948,7 +8946,7 @@ button a {
   font-size: 1rem; }
 
 .p-card-slider__param {
-  font-size: .8rem;
+  font-size: .75rem;
   color: #969696; }
 
 .top-widget {
