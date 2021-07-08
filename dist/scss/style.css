@@ -7759,6 +7759,10 @@ input[type="number"] {
     .l-company-head__info {
       width: 100%; } }
 
+.l-footer-container {
+  display: flex;
+  justify-content: center; }
+
 .l-footer {
   padding: 15px;
   width: 100%;
@@ -7771,12 +7775,11 @@ input[type="number"] {
     margin: 30px 0 10px;
     overflow: hidden;
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap; }
     .l-footer ul li {
       text-align: left;
       float: left;
-      padding: 0 15px;
+      padding: 5px 15px;
       display: inline; }
       .l-footer ul li a {
         color: #fff;
