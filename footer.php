@@ -1,12 +1,14 @@
     <footer id="js-footer" class="l-footer">
       
       <div class="l-container">
-        <ul class="">
-          <li><a href="index.php">HOME</a></li>
-          <li><a href="privacy.php">プライバシーポリシー</a></li>
-          <li><a href="sitemap.php">サイトマップ</a></li>
-          <li><a href="contact.php">お問い合わせ</a></li>
-        </ul>
+        <div class="l-footer-container">
+          <ul>
+            <li><a href="index.php">HOME</a></li>
+            <li><a href="privacy.php">プライバシーポリシー</a></li>
+            <li><a href="sitemap.php">サイトマップ</a></li>
+            <li><a href="contact.php">お問い合わせ</a></li>
+          </ul>
+        </div>
       </div>
 
       <span class="l-footer__copyright">
