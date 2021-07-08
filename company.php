@@ -18,7 +18,8 @@ debugLogStart();
 // GETパラメータを取得
 //----------------------------
 // 企業IDのGETパラメータを取得
-$company_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+$company_id = filter_input(INPUT_GET, 'c_id');
+// $company_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
 // DBから企業データを取得
 $dbCompanyData = getCompanyOne($company_id);
 // DBから企業の平均評価値を取得
