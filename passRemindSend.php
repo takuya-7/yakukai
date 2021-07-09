@@ -34,11 +34,8 @@ if(!empty($_POST)){
         $dbh = dbConnect();
         $sql = 'SELECT count(*) FROM users WHERE email = :email AND delete_flg = 0';
         $data = array(':email' => $email);
+        $stmt = queryPost($dbh, $sql, $data);
 
-        // クエリ実行
-        $stmt = queryPost($dbh, $sql, $data);   // 結果は0,1、true, falseで返ってくる
-
-        // クエリ結果の値を取得
         $result = $stmt->fetch(PDO::FETCH_ASSOC);     //クエリ結果の中身：件数を取得している
 
         // 検索に引っかかってない場合： $result = array(1) { ["count(*)"]=> string(1) "0" }

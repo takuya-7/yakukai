@@ -40,22 +40,22 @@ if(!empty($_POST)){
         debug('メールアドレスの変更に成功しました！');
         $_SESSION['msg_success'] = SUC06;
         // 変更確認メール送信
-  //       $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
-  //       $from = 'info@yakukai.net';
-  //       $to = $email;
-  //       $subject = 'メールアドレス変更完了　｜　ヤクカイ';
-  //       $comment = <<<EOM
-  // { $username }様
+        $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
+        $from = 'info@yakukai.net';
+        $to = $email;
+        $subject = 'メールアドレス変更完了　｜　ヤクカイ';
+        $comment = <<<EOM
+  { $username }様
   
-  // メールアドレスが変更されました。
+  メールアドレスが変更されました。
                         
-  // ////////////////////////////////////////
-  // ヤクカイ
-  // URL  https://yakukai.net/
-  // E-mail info@yakukai.net
-  // ////////////////////////////////////////
-  // EOM;
-  //       sendMail($from, $to, $subject, $comment);
+  ////////////////////////////////////////
+  ヤクカイ
+  URL  https://yakukai.net/
+  E-mail info@yakukai.net
+  ////////////////////////////////////////
+  EOM;
+        sendMail($from, $to, $subject, $comment);
         header('Location:mypage.php');
       }
     }catch(Exception $e){

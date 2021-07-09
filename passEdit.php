@@ -75,27 +75,24 @@ if(!empty($_POST)){
                     debug('パスワードの変更に成功しました！');
                     $_SESSION['msg_success'] = SUC01;
 
-//                     // メール送信
-//                     $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
-//                     $from = 'info@gmail.com';
-//                     $to = $userData['email'];
-//                     $subject = 'メール変更完了　｜　ヤクカイ';
-//                     $comment = <<<EOM
-// { $username }様
+                    // メール送信
+                    $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
+                    $from = 'info@gmail.com';
+                    $to = $userData['email'];
+                    $subject = 'メール変更完了　｜　ヤクカイ';
+                    $comment = <<<EOM
+{ $username }様
 
-// パスワードが変更されました。
+パスワードが変更されました。
                       
-// ////////////////////////////////////////
-// ヤクカイ
-// URL  https://yakukai.com/
-// E-mail info@yakukai.com
-// ////////////////////////////////////////
-// EOM;
-//                     sendMail($from, $to, $subject, $comment);
+////////////////////////////////////////
+ヤクカイ
+URL  https://yakukai.com/
+E-mail info@yakukai.com
+////////////////////////////////////////
+EOM;
+                    sendMail($from, $to, $subject, $comment);
                     header('Location:mypage.php');
-                // }else{
-                //     debug('クエリに失敗しました。');
-                //     $err_msg['common'] = MSG07;
                 }
 
             } catch (Exception $e){
