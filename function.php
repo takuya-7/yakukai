@@ -229,14 +229,14 @@ function isLogin(){
 function dbConnect(){
   // DBへの接続準備
   // ローカル用設定
-  $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
-  $user = 'root';
-  $password = 'root';
+  // $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
+  // $user = 'root';
+  // $password = 'root';
 
   // AWS用設定
-  // $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
-  // $user = 'yakukai_admin';
-  // $password = 'yakuyakudbb';
+  $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
+  $user = 'yakukai_admin';
+  $password = 'yakuyakudbb';
   
   $options = array(
     // SQL実行失敗時にはエラーコードのみ設定
