@@ -1,5 +1,4 @@
 <?php
-
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「');
@@ -86,14 +85,13 @@ if(!empty($_POST)){
 
 ?>
 
-
 <?php
 $siteTitle = 'ユーザー登録';
 require('head.php');
 ?>
 
-<body class="page-signup">
-    
+<body>
+    <div class="l-all-wrapper">
     <?php
         require('header.php');
     ?>

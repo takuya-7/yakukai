@@ -27,6 +27,7 @@ require('head.php');
 ?>
 
   <body>
+    <div class="l-all-wrapper">
     <!-- セッション変数内のメッセージを表示 -->
     <p id="js-show-msg" style="display:none;" class="msg-slide">
       <?php echo getSessionFlash('msg_success'); ?>

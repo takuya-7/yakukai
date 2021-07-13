@@ -145,6 +145,7 @@ require('head.php');
 ?>
 
 <body>
+  <div class="l-all-wrapper">
   <?php
     require('header.php');
   ?>

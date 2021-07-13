@@ -80,7 +80,8 @@ $siteTitle = 'プロフィール入力';
 require('head.php');
 ?>
 
-<body class="">
+<body>
+  <div class="l-all-wrapper">
     <?php
       require('header.php');
     ?>
