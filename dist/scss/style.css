@@ -8842,7 +8842,8 @@ button a {
   font-size: 0.9rem;
   float: left;
   margin: 0;
-  width: 75%; }
+  width: 75%;
+  border-radius: 0; }
   @media screen and (max-width: 576px) {
     .p-top-search-box__input {
       height: 2.7rem;
