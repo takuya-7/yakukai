@@ -41,7 +41,7 @@ if(!empty($_POST)){
         $_SESSION['msg_success'] = SUC06;
         // 変更確認メール送信
         $username = ($userData['username']) ? $userData['username'] : 'ご利用者';
-        $from = 'info@yakukai.net';
+        $from = 'support@yakukai.net';
         $to = $email;
         $subject = 'メールアドレス変更完了　｜　ヤクカイ';
         $comment = <<<EOM
@@ -50,9 +50,9 @@ if(!empty($_POST)){
   メールアドレスが変更されました。
                         
   ////////////////////////////////////////
-  ヤクカイ
+  ヤクカイサポート
   URL  https://yakukai.net/
-  E-mail info@yakukai.net
+  E-mail support@yakukai.net
   ////////////////////////////////////////
   EOM;
         sendMail($from, $to, $subject, $comment);

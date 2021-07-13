@@ -35,7 +35,7 @@ if(!empty($_POST)){
   if(empty($err_msg)){
     debug('バリデーションOK');
     // メール送信
-    $from = 'info@yakukai.net';
+    $from = 'support@yakukai.net';
     $to = $email;
     $subject = '【お問い合わせ】'.$title.'｜ヤクカイ';
     $comment = <<<EOM
@@ -43,9 +43,9 @@ if(!empty($_POST)){
 {$message}
 
 ////////////////////////////////////////
-ヤクカイ運営
+ヤクカイサポート
 URL  https://yakukai.net
-E-mail info@yakukai.net
+E-mail support@yakukai.net
 ////////////////////////////////////////
 EOM;
     

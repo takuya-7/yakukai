@@ -50,24 +50,24 @@ if(!empty($_POST)){
           $auth_key = makeRandKey();
 
           // 認証キーをメールに記載して送信
-          $from = 'info@yakukai.net';
+          $from = 'support@yakukai.net';
           $to = $email;
           $subject = '【パスワード再発行認証】｜ヤクカイ';
           $comment = <<<EOM
 本メールアドレス宛にパスワード再発行のご依頼がありました。
 下記のURLにて認証キーをご入力頂くとパスワードが再発行されます。
 
-パスワード再発行認証キー入力ページ：http://localhost:8888/yakukai.net/passRemindRecieve.php
+パスワード再発行認証キー入力ページ：https://yakukai.net/passRemindRecieve.php
 認証キー：{$auth_key}
 ※認証キーの有効期限は30分となります
 
 認証キーを再発行されたい場合は下記ページより再度再発行をお願い致します。
-http://localhost:8888/yakukai.net/passRemindSend.php
+http://yakukai.net/passRemindSend.php
 
 ////////////////////////////////////////
-ヤクカイ運営
+ヤクカイサポート
 URL  https://yakukai.net
-E-mail info@yakukai.net
+E-mail support@yakukai.net
 ////////////////////////////////////////
 EOM;
           
@@ -123,8 +123,8 @@ require('head.php');
               </div>
       
               <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
-                  Email
-                  <input type="text" name="email" value="<?php echo getFormData('email'); ?>">
+                Email
+                <input type="text" name="email" value="<?php echo getFormData('email'); ?>">
               </label>
       
               <div class="c-form__message">

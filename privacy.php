@@ -124,7 +124,7 @@ require('head.php');
             <div class="u-mb-4">
               <h2 class="u-mb-3">第10条（お問い合わせ窓口）</h2>
               <p>本ポリシーに関するお問い合わせは，下記の窓口までお願いいたします。</p>
-              <p>info@yakukai.net</p>
+              <a href="contact.php">お問い合わせ</a>
             </div>
           </div>
         </div>
