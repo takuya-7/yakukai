@@ -1183,6 +1183,7 @@ button a{
   float: left;
   margin: 0;
   width: 75%;
+  border-radius: 0;
   @include mq() {
     height: 2.7rem;
     font-size: 0.75rem;
