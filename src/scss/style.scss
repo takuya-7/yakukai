@@ -282,9 +282,11 @@ input[type="number"] {
 
 // l-main.scss
 // ---------------------------
-.l-content-wrapper{
-  // background: #f6f6f4;
+.l-all-wrapper{
   background: #edf1f5;
+  min-height: 100vh;
+}
+.l-content-wrapper{
   padding-top: 1rem;
   padding-bottom: 2rem;
   min-height: 100%;

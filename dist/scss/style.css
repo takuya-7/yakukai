@@ -7721,8 +7721,11 @@ input[type="number"] {
   .l-menu-trigger.active span:nth-of-type(3) {
     transform: translateY(-15px) rotate(45deg); }
 
-.l-content-wrapper {
+.l-all-wrapper {
   background: #edf1f5;
+  min-height: 100vh; }
+
+.l-content-wrapper {
   padding-top: 1rem;
   padding-bottom: 2rem;
   min-height: 100%; }
