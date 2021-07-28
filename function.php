@@ -237,16 +237,19 @@ function dbConnect(){
       $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
       $user = 'root';
       $password = 'root';
+      break;
     // dockerコンテナ用設定
     case 'docker':
-      $dsn = 'mysql:dbname=yakukai;host=3306;charset=utf8';
+      $dsn = 'mysql:dbname=yakukai;host=localhost:3306;charset=utf8';
       $user = 'mysql';
       $password = 'mysql';
+      break;
     // AWS用設定
     case 'aws':
       $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
       $user = 'yakukai_admin';
       $password = 'yakuyakudbb';
+      break;
   }
   
   $options = array(
@@ -256,7 +259,7 @@ function dbConnect(){
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバー負荷を軽減)
     // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
-    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+    // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
   );
   // PDOオブジェクト生成（DBへ接続）
   $dbh = new PDO($dsn, $user, $password, $options);
