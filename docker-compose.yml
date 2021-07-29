@@ -1,0 +1,63 @@
+version: '3'
+
+# docker volumeを使用
+# volumes: 
+#   db-data:
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 7777:80
+    volumes:
+      - .:/var/www/html/yakukai
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on: 
+      - php
+
+  php:
+    # build contextをrootディレクトリ指定。dockerfileを指定（本番環境は.prod指定）
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile.prod
+    # カレントディレクトリをコンテナの対象ディレクトリにマウント
+    volumes:
+      - .:/var/www/html/yakukai
+    # -it
+    # stdin_open: true
+    # tty: true
+    # サービスのdbができたらdocker runする
+    depends_on: 
+      - mysql
+    # webからdbにアクセスできるようにする
+    links: 
+      - mysql
+
+  mysql:
+    # mysqlディレクトリのDockerfileをビルド
+    build: 
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    # DBデータを構築するSQLファイルをコンテナのdocker-entrypoint-initdb.dにマウントすることで起動時に自動でSQLファイルを実行させる
+    volumes:
+      - ./docker/mysql/data:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    # 環境変数を設定
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: yakukai
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_pass
+      TZ: Asia/Tokyo
+    
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   ports:
+  #     - 7776:80
+  #   depends_on:
+  #     - mysql
