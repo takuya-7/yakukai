@@ -233,16 +233,16 @@ function dbConnect(){
 
   switch($environment){
     // ローカル用設定
-    case 'local':
+    case 'manp':
       $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
       $user = 'root';
       $password = 'root';
       break;
     // dockerコンテナ用設定
     case 'docker':
-      $dsn = 'mysql:dbname=yakukai;host=localhost:3306;charset=utf8';
-      $user = 'mysql';
-      $password = 'mysql';
+      $dsn = 'mysql:host=mysql;dbname=yakukai;charset=utf8';
+      $user = 'mysql_user';
+      $password = 'mysql_pass';
       break;
     // AWS用設定
     case 'aws':
@@ -251,6 +251,10 @@ function dbConnect(){
       $password = 'yakuyakudbb';
       break;
   }
+
+  debug('dsn: '.$dsn);
+  debug('user: '.$user);
+  debug('password: '.$password);
   
   $options = array(
     // SQL実行失敗時にはエラーコードのみ設定
@@ -263,6 +267,11 @@ function dbConnect(){
   );
   // PDOオブジェクト生成（DBへ接続）
   $dbh = new PDO($dsn, $user, $password, $options);
+  if($dbh){
+    debug('PDOオブジェクト生成成功！');
+  }else{
+    debug('PDOオブジェクト生成失敗...');
+  }
   return $dbh;
 }
 // SQL実行関数
