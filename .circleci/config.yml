@@ -1,0 +1,30 @@
+version: 2
+
+references:
+  docker_hub_authentication: &docker_hub_authentication
+    auth:
+      username: tky007
+      password: docdocuu009
+
+jobs:
+  build:
+    # docker-composeがインストール済みの仮想マシンをプル
+    machine:
+      image: circleci/classic:edge
+      <<: *docker_hub_authentication
+
+    steps:
+      # CI環境上のworking_directoryの値の場所にGitリポジトリをコピー
+      - checkout
+      - run:
+          name: Dockerコンテナの起動
+          command: docker-compose up --build -d
+      - run:
+          name: db接続を待機
+          command: sleep 10
+      - run:
+          name: テストを実行
+          command: docker-compose exec php phpunit
+      - run:
+          name: Dockerコンテナの停止
+          command: docker-compose down

@@ -21,7 +21,7 @@ services:
     # build contextをrootディレクトリ指定。dockerfileを指定（本番環境は.prod指定）
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile.prod
+      dockerfile: ./docker/php/Dockerfile
     # カレントディレクトリをコンテナの対象ディレクトリにマウント
     volumes:
       - .:/var/www/html/yakukai
