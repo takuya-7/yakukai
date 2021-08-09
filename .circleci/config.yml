@@ -54,10 +54,10 @@ workflows:
     jobs:
       - build
       - deploy:
-        # deployより先にbuildさせる
-        requires:
-          - build
-        # masterブランチにpushされた場合のみdeployを実行する
-        filters:
-          branches:
-            only: master
+          # deployより先にbuildさせる
+          requires:
+            - build
+          # masterブランチにpushされた場合のみdeployを実行する
+          filters:
+            branches:
+              only: main
