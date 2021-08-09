@@ -40,14 +40,12 @@ jobs:
       - add_ssh_keys:
       # CircleCI に登録した環境変数を使って SSH
       - run:
-          name: EC2のbastionにSSH接続
-          command: ssh -p 49222 ${USER_NAME}@${HOST_NAME} "cd /usr/src && sudo mkdir test_circleci"
-      # - run:
-      #     name: テストコマンド実行
-      #     command: mkdir circleci_test
-      # - run:
-      #     name: bastionからwebサーバーに接続し、最新コードをpull
-      #     command: ssh -p 49222 -i “id_rsa” yakukai@172.16.3.11 'cd /var/www/html/yakukai/ && git pull'
+          name: EC2、bastion経由でwebサーバーにSSH接続し、最新コードをpull
+          command: |
+            ssh -p 49222 ${USER_NAME}@${HOST_NAME}
+            ssh -p 49222 -i “id_rsa” yakukai@172.16.3.11
+            cd /var/www/html/yakukai/
+            git pull
 
 workflows:
   version: 2
