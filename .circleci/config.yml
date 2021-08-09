@@ -36,16 +36,22 @@ jobs:
       image: circleci/classic:edge
     steps:
       - checkout
-      # CircleCI に登録した秘密鍵を呼び出す
-      - add_ssh_keys:
-      # CircleCI に登録した環境変数を使って SSH
+      - run: sudo pip install awscli
       - run:
-          name: EC2、bastion経由でwebサーバーにSSH接続し、最新コードをpull
+          name: SSH経由のデプロイ
           command: |
-            ssh -p 49222 ${USER_NAME}@${HOST_NAME}
-            ssh -p 49222 -i “id_rsa” yakukai@172.16.3.11
-            cd /var/www/html/yakukai/
-            git pull
+            ./shells/deploy.sh
+
+      # CircleCI に登録した秘密鍵を呼び出す
+      # - add_ssh_keys:
+      # CircleCI に登録した環境変数を使って SSH
+      # - run:
+      #     name: EC2、bastion経由でwebサーバーにSSH接続し、最新コードをpull
+      #     command: |
+      #       ssh -p 49222 ${USER_NAME}@${HOST_NAME}
+      #       ssh -p 49222 -i “id_rsa” yakukai@172.16.3.11
+      #       cd /var/www/html/yakukai/
+      #       git pull
 
 workflows:
   version: 2
