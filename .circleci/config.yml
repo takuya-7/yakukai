@@ -37,8 +37,6 @@ jobs:
   deploy:
     machine: true
       # image: circleci/classic:edge
-      # <<: *docker_hub_authentication
-      # enabled: true
     steps:
       - checkout
       # - run:
