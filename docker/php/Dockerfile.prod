@@ -1,5 +1,4 @@
-FROM php:7.4.9-fpm-alpine
-# FROM php:7.4.9-fpm
+FROM circleci/php:7.4.9-fpm-node
 
 # ENV TZ=Asia/Tokyo \
 #   LANG=ja_JP.UTF-8 \
