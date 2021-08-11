@@ -43,8 +43,8 @@ jobs:
       - checkout
       - run:
           name: awscli のインストール
-          command: sudo pip install awscli
-          # command: sudo pip install --index-url=https://pypi.python.org/simple/ awscli
+          # command: sudo pip install awscli
+          command: sudo pip install --index-url=https://pypi.python.org/simple/ awscli
       - run:
           name: SSH経由のデプロイ
           command: |
