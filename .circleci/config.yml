@@ -33,13 +33,14 @@ jobs:
   # deployジョブ: EC2にSSH接続して、デプロイを実行する
   deploy:
     machine:
-      # image: circleci/classic:edge
-      enabled: true
+      image: circleci/classic:edge
+      # enabled: true
     steps:
       - checkout
       - run:
           name: awscli のインストール
-          command: sudo pip install awscli
+          # command: sudo pip install awscli
+          command: sudo pip install --index-url=https://pypi.python.org/simple/ awscli
       - run:
           name: SSH経由のデプロイ
           command: |
