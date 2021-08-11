@@ -229,7 +229,7 @@ function isLogin(){
 function dbConnect(){
   // DBへの接続準備
   // 環境設定
-  $environment = 'aws';
+  $environment = 'docker';
 
   switch($environment){
     // ローカル用設定
