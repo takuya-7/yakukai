@@ -13,4 +13,5 @@ MY_IP=`curl -f -s ifconfig.me`
 
 trap "aws ec2 revoke-security-group-ingress --group-id $MY_SECURITY_GROUP --protocol tcp --port 22 --cidr $MY_IP/32" 0 1 2 3 15
 aws ec2 authorize-security-group-ingress --group-id $MY_SECURITY_GROUP --protocol tcp --port 22 --cidr $MY_IP/32
-ssh $USER_NAME@$HOST_NAME "cd /var/www/html/yakukai/ && git pull"
+ssh $USER_NAME@$HOST_NAME
+ssh -p 49222 -i “id_rsa” yakukai@172.16.3.11 "cd /var/www/html/yakukai/ && git pull"
