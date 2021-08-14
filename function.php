@@ -229,27 +229,47 @@ function isLogin(){
 function dbConnect(){
   // DBへの接続準備
   // 環境設定
-  $environment = 'docker';
+  // $environment = 'docker';
 
-  switch($environment){
-    // ローカル用設定
-    case 'manp':
-      $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
-      $user = 'root';
-      $password = 'root';
-      break;
-    // dockerコンテナ用設定
-    case 'docker':
-      $dsn = 'mysql:host=mysql;dbname=yakukai;charset=utf8';
-      $user = 'mysql_user';
-      $password = 'mysql_pass';
-      break;
-    // AWS用設定
-    case 'aws':
-      $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
-      $user = 'yakukai_admin';
-      $password = 'yakuyakudbb';
-      break;
+  // switch($environment){
+  //   // ローカル用設定
+  //   case 'manp':
+  //     $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
+  //     $user = 'root';
+  //     $password = 'root';
+  //     break;
+  //   // dockerコンテナ用設定
+  //   case 'docker':
+  //     $dsn = 'mysql:host=mysql;dbname=yakukai;charset=utf8';
+  //     $user = 'mysql_user';
+  //     $password = 'mysql_pass';
+  //     break;
+  //   // AWS用設定
+  //   case 'aws':
+  //     $dsn = 'mysql:dbname=yakukai;host=rds-yakukai.cu8fk2ptro5d.ap-northeast-1.rds.amazonaws.com;port=3306;charset=utf8';
+  //     $user = 'yakukai_admin';
+  //     $password = 'yakuyakudbb';
+  //     break;
+  // }
+
+  // 環境変数取得、設定
+  if(empty(getenv('PDO_DSN'))){
+    // MAMP設定
+    $dsn = 'mysql:dbname=yakukai;host=localhost:8889;charset=utf8';
+  }else{
+    $dsn = getenv('PDO_DSN');
+  }
+  if(empty(getenv('PDO_USER'))){
+    // MAMP設定
+    $user = 'root';
+  }else{
+    $user = getenv('PDO_USER');
+  }
+  if(empty(getenv('PDO_USER'))){
+    // MAMP設定
+    $password = 'root';
+  }else{
+    $password = getenv('PDO_PASSWORD');
   }
 
   debug('dsn: '.$dsn);

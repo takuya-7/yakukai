@@ -1,12 +1,15 @@
+# 開発環境用Dockerfile
+
 FROM php:7.4.9-fpm-alpine
 # FROM circleci/php:7.4.9-fpm-node-browsers
-
 
 ENV TZ=Asia/Tokyo \
   LANG=ja_JP.UTF-8 \
   LANGUAGE=ja_JP:ja \
-  LC_ALL=ja_JP.UTF-8
-
+  LC_ALL=ja_JP.UTF-8 \
+  PDO_DSN=mysql:host=mysql;dbname=yakukai;charset=utf8 \
+  PDO_USER=mysql_user \
+  PDO_PASSWORD=mysql_pass
 
 #composerインストール
 # RUN curl -sS https://getcomposer.org/installer | php

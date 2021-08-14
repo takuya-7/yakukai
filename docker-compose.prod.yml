@@ -1,0 +1,26 @@
+# 本番環境（AWS）用ファイル
+
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html/yakukai
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on: 
+      - php
+
+  php:
+    # build contextをrootディレクトリ指定。dockerfileを指定（本番環境は.prod指定）
+    build:
+      context: .
+      # 本番環境用Dockerfile指定
+      dockerfile: ./docker/php/Dockerfile.prod
+    # カレントディレクトリをコンテナの対象ディレクトリにマウント
+    # volumes:
+    #   - .:/var/www/html/yakukai
