@@ -27,4 +27,4 @@ COPY ./docker/php/php.ini /usr/local/etc/php/
 # 実行ディレクトリを指定
 WORKDIR /var/www/html/yakukai
 # 本番環境ではコード類全てコンテナに移す
-COPY ../../. .
+COPY . .

@@ -16,7 +16,7 @@ MY_IP=`curl -f -s ifconfig.me`
 
 # セキュリティグループにcircleciのIPアドレスを追加
 aws ec2 authorize-security-group-ingress --group-id $MY_SECURITY_GROUP --protocol tcp --port 22 --cidr $MY_IP/32
-# SSH接続してデプロイ
-ssh $USER_NAME@$HOST_NAME "cd /var/www/html/yakukai/ && git pull"
+# SSH接続してデプロイ。docker-composeでコンテナ起動（起動前にdocker-compose downすべき？）
+ssh $USER_NAME@$HOST_NAME "cd /var/www/html/yakukai/ && git pull && docker-compose -f docker-compose.prod.yml up --build -d"
 # セキュリティグループのインバウンドルールを削除
 trap "aws ec2 revoke-security-group-ingress --group-id $MY_SECURITY_GROUP --protocol tcp --port 22 --cidr $MY_IP/32" 0 1 2 3 15
