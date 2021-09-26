@@ -27,6 +27,11 @@ $dbCompanyRatings = getCompanyRatings($company_id);
 // DBからクチコミのカテゴリ情報を取得
 $dbCategoryData = getCategory($company_id);
 
+// ユーザーID取得
+$user_id = $_SESSION['user_id'];
+// ユーザーのクチコミ投稿情報取得
+$dbAnswerData = getAnswer($user_id);
+
 // $viewDataが空かどうか（空ならユーザーが不正なGETパラメータを入れて商品データを取得できていない状態）をチェック
 if(empty($dbCompanyData)){
   error_log('エラー発生:指定ページに不正な値が入りました');
@@ -55,7 +60,19 @@ require('head.php');
     <div class="l-content-wrapper">
       <div class="l-container">
         <div class="u-mb-3">
+          <?php
+            // クチコミ投稿が完了していない場合
+            if(empty($dbAnswerData[0]['answer'])){
+          ?>
           <a href="surveyInfo.php" class="c-button c-button--blue c-button--width100">クチコミを投稿する</a>
+          <?php
+            // クチコミ投稿が完了している場合
+            }else{
+          ?>
+          <button class="c-button c-button--gray c-button--width100" style= "cursor:default">クチコミ投稿済み</button>
+          <?php
+            }
+          ?>
         </div>
 
         <div class="l-content p-company-head">

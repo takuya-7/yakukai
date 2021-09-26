@@ -7830,6 +7830,13 @@ input[type="number"] {
   border-radius: 5px;
   box-shadow: .2rem .2rem .4rem #cad4e2; }
 
+.c-button--gray {
+  background: #969696;
+  color: #fff;
+  padding: .7rem;
+  border-radius: 5px;
+  box-shadow: .2rem .2rem .4rem #cad4e2; }
+
 .c-button--width100 {
   width: 100%; }
 
