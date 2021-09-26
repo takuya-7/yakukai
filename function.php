@@ -456,7 +456,7 @@ function getAnswer($user_id){
   debug('ユーザーの回答を取得します。');
   try{
     $dbh = dbConnect();
-    $sql = 'SELECT * FROM answers WHERE user_id = :user_id AND delete_flg = 0';
+    $sql = 'SELECT * FROM answers WHERE user_id = :user_id AND delete_flg = 0 AND post_flg = 1';
     $data = array(':user_id' => $user_id);
     $stmt = queryPost($dbh, $sql, $data);
   } catch (Exeption $e){
