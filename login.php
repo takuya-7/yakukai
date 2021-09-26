@@ -158,6 +158,10 @@ require('head.php');
               </div>
             </fieldset>
 
+            <p>【ゲストログイン】</p>
+            <p>・メールアドレス：a@a.a</p>
+            <p>・パスワード：aaaaaa</p>
+
             <label class="u-mb-3">
                 <input type="checkbox" name="pass_save"> 次回ログインを省略する
             </label>
