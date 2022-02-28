@@ -65,8 +65,3 @@ https://yakukai.net/
 
 現在デモサイトとして運用中です。
 記載されているクチコミはサンプルで、実際のクチコミではありません。
-
-# 作成者
-
-* Takuya Sumitomo
-* ts.procd@gmail.com
